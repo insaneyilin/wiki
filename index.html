@@ -1,30 +1,75 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
-    <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title></title>
+    <title>Yilin's Wiki</title>
     <meta name="keywords" content=""/>
     <meta name="description" content=""/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
   </head>
 
   <body>
     <div id="container">
       
-<div class="title"></div>
+<div class="title">Yilin's Wiki</div>
 
 <div class="index">    
     <div class="category">
-      <h2 id="intro">Intro
+      <h2 id="autonomous_driving">Autonomous_driving
       </h2>
       <div class="category_pages">
         <ul>  
           <li class="pagelist item_arrow">
-              <a href="./intro/gettingstarted.html">Getting Started</a>
+              <a href="./autonomous_driving/autonomous_driving_levels.html">Autonomous Driving Levels</a>
+          </li>
+        </ul>
+      </div> <!-- end category_pages -->
+    </div> <!-- end category -->
+    <div class="clearfix"></div>  
+    <div class="category">
+      <h2 id="deep_learning_tools">Deep_learning_tools
+      </h2>
+      <div class="category_pages">
+        <ul>  
+          <li class="pagelist item_arrow">
+              <a href="./deep_learning_tools/caffe_notes.html">Caffe_notes</a>
+          </li>
+        </ul>
+      </div> <!-- end category_pages -->
+    </div> <!-- end category -->
+    <div class="clearfix"></div>  
+    <div class="category">
+      <h2 id="tools">Tools
+      </h2>
+      <div class="category_pages">
+        <ul>  
+          <li class="pagelist item_arrow">
+              <a href="./tools/git_notes.html">Git notes</a>
+          </li>  
+          <li class="pagelist item_arrow">
+              <a href="./tools/hello_simiki.html">hello_simiki</a>
           </li>
         </ul>
       </div> <!-- end category_pages -->
@@ -34,9 +79,9 @@
     </div>
     <div id="footer">
       <span>
-        <p>Copyright © 2019 .
+        <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-07-05 01:21:36</p>
+        <p>Site Generated 2019-07-09 01:29:10</p>
       </span>
     </div>
 
