@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Git notes - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#tools">tools</a>&nbsp;&#187;&nbsp;Git notes
+    <span class="updated">Page Updated&nbsp;
+      2019-07-09 00:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Git notes</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#git"><a name="gitconfig"></a>Git 配置</a></li>
+<li><a href="#github-ssh-key">Github 配置 SSH Key</a><ul>
+<li><a href="#1-git-username-e-mail">1. 设置 git 的 username 和 e-mail</a></li>
+<li><a href="#2-ssh-key">2. 生成 ssh key</a></li>
+<li><a href="#3-github-ssh-key">3. Github 添加 ssh key</a></li>
+<li><a href="#4">4. 验证</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="git"><a name="gitconfig"></a>Git 配置</h2>
+<p>手动设置用户信息：</p>
+<div class="hlcode"><pre><span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="n">global</span> <span class="n">user</span><span class="p">.</span><span class="n">name</span> <span class="s">&quot;ABC&quot;</span>
+<span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="n">global</span> <span class="n">user</span><span class="p">.</span><span class="n">email</span> <span class="s">&quot;abc@abc.com&quot;</span>
+</pre></div>
+
+
+<p>使用配置文件，<code>vim ~/.gitconfig</code>：</p>
+<div class="hlcode"><pre><span class="k">[user]</span>
+    <span class="na">name</span> <span class="o">=</span> <span class="s">ABC</span>
+<span class="s">    email = abc@abc.com</span>
+
+<span class="k">[core]</span>
+    <span class="na">editor</span> <span class="o">=</span> <span class="s">vim</span>
+
+<span class="k">[alias]</span>
+    <span class="na">st</span> <span class="o">=</span> <span class="s">status</span>
+<span class="s">    br = branch</span>
+<span class="s">    df = diff</span>
+<span class="s">    l = log</span>
+<span class="s">    lg = log --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s [%C(cyan)%an%Creset] %Cgreen(%cr)%Creset&#39; --graph --decorate</span>
+<span class="s">    co = checkout</span>
+</pre></div>
+
+
+<hr />
+<h2 id="github-ssh-key">Github 配置 SSH Key</h2>
+<h3 id="1-git-username-e-mail">1. 设置 git 的 username 和 e-mail</h3>
+<p>参考 <a href="#gitconfig">Git 配置</a>。</p>
+<h3 id="2-ssh-key">2. 生成 ssh key</h3>
+<div class="hlcode"><pre><span class="cp"># 查看是否已存在 ssh key</span>
+<span class="n">ls</span> <span class="o">~/</span><span class="p">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="o">*</span>
+
+<span class="cp"># 若没有，生成一个新的 key</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span> <span class="o">-</span><span class="n">C</span> <span class="s">&quot;abc@abc.com&quot;</span>
+
+<span class="cp"># 查看生成的 ssh key</span>
+<span class="n">cat</span> <span class="o">~/</span><span class="p">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="p">.</span><span class="n">pub</span>
+</pre></div>
+
+
+<h3 id="3-github-ssh-key">3. Github 添加 ssh key</h3>
+<p>在 Github 用户设置里将 <code>~/.ssh/id_rsa.pub</code> 中的内容贴上去。</p>
+<h3 id="4">4. 验证</h3>
+<div class="hlcode"><pre><span class="n">ssh</span> <span class="o">-</span><span class="n">T</span> <span class="n">git</span><span class="err">@</span><span class="n">github</span><span class="p">.</span><span class="n">com</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-07-09 01:29:10</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
