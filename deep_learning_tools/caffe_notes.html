@@ -63,7 +63,30 @@
 <li><a href="#_3">激活函数</a></li>
 </ul>
 </li>
-<li><a href="#caffe_3">Caffe 中的数据结构</a></li>
+<li><a href="#caffe_3">Caffe 中的数据结构</a><ul>
+<li><a href="#blob">Blob</a></li>
+<li><a href="#layer">Layer</a></li>
+<li><a href="#net">Net</a></li>
+</ul>
+</li>
+<li><a href="#caffe-io">Caffe IO 模块</a><ul>
+<li><a href="#_4">数据读取层</a></li>
+<li><a href="#_5">数据转换器</a></li>
+</ul>
+</li>
+<li><a href="#caffe_4">Caffe 模型</a><ul>
+<li><a href="#caffe-model-zoo">Caffe Model Zoo</a></li>
+</ul>
+</li>
+<li><a href="#caffe_5">Caffe 前向传播计算</a></li>
+<li><a href="#caffe_6">Caffe 反向传播计算</a></li>
+<li><a href="#caffe_7">Caffe 最优化求解</a><ul>
+<li><a href="#caffe_8">Caffe 中的求解器</a></li>
+</ul>
+</li>
+<li><a href="#caffe_9">Caffe 工具</a></li>
+<li><a href="#caffe-gpu">Caffe GPU 加速</a></li>
+<li><a href="#caffe_10">Caffe 可视化</a></li>
 </ul>
 </div>
 <blockquote>
@@ -172,13 +195,156 @@
 </ul>
 <hr />
 <h2 id="caffe_3">Caffe 中的数据结构</h2>
-<p>（TODO: ...）</p>
+<ul>
+<li>Caffe 中一个 CNN 模型用 Net 表示，一个 Net 对应一个 prototxt 文件</li>
+<li>一个 Net 由多个 Layer 堆叠成</li>
+<li>Layer 由多个 Blob 组成</li>
+</ul>
+<h3 id="blob">Blob</h3>
+<p>一个 Blob 在内存中表示 4 维数组：(width, height, channels, num)</p>
+<p>width 和 height 表示图像宽高，channels 表示通道数，num 表示第几张图</p>
+<p>Blob 用于存储数据或权值、权值增量</p>
+<p>在进行网络计算时，每一层的输入、输出都需要 Blob 对象缓冲。</p>
+<p>Blob 对象有 <code>ToProto()</code>, <code>FromProto()</code> 方法，可以实现内存与磁盘数据的交互。（通过 BlobProto 类型读写）</p>
+<p>通过 Blob 来看使用 PB 的好处：（为什么不在 C++ 中直接定义结构体）</p>
+<p>－ 结构体的序列化／反序列化需要额外编程<br />
+－ 不同结构体难以做到标准统一</p>
+<p>Blob 是一个模版类，其中封装了 SyncedMemory 类对象（存放data、diff）</p>
+<h3 id="layer">Layer</h3>
+<p>Layer 是 Caffe 的基本计算单元，至少有一个输入 Blob 和一个输出 Blob</p>
+<p>输入是 bottom</p>
+<p>输出是 top</p>
+<p>一些 Layer 有 weight 和 bias</p>
+<p>Layer 有两个运算方向：前向传播和反向传播</p>
+<p>－ 前向传播会对输入 Blob 进行某种处理（有 weight 和 bias 的层会利用这些信息对输入进行处理），得到输出 Blob<br />
+－ 反向传播计算对输出 Blob 的 diff 进行某种处理，得到输入 Blob 的 diff（ weight 和 bias 的 diff 可能会被用到）</p>
+<p>下面四个函数会在各个 Layer 的派生类中经常看到：</p>
+<ul>
+<li>Forward_cpu()</li>
+<li>Backward_cpu()</li>
+<li>Forward_gpu()</li>
+<li>Backward_gpu()</li>
+</ul>
+<p>Layer 这个类是一个虚基类，大部分函数都没有实现</p>
+<h3 id="net">Net</h3>
+<p>Net 在 Caffe 中代表一个完整的 CNN 模型，它包含若干 Layer 实例。LeNet，AlexNet 等这些网络用 prototxt 描述，在 Caffe 中就是一个 Net 对象</p>
+<p>Net 中既有 Layer 对象，又有 Blob 对象。</p>
+<p>Blob 对象用于存放每个 Layer 输入／输出中间结果，Layer 对象则根据 Net 描述对指定的输入 Blob 进行某些计算处理；输入 Blob 和输出 Blob 可能为同一个</p>
+<p>注意：Blob 名字和 Layer 名字相同并不代表它们有直接关系</p>
+<p>有两种 blob，分别为数据 blob 和权值 blob；深度学习的目的就是不断从“数据”中获取知识，存储到“模型”中，应用于后来的“数据”。</p>
+<p>Net -&gt; Layer -&gt; Blob</p>
+<p>Blob 提供了数据容器的机制，Layer 通过不通的策略使用它们，实现多元化的计算处理过程，同时提供深度学习的各种基本算法（卷积，池化，损失函数计算等）；Net 则利用 Layer 的这些机制，组合为一个完整的深度学习模型。</p>
+<hr />
+<h2 id="caffe-io">Caffe IO 模块</h2>
+<p>之前的例子：将数据转换为 LMDB 格式，训练网络时由数据读取层（DataLayer）不断从 LMDB 读取数据，送入后续卷积、池化等层。</p>
+<h3 id="_4">数据读取层</h3>
+<p>除了从 LMDB 、LEVELDB 等读取外，也支持从原始图像直接读取（ImageDataLayer）</p>
+<ul>
+<li>batch_size: 一个批量数据包含的图片数目</li>
+<li>rand_skip: 随机跳过若干图片</li>
+</ul>
+<p>数据读取层代码： include/caffe/data_layers.hpp</p>
+<h3 id="_5">数据转换器</h3>
+<p>Data Transformer</p>
+<p>一些预处理方法：随机镜像、随机切块、去均值、灰度变换等。</p>
+<p>其他数据层：memory_data_layer, window_data_layer, hdf5_data_layer</p>
+<hr />
+<h2 id="caffe_4">Caffe 模型</h2>
+<p>一个完整的深度学习系统：数据 ＋ 模型</p>
+<p>一个深度学习模型通常有三部分：</p>
+<ul>
+<li>可学习参数（Learnable Parameter）:训练参数，神经网络权值，其数值由模型初始化参数、误差反向传播控制，一般不可人工干预</li>
+<li>结构参数（Archetecture Parameter）:卷积层、全连接层、下采样层数目，卷积核数目，卷积核大小等用来描述网络结构的参数，训练前事先设定好；注意，训练阶段和预测阶段网络结构参数很可能不同</li>
+<li>训练超参数（Hyper-Parameter）:用来控制网络训练收敛的参数，往往调参调的就是这个；预测网络不需要该参数</li>
+</ul>
+<p>可学习参数在内存中使用 Blob 对象保持，必要时以二进制保存在磁盘上（.caffemodel），便于 finetune 、共享、与性能评估（benchmark）</p>
+<p>结构参数通过 ProtoBuffer 文本格式描述，通过该描述文件构建 Net 对象、Layer 对象，形成 DAG（有向无环图），在 Layer 与 Layer 之间、Net 输入与输出之间均为持有数据和中间结果的 Blob 对象。</p>
+<p>训练超参数也是通过 prototxt 保存，训练时利用该描述文件构建 Solver，该对象按照一定规则在训练网络时自动调节这些超参数</p>
+<h3 id="caffe-model-zoo">Caffe Model Zoo</h3>
+<p>对于规模很大的模型，是否每次都需要从头训练？</p>
+<p>Caffe Model Zoo 提供了一个分享模型的平台</p>
+<hr />
+<h2 id="caffe_5">Caffe 前向传播计算</h2>
+<p>CNN 训练时一般包括了前向传播和反向传播两个阶段</p>
+<p>前向传播阶段，数据从数据读取层出发，经过若干处理层，达到最后一层（损失层或特征层）</p>
+<p>网络中的权值在 FP 过程中不发生变化，可以看作常量。</p>
+<p>网络路径是一个有向无环图</p>
+<p>Caffe 中 FP 通过 Net ＋ Layer 组合完成，中间结果和最终结果通过 Blob 承载。</p>
+<p>前向传播：从输入层到输出层，一层一层利用已有权值来更新 loss 和最终输出</p>
+<p>反向传播：从输出层到输入层，从输出层总误差开始一层一层更新权值</p>
+<p>前向传播在训练和预测中都要用到</p>
+<p>反向传播只在训练时用到</p>
+<p>Loss Layer 是 CNN 的终点，接受两个 Blob 作为输入，其中一个为 CNN 的预测值，另一个是真实标签。 损失层将这两个输入进行一系列运算，计算损失函数值 L(\theta), \theta 是模型的权值，训练的目标就是得到最优权值，使得 Loss 最小。</p>
+<p>损失函数是在前向传播计算中得到的，同时也是反向传播的起点</p>
+<p>Caffe 中实现了多种损失层，分别用于不同场合，其中 SoftmaxWithLossLayer 实现了 Softmax ＋ 交叉熵损失函数计算过程</p>
+<p>Caffe 训练时的的问题“为什么 Loss 总在 6.9 左右？”，因为 -ln(0.001) = 6.907755... （ImageNet-1000 分类问题初始状态为均匀分布，每个类别的分类概率为 0.001 ）。这说明没有收敛的迹象，需要调大学习率或者修改权值初始化方式</p>
+<p>一个 Blob 中有 data 和 diff 两部分数据，数据读取层提供了 data， 损失层提供了 diff</p>
+<hr />
+<h2 id="caffe_6">Caffe 反向传播计算</h2>
+<p>从 Loss 层向数据层方向传播 diff ，更新权值</p>
+<hr />
+<h2 id="caffe_7">Caffe 最优化求解</h2>
+<p>Caffe 求解器的职责：</p>
+<ul>
+<li>负责记录优化过程，创建用于学习的训练网络和用于评估学习效果的测试网络</li>
+<li>调用 Forward －》 调用 Backward －》 更新权值，反复迭代优化模型</li>
+<li>周期性评估测试网络</li>
+<li>在优化中为模型、求解器状态打快照</li>
+</ul>
+<p>Caffe 求解器每次迭代中做的事情：</p>
+<ul>
+<li>调用 Net 的前向传播函数来计算输出和损失函数</li>
+<li>调用 Net 的反向传播函数来计算梯度</li>
+<li>根据求解器方法，将梯度转换为权值增量</li>
+<li>根据学习率、历史权值、所用方法更新求解器状态</li>
+</ul>
+<h3 id="caffe_8">Caffe 中的求解器</h3>
+<ul>
+<li>SGD，随机梯度下降</li>
+<li>AdaDelta</li>
+<li>ADAGRAD，自适应梯度</li>
+<li>Adam</li>
+<li>Nesterov，加速梯度法</li>
+<li>RMSprop</li>
+</ul>
+<p>求解器方法的重点在于最小化损失函数的全局优化问题</p>
+<p>SGD算法，利用负梯度和权值更新历史的线性组合更新权值 W</p>
+<ul>
+<li>SGD 算法里的超参数：</li>
+<li>lr，学习率，负梯度的权重</li>
+<li>momentum，权值更新历史的权重</li>
+</ul>
+<hr />
+<h2 id="caffe_9">Caffe 工具</h2>
+<p>tools/ 下有一些利用 caffe 编写的程序，如训练、预测、预处理等</p>
+<hr />
+<h2 id="caffe-gpu">Caffe GPU 加速</h2>
+<p>略，CUDA ＋ cuDNN</p>
+<hr />
+<h2 id="caffe_10">Caffe 可视化</h2>
+<ul>
+<li>原始数据可视化</li>
+<li>网络可视化（利用 draw_net.py 来画）</li>
+<li>网络权值可视化：通常第一个卷积层是最容易解释的，良好训练的网络权值通常表现为美观、光滑的滤波器</li>
+<li>如果网络权值可视化中出现图案相关性高、缺乏结构性等情况，可能说明训练结果不好</li>
+</ul>
+<p>训练脚本时这么写：</p>
+<div class="hlcode"><pre><span class="n">xxx</span><span class="p">.</span><span class="n">sh</span> <span class="o">&gt;&amp;</span> <span class="n">xxx</span><span class="p">.</span><span class="n">log</span> <span class="o">&amp;</span>
+<span class="cp"># &gt;&amp; 表示 stdout 和 stderr 都重定向到 xxx.log</span>
+<span class="cp"># 最后的 &amp; 表示在后台运行</span>
+</pre></div>
+
+
+<p>可以用 tail -f xxx.log 观察 log 文件的更新</p>
+<p>可以使用如下命令提取 log 文件中的 loss 值：</p>
+<div class="hlcode"><pre><span class="n">cat</span> <span class="n">xxx</span><span class="p">.</span><span class="n">log</span> <span class="o">|</span> <span class="n">grep</span> <span class="s">&quot;Train net output&quot;</span> <span class="o">|</span> <span class="n">awk</span> <span class="err">&#39;</span><span class="p">{</span><span class="n">print</span> <span class="err">$</span><span class="mi">11</span><span class="p">}</span><span class="err">&#39;</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-07-12 01:31:07</p>
+        <p>Site Generated 2019-07-13 01:33:21</p>
       </span>
     </div>
 
