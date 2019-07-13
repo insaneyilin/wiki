@@ -28,6 +28,10 @@
     <script type="text/javascript" async
       src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
   </head>
 
   <body>
@@ -51,16 +55,24 @@
 <li><a href="https://tracholar.github.io/wiki/web/simiki.html">在github pages中使用simiki指南</a></li>
 <li><a href="https://yihui.name/cn/2017/04/mathjax-markdown/">MathJax 与 Markdown 的究极融合</a></li>
 <li><a href="https://weilai5432.github.io/2017/01/11/MathJax-%E5%9C%A8MarkDown%E4%B8%AD%E6%8F%92%E5%85%A5%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/">MathJax-在网页或MarkDown中插入数学公式</a></li>
+<li><a href="https://mermaidjs.github.io/usage.html">MermaidJS-Usage</a></li>
 </ul>
 <p>测试 MathJax：</p>
 <p>$$X_i + Y_i$$</p>
-<p>这 $X_i + Y_i$ 是一个行内公式。</p>
+<p>$X_i + Y_i$ 是一个行内公式。</p>
+<p>测试 Mermaid 流程图：</p>
+<div class="mermaid">
+graph LR
+  A --- B
+  B-->C[fa:fa-ban forbidden]
+  B-->D(fa:fa-spinner hahaha);
+</div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-07-13 04:24:58</p>
+        <p>Site Generated 2019-07-13 19:59:44</p>
       </span>
     </div>
 
