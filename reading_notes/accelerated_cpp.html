@@ -175,7 +175,7 @@
   <span class="k">virtual</span> <span class="kt">double</span> <span class="nf">grade</span><span class="p">();</span>
   <span class="c1">// ...</span>
 <span class="p">};</span>
-<span class="k">class</span> <span class="nc">Grad</span> <span class="p">{</span>
+<span class="k">class</span> <span class="nc">Grad</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Core</span> <span class="p">{</span>
  <span class="nl">public:</span>
   <span class="k">virtual</span> <span class="kt">double</span> <span class="n">grade</span><span class="p">()</span> <span class="n">override</span><span class="p">;</span>
   <span class="c1">// ...  </span>
@@ -213,8 +213,8 @@
     <span class="k">return</span> <span class="k">new</span> <span class="n">Core</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">};</span>
-<span class="k">class</span> <span class="nc">Grad</span> <span class="p">{</span>
- <span class="nl">private:</span>
+<span class="k">class</span> <span class="nc">Grad</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Core</span> <span class="p">{</span>
+ <span class="nl">protected:</span>
   <span class="n">Grad</span><span class="o">*</span> <span class="n">clone</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="n">Grad</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
   <span class="p">}</span>
@@ -333,7 +333,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-07-15 01:22:54</p>
+        <p>Site Generated 2019-07-16 00:17:26</p>
       </span>
     </div>
 
