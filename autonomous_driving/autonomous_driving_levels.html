@@ -48,6 +48,7 @@
 <div class="page_title">Autonomous Driving Levels</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#sae">SAE 自动驾驶分级</a><ul>
 <li><a href="#l0">L0 无自动化</a></li>
 <li><a href="#l1">L1 提醒驾驶</a></li>
 <li><a href="#l2">L2 干预驾驶</a></li>
@@ -55,7 +56,13 @@
 <li><a href="#l4">L4 辅助自动驾驶</a></li>
 <li><a href="#l5">L5 完全自动驾驶</a></li>
 </ul>
+</li>
+<li><a href="#_1">自动驾驶任务分类</a></li>
+<li><a href="#_2">感知</a></li>
+<li><a href="#_3">规划与决策</a></li>
+</ul>
 </div>
+<h2 id="sae">SAE 自动驾驶分级</h2>
 <h3 id="l0">L0 无自动化</h3>
 <ul>
 <li>顾名思义，由人类完全操作</li>
@@ -90,12 +97,83 @@
 <li>人类可以根据需要接管</li>
 <li>在所有道路和环境条件下均可进行自动驾驶</li>
 </ul>
+<hr />
+<h2 id="_1">自动驾驶任务分类</h2>
+<p>一般来说，Driving Task 可以分为三个部分：</p>
+<ul>
+<li>Perceiving the enviroment</li>
+<li>Planning how to reach from A to B</li>
+<li>Controlling the vehicle</li>
+</ul>
+<p>ODD, Operational Design Domain. 限定操作域。</p>
+<p>具体驾驶任务由哪些组成？</p>
+<ul>
+<li>lateral control — steering | 横向控制，如转向</li>
+<li>longitudinal control — braking | 纵向控制，如刹车</li>
+<li>Object and Event Detection and Response (OEDR) | 物体、事件的检测与响应</li>
+<li>planning</li>
+<li>long term (route)</li>
+<li>short term</li>
+<li>miscellaneous</li>
+</ul>
+<p>自动驾驶 5 级分类</p>
+<ul>
+<li>L0 - 无自动化</li>
+<li>L1 - 驾驶辅助，如 ACC, LKA</li>
+<li>L2 - 部分自动化，如部分情况下可以执行 Lateral Control / Longitudinal Control</li>
+<li>L3 - 有条件自动化，部分场景下具备 OEDR 能力</li>
+<li>L4 - 高度自动驾驶，具备应变（Fallback）能力</li>
+<li>L5 - 全自动驾驶，unlimited ODD</li>
+</ul>
+<h2 id="_2">感知</h2>
+<div class="hlcode"><pre><span class="n">input</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">Analyze</span> <span class="n">ego</span> <span class="n">motion</span> <span class="o">&amp;</span> <span class="n">env</span> <span class="p">(</span><span class="n">perceptin</span><span class="p">)]</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">Decide</span> <span class="n">on</span> <span class="n">and</span> <span class="n">plan</span> <span class="n">a</span> <span class="n">maneuver</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="n">drive</span>
+</pre></div>
+
+
+<p>Object and Event Detection and Response (OEDR)</p>
+<p>Goals for perception</p>
+<ul>
+<li>static objects. e.g. road and lane markings, curbs, traffic lights</li>
+<li>dynamic objects (on-road). e.g. vehicles, pedestrians</li>
+<li>ego localization. e.g. position, velocity, orientation</li>
+</ul>
+<p>Challenge to perception</p>
+<ul>
+<li>robust detection and segmentation</li>
+<li>sensor uncertainty</li>
+<li>occlusion, reflection</li>
+<li>illumination, lens flare</li>
+<li>weather, precipitation</li>
+</ul>
+<h2 id="_3">规划与决策</h2>
+<p>Planning 分类：</p>
+<ul>
+<li>Reactive</li>
+<li>Predictive</li>
+</ul>
+<p>Decision 分类：</p>
+<ul>
+<li>Long term. 从 NY 导航到 LA</li>
+<li>Short term. 现在能否换道到右车道？能否穿过路口？</li>
+<li>Immediate. 加速或刹车？</li>
+</ul>
+<p>Reactive Planning</p>
+<ul>
+<li>rule-based</li>
+<li>we have rules that take into account the current state of ego and other objects and give decisions</li>
+<li>e.g. If there is a pedestrian on the road, stop</li>
+</ul>
+<p>Predictive Planning</p>
+<ul>
+<li>Make predictions about other vehicles and how they are moving. Then use these predictions to inform our decisions.</li>
+<li>e.g. That car has been stopped for the last 10 seconds. It is going to be stopped for the next few seconds.</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-07-16 00:17:26</p>
+        <p>Site Generated 2019-07-17 02:29:07</p>
       </span>
     </div>
 
