@@ -64,6 +64,7 @@
 </ul>
 </li>
 <li><a href="#git-clone-depth1">git clone --depth=1 之后怎样获取其他分支？</a></li>
+<li><a href="#repo-repo">本地 repo 关联到远端 repo</a></li>
 </ul>
 </div>
 <h2 id="git"><a name="gitconfig"></a>Git 配置</h2>
@@ -166,12 +167,21 @@
 <span class="nx">git</span> <span class="nx">fetch</span> <span class="o">--</span><span class="nb">depth</span> <span class="mi">1</span> <span class="nx">origin</span> <span class="o">&lt;</span><span class="nx">remote_branch_name</span><span class="o">&gt;</span>
 <span class="nx">git</span> <span class="nx">checkout</span> <span class="o">&lt;</span><span class="nx">remote_branch_name</span><span class="o">&gt;</span>
 </pre></div>
+
+
+<hr />
+<h2 id="repo-repo">本地 repo 关联到远端 repo</h2>
+<div class="hlcode"><pre><span class="nx">git</span> <span class="nx">remote</span> <span class="nb">add</span> <span class="nx">origin</span> <span class="nx">git</span><span class="p">@</span><span class="nx">github.com</span><span class="p">:</span><span class="nx">your_name</span><span class="p">/</span><span class="nx">your_project.git</span>
+<span class="nx">git</span> <span class="nx">remote</span> <span class="nx">show</span> <span class="nx">origin</span>
+
+<span class="nx">git</span> <span class="nx">branch</span> <span class="o">--</span><span class="nb">set</span><span class="na">-upstream-to</span><span class="o">=</span><span class="nx">origin</span><span class="o">/&lt;</span><span class="nx">branch</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">local_branch</span><span class="o">&gt;</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-10-04 19:54:12</p>
+        <p>Site Generated 2019-10-07 02:20:24</p>
       </span>
     </div>
 
