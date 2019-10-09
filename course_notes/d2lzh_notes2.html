@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Dive Into Deep Learning notes(2) - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#course_notes">course_notes</a>&nbsp;&#187;&nbsp;Dive Into Deep Learning notes(2)
+    <span class="updated">Page Updated&nbsp;
+      2019-10-09 23:34
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Dive Into Deep Learning notes(2)</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ch5-2">ch5 卷积神经网络(2)</a><ul>
+<li><a href="#googlenet">GoogleNet 含并行连接的网络</a></li>
+<li><a href="#batch-normalization">Batch Normalization</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p><a href="http://zh.d2l.ai/index.html">动手学深度学习</a></p>
+<hr />
+<h1 id="ch5-2">ch5 卷积神经网络(2)</h1>
+<h2 id="googlenet">GoogleNet 含并行连接的网络</h2>
+<p>GoogleNet 中的基础结构，Inception 块：</p>
+<p><img alt="" src="/wiki/attach/images/d2lzh_notes/figure_5.8.png" /></p>
+<p>Inception块里有4条并行的线路。前3条线路使用窗口大小分别是1×1、3×3和5×5的卷积层来<strong>抽取不同空间尺寸下的信息</strong>，其中<strong>中间2个线路会对输入先做1×1卷积来减少输入通道数</strong>，以降低模型复杂度。第四条线路则使用3×3最大池化层，后接1×1卷积层来改变通道数。4条线路都<strong>使用了合适的填充来使输入与输出的高和宽一致</strong>。最后我们<strong>将每条线路的输出在通道维上连结</strong>，并输入接下来的层中去。</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">d2lzh</span> <span class="kn">as</span> <span class="nn">d2l</span>
+<span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">gluon</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">nd</span>
+<span class="kn">from</span> <span class="nn">mxnet.gluon</span> <span class="kn">import</span> <span class="n">nn</span>
+
+<span class="k">class</span> <span class="nc">Inception</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Block</span><span class="p">):</span>
+    <span class="c"># c1 - c4为每条线路里的层的输出通道数</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Inception</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c"># 线路1，单1 x 1卷积层</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p1_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="c"># 线路2，1 x 1卷积层后接3 x 3卷积层</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">c2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2_2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">c2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="c"># 线路3，1 x 1卷积层后接5 x 5卷积层</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p3_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">c3</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p3_2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">c3</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                              <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="c"># 线路4，3 x 3最大池化层后接1 x 1卷积层</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p4_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p4_2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">c4</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p2_2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p2_1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">p3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p3_2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p3_1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">p4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p4_2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p4_1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="c"># 在通道维上连结输出</span>
+        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">p4</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+<p>GoogLeNet跟VGG一样，在主体卷积部分中使用5个模块（block），每个模块之间使用步幅为2的3×3最大池化层来减小输出高宽。</p>
+<p>第一模块使用一个64通道的7×7卷积层。</p>
+<p>第二模块使用2个卷积层：首先是64通道的1×1卷积层，然后是将通道增大3倍的3×3卷积层。它对应Inception块中的第二条线路。</p>
+<p>第三模块串联2个完整的Inception块。第一个Inception块的输出通道数为 <code>64+128+32+32 = 256</code> ，其中4条线路的输出通道数比例为 <code>64:128:32:32 = 2:4:1:1</code>。其中第二、第三条线路先分别将输入通道数减小至<code>96/192 = 1/2</code> 和 <code>16/192=1/12</code> 后，再接上第二层卷积层。第二个Inception块输出通道数增至 <code>128+192+96+64 = 480</code> ，每条线路的输出通道数之比为 <code>128:192:96:64 = 4:6:3:2</code> 。其中第二、第三条线路先分别将输入通道数减小至 <code>128/256 = 1/2</code> 和 <code>32/256 = 1/8</code> 。</p>
+<p>第四模块更加复杂。它串联了5个Inception块，其输出通道数分别是 <code>192+208+48+64 = 512</code> 、<code>160+224+64+64 = 512</code> 、<code>128+256+64+64 = 512</code> 、<code>112+288+64+64 = 528</code> 和 <code>256+320+128+128 = 832</code> 。这些线路的通道数分配和第三模块中的类似，首先含3×3卷积层的第二条线路输出最多通道，其次是仅含1×1卷积层的第一条线路，之后是含5×5卷积层的第三条线路和含3×3最大池化层的第四条线路。其中第二、第三条线路都会先按比例减小通道数。这些比例在各个Inception块中都略有不同。</p>
+<p>第五模块有输出通道数为 <code>256+320+128+128 = 832</code> 和 <code>384+384+128+128 = 1024</code> 的两个Inception块。其中每条线路的通道数的分配思路和第三、第四模块中的一致，只是在具体数值上有所不同。需要注意的是，第五模块的后面紧跟输出层，该模块同NiN一样使用全局平均池化层来将每个通道的高和宽变成1。最后我们将输出变成二维数组后接上一个输出个数为标签类别数的全连接层。</p>
+<ul>
+<li>Inception块相当于<strong>一个有4条线路的子网络</strong>。它通过不同窗口形状的卷积层和最大池化层来<strong>并行抽取信息</strong>，并使用1×1卷积层减少通道数从而降低模型复杂度。</li>
+<li>GoogLeNet将多个设计精细的Inception块和其他层串联起来。其中<strong>Inception块的通道数分配之比是在ImageNet数据集上通过大量的实验得来的</strong>。</li>
+<li>GoogLeNet和它的后继者们一度是ImageNet上最高效的模型之一：在类似的测试精度下，它们的计算复杂度往往更低。</li>
+</ul>
+<h2 id="batch-normalization">Batch Normalization</h2>
+<p>本节我们介绍批量归一化（batch normalization）层，它能让较深的神经网络的训练变得更加容易。在 “实战Kaggle比赛：预测房价” 一节里，我们对输入数据做了标准化处理：处理后的任意一个特征在数据集中所有样本上的均值为0、标准差为1。<strong>标准化处理输入数据使各个特征的分布相近：这往往更容易训练出有效的模型</strong>。</p>
+<p>通常来说，数据标准化预处理对于浅层模型就足够有效了。随着模型训练的进行，当每层中参数更新时，靠近输出层的输出较难出现剧烈变化。但<strong>对深层神经网络来说，即使输入数据已做标准化，训练中模型参数的更新依然很容易造成靠近输出层输出的剧烈变化</strong>。这种<strong>计算数值的不稳定性</strong>通常令我们难以训练出有效的深度模型。</p>
+<p>批量归一化的提出正是为了应对深度模型训练的挑战。在模型训练时，批量归一化利用小批量上的均值和标准差，<strong>不断调整神经网络中间输出</strong>，从而<strong>使整个神经网络在各层的中间输出的数值更稳定</strong>。批量归一化和下一节将要介绍的残差网络为训练和设计深度模型提供了两类重要思路。</p>
+<p>对全连接层和卷积层做批量归一化的方法稍有不同。下面我们将分别介绍这两种情况下的批量归一化。<br />
+通常，我们将批量归一化层置于<strong>全连接层中的仿射变换和激活函数之间</strong>。利用小批量样本学习 <code>拉伸</code> 和 <code>偏移</code>参数。</p>
+<p>可学习的拉伸和偏移参数<strong>保留了不做批量归一化的可能</strong>，即：如果批量归一化无益，理论上，学出的模型可以不使用批量归一化。</p>
+<p>对卷积层来说，批量归一化发生在<strong>卷积计算之后、应用激活函数之前</strong>。如果卷积计算输出多个通道，我们需要对这些通道的输出分别做批量归一化，且每个通道都拥有独立的拉伸和偏移参数，并均为标量。设小批量中有 <code>m</code> 个样本。在单个通道上，假设卷积计算输出的高和宽分别为 <code>p</code> 和 <code>q</code> 。我们需要对该通道中 <code>m×p×q</code> 个元素同时做批量归一化。对这些元素做标准化计算时，我们使用相同的均值和方差，即该通道中 <code>m×p×q</code> 个元素的均值和方差。</p>
+<p>使用批量归一化训练时，我们可以<strong>将批量大小设得大一点，从而使批量内样本的均值和方差的计算都较为准确</strong>。将训练好的模型用于预测时，我们希望模型对于任意输入都有确定的输出。因此，单个样本的输出不应取决于批量归一化所需要的随机小批量中的均值和方差。一种常用的方法是<strong>通过移动平均估算整个训练数据集的样本均值和方差，并在预测时使用它们得到确定的输出</strong>。可见，<strong>和丢弃层一样，批量归一化层在训练模式和预测模式下的计算结果也是不一样的</strong>。</p>
+<p>BN 主要是让收敛变快，但对模型的预测准确率等影响不大。</p>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-10-10 00:45:54</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

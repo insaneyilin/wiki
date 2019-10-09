@@ -49,7 +49,7 @@
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ch1-to-ch4">ch1 to ch4</a></li>
-<li><a href="#ch5">ch5 卷积神经网络</a><ul>
+<li><a href="#ch5-1">ch5 卷积神经网络(1)</a><ul>
 <li><a href="#_1">卷积和相关</a></li>
 <li><a href="#_2">特征图和感受野</a></li>
 <li><a href="#padding-stride">padding 和 stride</a></li>
@@ -58,6 +58,8 @@
 <li><a href="#_4">池化层</a></li>
 <li><a href="#lenet">LeNet</a></li>
 <li><a href="#alexnet">AlexNet</a></li>
+<li><a href="#vgg-net">VGG Net</a></li>
+<li><a href="#network-in-network">Network In Network</a></li>
 </ul>
 </li>
 </ul>
@@ -74,7 +76,7 @@
 4.改完模型先看看 loss 曲线情况，如果不平滑（抖动大）说明模型不合适</p>
 <p>第四章讲了下 mxnet gluon 中深度学习计算相关的内容，如模型的定义/参数的存储、初始化等。</p>
 <hr />
-<h1 id="ch5">ch5 卷积神经网络</h1>
+<h1 id="ch5-1">ch5 卷积神经网络(1)</h1>
 <h2 id="_1">卷积和相关</h2>
 <p><img alt="二维互相关运算" src="/wiki/attach/images/d2lzh_notes/figure_5.1.png" /></p>
 <p>二维卷积和相关(correlation)，其实常见的是相关操作，按卷积的严格定义是把卷积核旋转 180 度后做相关操作。不过对于 CNN 中，这两种操作没区别：</p>
@@ -194,12 +196,149 @@
 <li>AlexNet跟LeNet结构类似，但使用了<strong>更多的卷积层</strong>和<strong>更大的参数空间</strong>来拟合大规模数据集ImageNet。它是浅层神经网络和深度神经网络的分界线。</li>
 <li>虽然看上去AlexNet的实现比LeNet的实现也就多了几行代码而已，但这个观念上的转变和真正优秀实验结果的产生令学术界付出了很多年。</li>
 </ul>
+<h2 id="vgg-net">VGG Net</h2>
+<p>VGG net，名字来源于论文作者所在的实验室Visual Geometry Group 。VGG提出了可以通过<strong>重复使用简单的基础块</strong>来构建深度模型的思路。</p>
+<p>VGG 块。VGG块的组成规律是：<strong>连续使用数个相同的填充为1、窗口形状为3×3的卷积层后接上一个步幅为2、窗口形状为2×2的最大池化层。卷积层保持输入的高和宽不变，而池化层则对其减半。</strong>我们使用vgg_block函数来实现这个基础的VGG块，它可以指定卷积层的数量num_convs和输出通道数num_channels。</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">d2lzh</span> <span class="kn">as</span> <span class="nn">d2l</span>
+<span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">gluon</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">nd</span>
+<span class="kn">from</span> <span class="nn">mxnet.gluon</span> <span class="kn">import</span> <span class="n">nn</span>
+
+<span class="k">def</span> <span class="nf">vgg_block</span><span class="p">(</span><span class="n">num_convs</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">):</span>
+    <span class="n">blk</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_convs</span><span class="p">):</span>
+        <span class="n">blk</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">num_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                          <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">))</span>
+    <span class="n">blk</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">blk</span>
+</pre></div>
+
+
+<p>与AlexNet和LeNet一样，VGG网络由卷积层模块后接全连接层模块构成。卷积层模块串联数个vgg_block，其超参数由变量conv_arch定义。该变量指定了每个VGG块里卷积层个数和输出通道数。全连接模块则跟AlexNet中的一样。</p>
+<p>现在我们构造一个VGG网络。它有5个卷积块，前2块使用单卷积层，而后3块使用双卷积层。第一块的输出通道是64，之后每次对输出通道数翻倍，直到变为512。因为这个网络使用了8个卷积层和3个全连接层，所以经常被称为<strong>VGG-11</strong>。</p>
+<div class="hlcode"><pre><span class="n">conv_arch</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">vgg</span><span class="p">(</span><span class="n">conv_arch</span><span class="p">):</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+    <span class="c"># 卷积层部分</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">num_convs</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conv_arch</span><span class="p">:</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vgg_block</span><span class="p">(</span><span class="n">num_convs</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">))</span>
+    <span class="c"># 全连接层部分</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">net</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">vgg</span><span class="p">(</span><span class="n">conv_arch</span><span class="p">)</span>
+</pre></div>
+
+
+<p>下面构造一个高和宽均为224的单通道数据样本来观察每一层的输出形状。</p>
+<div class="hlcode"><pre><span class="n">net</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">blk</span> <span class="ow">in</span> <span class="n">net</span><span class="p">:</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">blk</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">blk</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;output shape:</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c"># sequential1 output shape:        (1, 64, 112, 112)</span>
+<span class="c"># sequential2 output shape:        (1, 128, 56, 56)</span>
+<span class="c"># sequential3 output shape:        (1, 256, 28, 28)</span>
+<span class="c"># sequential4 output shape:        (1, 512, 14, 14)</span>
+<span class="c"># sequential5 output shape:        (1, 512, 7, 7)</span>
+<span class="c"># dense0 output shape:     (1, 4096)</span>
+<span class="c"># dropout0 output shape:   (1, 4096)</span>
+<span class="c"># dense1 output shape:     (1, 4096)</span>
+<span class="c"># dropout1 output shape:   (1, 4096)</span>
+<span class="c"># dense2 output shape:     (1, 10)</span>
+</pre></div>
+
+
+<p>可以看到，每次我们将输入的高和宽减半，直到最终高和宽变成7后传入全连接层。与此同时，输出通道数每次翻倍，直到变成512。因为每个卷积层的窗口大小一样，所以<strong>每层的模型参数尺寸和计算复杂度与输入高、输入宽、输入通道数和输出通道数的乘积成正比</strong>。VGG这种高和宽减半以及通道翻倍的设计使得多数卷积层都有相同的模型参数尺寸和计算复杂度。</p>
+<p>VGG Net 的特点：</p>
+<ol>
+<li>VGG全部使用3x3卷积核、2x2池化核，不断加深网络结构来提升性能。 </li>
+<li>网络变深，参数量没有增长很多，<strong>参数量主要在3个全连接层</strong>。 </li>
+<li>训练比较耗时的依然是<strong>卷积层</strong>，因<strong>计算量比较大</strong>。 </li>
+<li>VGG有5段卷积，每段有2~3个卷积层，每段尾部用池化来缩小图片尺寸。 </li>
+<li>每段内卷积核数一样，越靠后的段卷积核数越多：64–128–256–512–512。</li>
+</ol>
+<p>创新点：</p>
+<ul>
+<li>层数更深特征图更宽。由于<strong>卷积核专注于扩大通道数</strong>、<strong>池化专注于缩小宽和高</strong>，使得模型架构上更深更宽的同时，计算量的增加放缓；</li>
+<li>全连接转卷积（测试阶段）。网络测试阶段将训练阶段的三个全连接替换为三个卷积，测试重用训练时的参数，使得测试得到的全卷积网络因为没有全连接的限制，因而可以接收任意宽或高为的输入。</li>
+<li>VGG16相比AlexNet的一个改进是采用连续的几个3x3的卷积核代替AlexNet中的较大卷积核（11x11，5x5）。<strong>对于给定的感受野（与输出有关的输入图片的局部大小），采用堆积的小卷积核是优于采用大的卷积核，因为多层非线性层可以增加网络深度来保证学习更复杂的模式，而且代价还比较小（参数更少）</strong>。</li>
+</ul>
+<p>关于 FC 转 1x1 Conv: 全卷积网络可以接收任意大小的图片输入，得到一个score map，对其做一个average就可以得到最终结果(one-hot label)。</p>
+<h2 id="network-in-network">Network In Network</h2>
+<p>LeNet、AlexNet和VGG在设计上的共同之处是：先以由卷积层构成的模块充分抽取空间特征，再以由全连接层构成的模块来输出分类结果。其中，AlexNet和VGG对LeNet的改进主要在于如何对这两个模块加宽（增加通道数）和加深。</p>
+<p>NiN 提出了另外一个思路，即<strong>串联多个由卷积层和“全连接”层构成的小网络来构建一个深层网络</strong>。</p>
+<p>我们知道，卷积层的输入和输出通常是四维数组（样本，通道，高，宽），而全连接层的输入和输出则通常是二维数组（样本，特征）。<strong>如果想在全连接层后再接上卷积层，则需要将全连接层的输出变换为四维</strong>。回忆在“多输入通道和多输出通道”一节里介绍的<strong>1×1卷积层。它可以看成全连接层</strong>，其中空间维度（高和宽）上的每个元素相当于样本，通道相当于特征。因此，<strong>NiN使用1×1卷积层来替代全连接层</strong>，从而使空间信息能够自然传递到后面的层中去。图5.7对比了NiN同AlexNet和VGG等网络在结构上的主要区别。</p>
+<p><img alt="" src="/wiki/attach/images/d2lzh_notes/figure_5.7.png" /></p>
+<p>NiN块是NiN中的基础块。它由<strong>一个卷积层加两个充当全连接层的1×1卷积层串联而成</strong>。其中第一个卷积层的超参数可以自行设置，而第二和第三个卷积层的超参数一般是固定的。</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">d2lzh</span> <span class="kn">as</span> <span class="nn">d2l</span>
+<span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">gluon</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">nd</span>
+<span class="kn">from</span> <span class="nn">mxnet.gluon</span> <span class="kn">import</span> <span class="n">nn</span>
+
+<span class="k">def</span> <span class="nf">nin_block</span><span class="p">(</span><span class="n">num_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">):</span>
+    <span class="n">blk</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">blk</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">num_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span>
+                      <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">),</span>
+            <span class="c"># 两个 1x1 卷积层，超参数固定(padding为0，stride为1)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">num_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">num_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">&#39;relu&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">blk</span>
+</pre></div>
+
+
+<p>NiN是在AlexNet问世不久后提出的。它们的卷积层设定有类似之处。NiN使用卷积窗口形状分别为11×11、5×5和3×3的卷积层，相应的输出通道数也与AlexNet中的一致。每个NiN块后接一个步幅为2、窗口形状为3×3的最大池化层。</p>
+<p>除使用NiN块以外，NiN还有一个设计与AlexNet显著不同：NiN去掉了AlexNet最后的3个全连接层，取而代之地，NiN<strong>使用了输出通道数等于标签类别数的NiN块</strong>，然后使用<strong>全局平均池化层</strong>对每个通道中所有元素求平均并<strong>直接用于分类</strong>。这里的<strong>全局平均池化层即窗口形状等于输入空间维形状的平均池化层</strong>。NiN的这个设计的好处是可以<strong>显著减小模型参数尺寸</strong>，从而缓解过拟合。然而，该设计有时会造成获得有效模型的<strong>训练时间的增加</strong>。</p>
+<div class="hlcode"><pre><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nin_block</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">nin_block</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">nin_block</span><span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span>
+        <span class="c"># 标签类别数是10</span>
+        <span class="n">nin_block</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="c"># 全局平均池化层将窗口形状自动设置成输入的高和宽</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">GlobalAvgPool2D</span><span class="p">(),</span>
+        <span class="c"># 将四维的输出转成二维的输出，其形状为(批量大小, 10)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">())</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">net</span><span class="p">:</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;output shape:</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c"># sequential1 output shape:        (1, 96, 54, 54)</span>
+<span class="c"># pool0 output shape:              (1, 96, 26, 26)</span>
+<span class="c"># sequential2 output shape:        (1, 256, 26, 26)</span>
+<span class="c"># pool1 output shape:              (1, 256, 12, 12)</span>
+<span class="c"># sequential3 output shape:        (1, 384, 12, 12)</span>
+<span class="c"># pool2 output shape:              (1, 384, 5, 5)</span>
+<span class="c"># dropout0 output shape:           (1, 384, 5, 5)</span>
+<span class="c"># sequential4 output shape:        (1, 10, 5, 5)</span>
+<span class="c"># pool3 output shape:              (1, 10, 1, 1)</span>
+<span class="c"># flatten0 output shape:           (1, 10)</span>
+</pre></div>
+
+
+<ul>
+<li>NiN重复使用由卷积层和代替全连接层的1×1卷积层构成的NiN块来构建深层网络。</li>
+<li>NiN去除了容易造成过拟合的全连接输出层，而是将其替换成输出通道数等于标签类别数的NiN块和全局平均池化层。</li>
+</ul>
+<p>1×1卷积核可以起到一个跨通道聚合的作用，所以进一步可以起到降维（或者升维）的作用，起到减少参数的目的</p>
+<p>一个问题：为什么 NiN 要用两个 1x1 卷积，用一个怎么样？</p>
+<ul>
+<li>1 个 1x1 conv 也可以实现对前一层所有 feature map 的信息进行非线性整合（引入非线性），再增加一层，应该是为了增加非线性变换的能力，从直观上来看，单个 1x1 conv 层的性能应该没有两个 1x1 conv 层的能力强（非线性拟合能力），如果继续增加 1x1 conv 层数，效果可能会更好，但是相应的计算复杂度也会提高，这里用两个应该是找一个平衡。</li>
+<li>两层1x1的CNN层可以一是增加参数空间，二是多增加一层非线性转换。如果再多一层，达到效果应该会更甚。</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-10-09 00:03:28</p>
+        <p>Site Generated 2019-10-10 00:45:54</p>
       </span>
     </div>
 
