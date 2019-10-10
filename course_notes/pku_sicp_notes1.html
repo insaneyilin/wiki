@@ -370,8 +370,10 @@
 
 <span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">good_enough</span> <span class="n">guess</span> <span class="n">x</span><span class="p">)</span>
     <span class="p">(</span><span class="o">&lt;</span> <span class="p">(</span><span class="n">abs</span> <span class="p">(</span><span class="o">-</span> <span class="p">(</span><span class="o">*</span> <span class="n">guess</span> <span class="n">guess</span><span class="p">)</span> <span class="n">x</span><span class="p">))</span> <span class="mf">0.001</span><span class="p">))</span>
+
 <span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">improve</span> <span class="n">guess</span> <span class="n">x</span><span class="p">)</span>
     <span class="p">(</span><span class="n">average</span> <span class="n">guess</span> <span class="p">(</span><span class="o">/</span> <span class="n">x</span> <span class="n">guess</span><span class="p">)))</span>
+
 <span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">sqrt</span> <span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="n">sqrt_iter</span> <span class="mf">1.0</span> <span class="n">x</span><span class="p">))</span>
 </pre></div>
 
@@ -379,10 +381,10 @@
 <h2 id="scheme-c">Scheme 过程构造同 C 语言的对比</h2>
 <ul>
 <li>C 语言里计算过程的抽象机制是<strong>函数</strong>；</li>
-<li>c 语言里函数需要描述<strong>类型</strong>（参数、返回值）；</li>
-<li>c 语言的函数<strong>可以没有返回值</strong>；</li>
-<li>c 语言中表达式是有关计算的描述，<strong>运行中每个表达式都算出一个值</strong>；</li>
-<li>c 语言中语句是命令，要求做一个<strong>动作</strong>。动作没有“值”的概念；</li>
+<li>C 语言里函数需要描述<strong>类型</strong>（参数、返回值）；</li>
+<li>C 语言的函数<strong>可以没有返回值</strong>；</li>
+<li>C 语言中表达式是有关计算的描述，<strong>运行中每个表达式都算出一个值</strong>；</li>
+<li>C 语言中语句是命令，要求做一个<strong>动作</strong>。动作没有“值”的概念；</li>
 </ul>
 <p>scheme 基于表达式，其中的每种结构都是<strong>表达式</strong>：</p>
 <ul>
@@ -394,7 +396,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-10-10 01:23:11</p>
+        <p>Site Generated 2019-10-10 12:40:34</p>
       </span>
     </div>
 
