@@ -333,8 +333,8 @@
 <li>如果网络权值可视化中出现图案相关性高、缺乏结构性等情况，可能说明训练结果不好</li>
 </ul>
 <p>训练脚本时这么写：</p>
-<div class="hlcode"><pre><span class="n">xxx</span><span class="p">.</span><span class="n">sh</span> <span class="o">&gt;&amp;</span> <span class="n">xxx</span><span class="p">.</span><span class="n">log</span> <span class="o">&amp;</span>
-<span class="cp"># &gt;&amp; 表示 stdout 和 stderr 都重定向到 xxx.log</span>
+<div class="hlcode"><pre><span class="n">xxx</span><span class="p">.</span><span class="n">sh</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span> <span class="n">xxx</span><span class="p">.</span><span class="n">log</span> <span class="o">&amp;</span>
+<span class="cp"># 2&gt;&amp;1 表示 stdout 和 stderr 都重定向到 xxx.log</span>
 <span class="cp"># 最后的 &amp; 表示在后台运行</span>
 </pre></div>
 
@@ -348,7 +348,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-10-10 12:40:34</p>
+        <p>Site Generated 2019-11-02 01:04:52</p>
       </span>
     </div>
 

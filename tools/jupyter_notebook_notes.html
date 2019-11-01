@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>复盘 - Yilin's Wiki</title>
+    <title>Jupyter Notebook notes - Yilin's Wiki</title>
     <meta name="keywords" content=""/>
     <meta name="description" content=""/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -38,54 +38,45 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#soft_skills">soft_skills</a>&nbsp;&#187;&nbsp;复盘
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#tools">tools</a>&nbsp;&#187;&nbsp;Jupyter Notebook notes
     <span class="updated">Page Updated&nbsp;
-      2019-07-22 01:01
+      2019-10-31 00:01
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">复盘</div>
+<div class="page_title">Jupyter Notebook notes</div>
 
-  <p>复盘 != 问责</p>
-<h3 id="_1">复盘的价值</h3>
-<ul>
-<li>从经验中学习</li>
-<li>知识萃取与共享</li>
-<li>可持续发展、改善</li>
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">基本用法</a></li>
 </ul>
-<h3 id="_2">什么时候复盘</h3>
+</div>
+<h2 id="_1">基本用法</h2>
+<p>Jupyter Notebook（又称IPython Notebook）是一个交互式的笔记本，使用浏览器作为界面，向后台的IPython服务器发送请求，并显示结果。在浏览器的界面中使用单元(Cell)保存各种信息。Cell有多种类型，经常使用的有表示格式化文本的Markdown单元，和表示代码的Code单元。</p>
+<p>启动 jupyter server 的命令：</p>
+<div class="hlcode"><pre><span class="n">jupyter</span> <span class="n">notebook</span>
+</pre></div>
+
+
+<p>默认的网页地址为 <code>http://localhost:8888/</code>。</p>
+<p>在远程服务器上启动 jupyter notebook：</p>
+<div class="hlcode"><pre><span class="n">jupyter</span> <span class="n">notebook</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">browser</span> <span class="o">--</span><span class="n">port</span><span class="o">=</span><span class="mi">8889</span>
+</pre></div>
+
+
+<p>笔记本文件格式为 <code>.ipynb</code>，实质是 <code>json</code> 文件。</p>
+<p>常用的 notebook cell：</p>
 <ul>
-<li>小项目/项目阶段：及时复盘</li>
-<li>大项目：阶段性复盘</li>
-<li>任务完成后：全面复盘</li>
+<li>markdown cell</li>
+<li>code cell</li>
 </ul>
-<h3 id="_3">复盘核心指导原则</h3>
+<p>常用快捷键：</p>
 <ul>
-<li>简单可依赖</li>
-<li>愿意被挑战</li>
-<li>对事不对人</li>
-<li>创新求变</li>
-<li>把事情做到极致</li>
+<li><code>ctrl+enter</code> ：运行当前 code cell</li>
+<li><code>alt+enter</code>：运行当前 code cell，并在下面再插入一个 code cell</li>
+<li><code>h</code>：帮助提示</li>
+<li><code>f</code>：搜索</li>
 </ul>
-<h3 id="_4">复盘四步法</h3>
-<ul>
-<li>回顾目标：当初的目的或期望是什么</li>
-<li>评估结果：和原定目标相比有哪些亮点和不足</li>
-<li>分析原因：事情成功和失败的根本原因，包括主观和客观两方面</li>
-<li>总结规律：通过以上的分析找到事物更有效、更符合本质规律的做法，比如需要实施哪些新举措，需要继续哪些措施等。</li>
-</ul>
-<p>Goal（目标回顾）、Result（结果陈述）、Analysis（过程分析）、Insight（归类总结），称为“GRAI复盘法”。</p>
-<h3 id="5">做复盘的5个误区</h3>
-<ol>
-<li>自己骗自己，做不到狠下心剖析自己</li>
-<li>流于形式，走过场</li>
-<li>追究责任，变成批斗会</li>
-<li>强调客观，推卸责任</li>
-<li>太急于得出结论</li>
-</ol>
-<hr />
-<h3 id="todo">复盘案例(TODO)</h3>
     </div>
     <div id="footer">
       <span>
