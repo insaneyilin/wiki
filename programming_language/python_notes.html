@@ -57,31 +57,38 @@
 <li><a href="#identifier">标识符（Identifier）</a></li>
 <li><a href="#_5">标准键盘输入</a></li>
 <li><a href="#_6">分支结构</a></li>
-<li><a href="#_7">循环结构</a></li>
-<li><a href="#_8">函数</a><ul>
-<li><a href="#_9">函数的变量作用域</a></li>
+<li><a href="#_7">循环结构</a><ul>
+<li><a href="#_8">同时迭代元素下标和元素</a></li>
+</ul>
+</li>
+<li><a href="#_9">函数</a><ul>
+<li><a href="#_10">函数的变量作用域</a></li>
+<li><a href="#_11">函数的参数</a></li>
+<li><a href="#_12">递归函数</a></li>
 </ul>
 </li>
 <li><a href="#python_1">Python中的字符串</a><ul>
-<li><a href="#_10">基本的字符串操作：</a></li>
+<li><a href="#_13">基本的字符串操作：</a></li>
 <li><a href="#index">字符串索引（index）</a></li>
 <li><a href="#slicing">字符串切片（Slicing）</a></li>
-<li><a href="#_11">获取逆字符串：</a></li>
+<li><a href="#_14">获取逆字符串：</a></li>
 <li><a href="#immutable">字符串是不可变（Immutable）的</a></li>
-<li><a href="#_12">常用字符串方法</a></li>
+<li><a href="#_15">常用字符串方法</a></li>
 <li><a href="#formatting">字符串格式化（Formatting）</a></li>
 </ul>
 </li>
 <li><a href="#list">列表（List）</a><ul>
-<li><a href="#_13">列表作函数参数</a></li>
-<li><a href="#_14">内建排序函数</a></li>
-<li><a href="#_15">嵌套列表</a></li>
+<li><a href="#_16">列表作函数参数</a></li>
+<li><a href="#_17">内建排序函数</a></li>
+<li><a href="#_18">嵌套列表</a></li>
 <li><a href="#list-comprehension">列表解析或推导（List Comprehension）</a></li>
+<li><a href="#generator">生成器(generator)</a></li>
+<li><a href="#iterator">迭代器(Iterator)</a></li>
 </ul>
 </li>
 <li><a href="#lambda">lambda函数</a></li>
 <li><a href="#tuple">元组（Tuple）</a><ul>
-<li><a href="#_16">函数与元组</a></li>
+<li><a href="#_19">函数与元组</a></li>
 </ul>
 </li>
 <li><a href="#dictionary">字典（Dictionary）</a><ul>
@@ -91,19 +98,19 @@
 <li><a href="#set">集合（set）</a></li>
 <li><a href="#python_2">Python 面向对象</a></li>
 <li><a href="#python_3">Python 程序员编程习惯</a></li>
-<li><a href="#_17">一个完整的小例子</a></li>
-<li><a href="#_18">中文编码</a></li>
-<li><a href="#_19">获取帮助</a></li>
-<li><a href="#_20">语法</a></li>
-<li><a href="#_21">杂项</a><ul>
-<li><a href="#_22">全局变量</a></li>
+<li><a href="#_20">一个完整的小例子</a></li>
+<li><a href="#_21">中文编码</a></li>
+<li><a href="#_22">获取帮助</a></li>
+<li><a href="#_23">语法</a></li>
+<li><a href="#_24">杂项</a><ul>
+<li><a href="#_25">全局变量</a></li>
 </ul>
 </li>
-<li><a href="#_23">字符串和编码</a></li>
+<li><a href="#_26">字符串和编码</a></li>
 </ul>
 </div>
 <blockquote>
-<p>Python（英国发音：/ˈpaɪθən/ 美国发音：/ˈpaɪθɑːn/）是一种广泛使用的解释型、高级编程、通用型编程语言，由吉多·范罗苏姆创造，第一版发布于1991年。可以视之为一种改良（加入一些其他编程语言的优点，如面向对象）的LISP。[来源请求]Python的设计哲学强调代码的可读性和简洁的语法（尤其是使用空格缩进划分代码块，而非使用大括号或者关键词）。相比于C++或Java，Python让开发者能够用更少的代码表达想法。不管是小型还是大型程序，该语言都试图让程序的结构清晰明了。<br />
+<p>Python（英国发音：/ˈpaɪθən/ 美国发音：/ˈpaɪθɑːn/）是一种广泛使用的解释型、高级编程、通用型编程语言，由吉多·范罗苏姆创造，第一版发布于1991年。可以视之为一种改良（加入一些其他编程语言的优点，如面向对象）的LISP。Python的设计哲学强调代码的可读性和简洁的语法（尤其是使用空格缩进划分代码块，而非使用大括号或者关键词）。相比于C++或Java，Python让开发者能够用更少的代码表达想法。不管是小型还是大型程序，该语言都试图让程序的结构清晰明了。<br />
  -- <a href="https://zh.wikipedia.org/wiki/Python">Wikipedia--Python</a></p>
 </blockquote>
 <h3 id="python">Python中的五种基本对象类型：</h3>
@@ -222,8 +229,14 @@
 
 
 <p><code>break</code>与<code>continue</code>与C++中意义相同。</p>
+<h4 id="_8">同时迭代元素下标和元素</h4>
+<div class="hlcode"><pre><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">]):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">elem</span><span class="p">)</span>
+</pre></div>
+
+
 <hr />
-<h3 id="_8">函数</h3>
+<h3 id="_9">函数</h3>
 <div class="hlcode"><pre><span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    To calculate the sum from i1 to i2</span>
@@ -241,7 +254,7 @@
 </pre></div>
 
 
-<h4 id="_9">函数的变量作用域</h4>
+<h4 id="_10">函数的变量作用域</h4>
 <p>局部变量：</p>
 <ul>
 <li>只能在程序的特定部分使用的变量</li>
@@ -252,11 +265,101 @@
 <li>为整个程序所使用的变量</li>
 <li>所有函数均可以使用</li>
 </ul>
+<h4 id="_11">函数的参数</h4>
+<p>Python 函数可以使用默认参数、可变参数和关键字参数。</p>
+<p>默认参数：</p>
+<div class="hlcode"><pre><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+
+
+<p>一个坑，不要用 <code>L=[]</code> 作为默认参数：</p>
+<div class="hlcode"><pre><span class="k">def</span> <span class="nf">add_end</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;END&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">L</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">add_end</span><span class="p">()</span>
+<span class="p">[</span><span class="s">&#39;END&#39;</span><span class="p">,</span> <span class="s">&#39;END&#39;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">add_end</span><span class="p">()</span>
+<span class="p">[</span><span class="s">&#39;END&#39;</span><span class="p">,</span> <span class="s">&#39;END&#39;</span><span class="p">,</span> <span class="s">&#39;END&#39;</span><span class="p">]</span>
+<span class="c"># 默认参数L也是一个变量，它指向对象[]，每次调用该函数，如果改变了L的内容，则下次调用时，默认参数的内容就变了，不再是函数定义时的[]了</span>
+
+<span class="c"># 正确实现</span>
+<span class="k">def</span> <span class="nf">add_end</span><span class="p">(</span><span class="n">L</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">L</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;END&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">L</span>
+</pre></div>
+
+
+<p>结论：<strong>默认参数必须指向不变对象！</strong>。</p>
+<p>可变参数：</p>
+<div class="hlcode"><pre><span class="k">def</span> <span class="nf">calc</span><span class="p">(</span><span class="o">*</span><span class="n">numbers</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">n</span>
+    <span class="k">return</span> <span class="nb">sum</span>
+
+<span class="n">calc</span><span class="p">()</span>
+<span class="c"># 0</span>
+<span class="n">calc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c"># 6</span>
+
+<span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">calc</span><span class="p">(</span><span class="o">*</span><span class="n">nums</span><span class="p">)</span>  <span class="c"># * 的作用，在函数调用中，* 能够将元组或者列表解包成不同的参数</span>
+
+<span class="c"># 类似的，** 可以解包一个字典</span>
+</pre></div>
+
+
+<p>关键字参数：</p>
+<div class="hlcode"><pre><span class="c"># 关键字参数允许你传入0个或任意个含参数名的参数，这些关键字参数在函数内部自动组装为一个dict</span>
+<span class="k">def</span> <span class="nf">person</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;name:&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s">&#39;age:&#39;</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="s">&#39;other:&#39;</span><span class="p">,</span> <span class="n">kw</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">person</span><span class="p">(</span><span class="s">&#39;Bob&#39;</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="n">city</span><span class="o">=</span><span class="s">&#39;Beijing&#39;</span><span class="p">)</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">Bob</span> <span class="n">age</span><span class="p">:</span> <span class="mi">35</span> <span class="n">other</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;city&#39;</span><span class="p">:</span> <span class="s">&#39;Beijing&#39;</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">person</span><span class="p">(</span><span class="s">&#39;Adam&#39;</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="n">gender</span><span class="o">=</span><span class="s">&#39;M&#39;</span><span class="p">,</span> <span class="n">job</span><span class="o">=</span><span class="s">&#39;Engineer&#39;</span><span class="p">)</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">Adam</span> <span class="n">age</span><span class="p">:</span> <span class="mi">45</span> <span class="n">other</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;gender&#39;</span><span class="p">:</span> <span class="s">&#39;M&#39;</span><span class="p">,</span> <span class="s">&#39;job&#39;</span><span class="p">:</span> <span class="s">&#39;Engineer&#39;</span><span class="p">}</span>
+
+<span class="c"># 字典解包</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">extra</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;city&#39;</span><span class="p">:</span> <span class="s">&#39;Beijing&#39;</span><span class="p">,</span> <span class="s">&#39;job&#39;</span><span class="p">:</span> <span class="s">&#39;Engineer&#39;</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">person</span><span class="p">(</span><span class="s">&#39;Jack&#39;</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="o">**</span><span class="n">extra</span><span class="p">)</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">Jack</span> <span class="n">age</span><span class="p">:</span> <span class="mi">24</span> <span class="n">other</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;city&#39;</span><span class="p">:</span> <span class="s">&#39;Beijing&#39;</span><span class="p">,</span> <span class="s">&#39;job&#39;</span><span class="p">:</span> <span class="s">&#39;Engineer&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p><strong>对于任意函数，都可以通过类似func(*args, </strong>kw)的形式调用它，无论它的参数是如何定义的。**</p>
+<p>注意函数接口可读性。</p>
+<ul>
+<li><code>*args</code> 是可变参数， <code>args</code> 接收的是一个 <code>tuple</code> ；</li>
+<li><code>**kw</code> 是关键字参数， <code>kw</code> 接收的是一个 <code>dict</code> 。</li>
+</ul>
+<h4 id="_12">递归函数</h4>
+<div class="hlcode"><pre><span class="c"># 非尾递归</span>
+<span class="k">def</span> <span class="nf">fact</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c"># 尾递归</span>
+<span class="k">def</span> <span class="nf">fact</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">fact_iter</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">fact_iter</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">product</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">product</span>
+    <span class="k">return</span> <span class="n">fact_iter</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span> <span class="o">*</span> <span class="n">product</span><span class="p">)</span>
+</pre></div>
+
+
+<p>大多数编程语言没有针对尾递归做优化，Python解释器也没有做优化，所以，即使把上面的 <code>fact(n)</code> 函数改成尾递归方式，也会导致栈溢出。</p>
 <hr />
 <h3 id="python_1">Python中的字符串</h3>
 <p>成对的单引号或双引号括起来的内容。</p>
 <p>使用三个引号（单或双）括起来的字符串将保留全部格式信息（如换行等）。</p>
-<h4 id="_10">基本的字符串操作：</h4>
+<h4 id="_13">基本的字符串操作：</h4>
 <ul>
 <li><code>len</code>，字符串长度</li>
 </ul>
@@ -311,7 +414,7 @@
 <li>[start:finish:countBy]，默认countBy为1</li>
 </ul>
 <p><br></p>
-<h4 id="_11">获取逆字符串：</h4>
+<h4 id="_14">获取逆字符串：</h4>
 <div class="hlcode"><pre><span class="n">my_str</span> <span class="o">=</span> <span class="s">&#39;spam&#39;</span>
 <span class="n">reverse_str</span> <span class="o">=</span> <span class="n">my_str</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="k">print</span> <span class="n">reverse_str</span>
@@ -334,7 +437,7 @@
 
 
 <hr />
-<h4 id="_12">常用字符串方法</h4>
+<h4 id="_15">常用字符串方法</h4>
 <p><code>replace</code>，如<code>my_str.replace(old, new)</code></p>
 <p>注意：</p>
 <ul>
@@ -390,7 +493,7 @@
 <li>内容是可变的；而字符串是不可变的</li>
 </ul>
 <p><br></p>
-<h4 id="_13">列表作函数参数</h4>
+<h4 id="_16">列表作函数参数</h4>
 <p>交换两个变量的值？</p>
 <div class="hlcode"><pre><span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="n">tmp</span> <span class="o">=</span> <span class="n">a</span>
@@ -417,7 +520,7 @@
 </pre></div>
 
 
-<h4 id="_14">内建排序函数</h4>
+<h4 id="_17">内建排序函数</h4>
 <ul>
 <li><code>sorted()</code>函数</li>
 </ul>
@@ -438,7 +541,7 @@
 
 
 <hr />
-<h4 id="_15">嵌套列表</h4>
+<h4 id="_18">嵌套列表</h4>
 <div class="hlcode"><pre><span class="n">x</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
 <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>  <span class="c"># 第三行第二列</span>
 </pre></div>
@@ -460,6 +563,112 @@
 </pre></div>
 
 
+<h4 id="generator">生成器(generator)</h4>
+<p>通过 list comprehension 可以直接创建列表，但如果列表过长，会造成空间浪费。</p>
+<p>使用 generator 可以边循环边计算列表元素，节省空间。</p>
+<div class="hlcode"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">81</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">g</span>
+<span class="o">&lt;</span><span class="n">generator</span> <span class="nb">object</span> <span class="o">&lt;</span><span class="n">genexpr</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0x1022ef630</span><span class="o">&gt;</span>
+
+<span class="c"># 通过next()函数获得generator的下一个返回值：</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="c"># 0</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="c"># 1</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="c"># 14</span>
+
+<span class="c"># 也可以直接用 in 来循环</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+
+<p>另一种定义 generator 的方式是使用关键字 <code>yield</code>：</p>
+<div class="hlcode"><pre><span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="nb">max</span><span class="p">):</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="nb">max</span><span class="p">:</span>
+        <span class="k">yield</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span>
+<span class="c"># 打印斐波那契数列</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fib</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+
+<p>如果一个函数定义中包含 <code>yield</code> 关键字，那么这个函数就不再是一个普通函数，而是一个generator。</p>
+<p>使用 generator 打印杨辉三角：</p>
+<div class="hlcode"><pre><span class="k">def</span> <span class="nf">triangles</span><span class="p">():</span>
+    <span class="n">l_prev</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">l_cur</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">yield</span><span class="p">(</span><span class="n">l_cur</span><span class="p">)</span>
+        <span class="n">l_prev</span> <span class="o">=</span> <span class="n">l_cur</span>
+        <span class="n">l_cur</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">l_prev_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_prev</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">l_prev_size</span><span class="p">):</span>
+            <span class="n">l_cur</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l_prev</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">l_prev</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">l_cur</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">triangles</span><span class="p">():</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">break</span>
+
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="c"># [1]</span>
+<span class="c"># [1, 1]</span>
+<span class="c"># [1, 2, 1]</span>
+<span class="c"># [1, 3, 3, 1]</span>
+<span class="c"># [1, 4, 6, 4, 1]</span>
+<span class="c"># [1, 5, 10, 10, 5, 1]</span>
+<span class="c"># [1, 6, 15, 20, 15, 6, 1]</span>
+<span class="c"># [1, 7, 21, 35, 35, 21, 7, 1]</span>
+<span class="c"># [1, 8, 28, 56, 70, 56, 28, 8, 1]</span>
+<span class="c"># [1, 9, 36, 84, 126, 126, 84, 36, 9, 1]</span>
+</pre></div>
+
+
+<h4 id="iterator">迭代器(Iterator)</h4>
+<p>可以使用 <code>for</code> 循环的数据类型：</p>
+<ul>
+<li>集合数据类型，<code>list</code>, <code>dict</code>, <code>tuple</code>, <code>set</code>, <code>str</code> 等</li>
+<li><code>generator</code>，包括生成器和带 <code>yield</code> 的generator function</li>
+</ul>
+<p>这些可以直接作用于 <code>for</code> 循环的对象统称为可迭代对象：<code>Iterable</code></p>
+<div class="hlcode"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">([],</span> <span class="n">Iterable</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">({},</span> <span class="n">Iterable</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">((</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)),</span> <span class="n">Iterable</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
+<span class="bp">False</span>
+</pre></div>
+
+
+<p>可以被 <code>next()</code> 函数调用并不断返回下一个值的对象称为迭代器：<code>Iterator</code> 。</p>
+<p>生成器都是 <code>Iterator</code> 对象，但 <code>list</code> 、 <code>dict</code> 、 <code>str</code> 虽然是 <code>Iterable</code> ，却不是 <code>Iterator</code></p>
+<p>把 <code>list</code> 、 <code>dict</code> 、 <code>str</code> 等 <code>Iterable</code> 变成 <code>Iterator</code> 可以使用 <code>iter()</code> 函数：</p>
+<div class="hlcode"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">iter</span><span class="p">([]),</span> <span class="n">Iterator</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">),</span> <span class="n">Iterator</span><span class="p">)</span>
+<span class="bp">True</span>
+</pre></div>
+
+
+<p>Python的 <code>Iterator</code> 对象表示的是一个 <strong>数据流</strong> ， <code>Iterator</code> 对象可以被 <code>next()</code> 函数调用并不断返回下一个数据，直到没有数据时抛出 <code>StopIteration</code> 错误。可以把这个数据流看做是一个有序序列，但我们却不能提前知道序列的长度，只能不断通过 <code>next()</code> 函数实现按需计算下一个数据，所以 <code>Iterator</code> 的计算是 <strong>惰性</strong> 的，只有在需要返回下一个数据时它才会计算。</p>
+<p><code>Iterator</code> 甚至可以表示一个无限大的数据流，例如全体自然数。而使用 <code>list</code> 是永远不可能存储全体自然数的。</p>
 <hr />
 <h3 id="lambda">lambda函数</h3>
 <p>定义匿名函数：</p>
@@ -485,7 +694,7 @@
 
 
 <p><br></p>
-<h4 id="_16">函数与元组</h4>
+<h4 id="_19">函数与元组</h4>
 <ul>
 <li>函数只能有一个返回值，但是可以返回一个元组</li>
 </ul>
@@ -587,7 +796,7 @@
 <li>尽量使用Python提供的内建函数和模块里的函数，所以我们<strong>对Python的模块说明手册要很熟悉</strong>。</li>
 <li>程序的清晰比简洁重要，多写注释，表明自己下面要做什么。越清晰的程序越容易修改。否则十天半个月后您想给自己的程序加个新功能，结果根本看不懂原来的程序了，可怎么加？</li>
 </ol>
-<h3 id="_17">一个完整的小例子</h3>
+<h3 id="_20">一个完整的小例子</h3>
 <p>把一个两列的文件input.txt，分割成两个文件col1.txt, col2.txt，一个文件一列。 input.txt 内容:</p>
 <div class="hlcode"><pre><span class="n">a1</span> <span class="err">啊阿</span>
 <span class="n">ai1</span> <span class="err">挨埃哀</span>
@@ -635,7 +844,7 @@
 <li>optparse 模块</li>
 </ul>
 <p>熟悉这些，基本上编程没问题了。</p>
-<h3 id="_18">中文编码</h3>
+<h3 id="_21">中文编码</h3>
 <p>对于中文的各种编码，我们只要知道字符串的两个函数：encode() 和 decode()，他们可以把各种编码与标准的统一码进行转换。</p>
 <div class="hlcode"><pre>    <span class="c"># 把统一码转成 GBK 码</span>
     <span class="s">&quot;我们就是花朵&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;GBK&quot;</span><span class="p">)</span>
@@ -647,7 +856,7 @@
 
 <hr />
 <p>以下来自<a href="http://blog.jobbole.com/43922/">快速入门：十分钟学会Python</a></p>
-<h3 id="_19">获取帮助</h3>
+<h3 id="_22">获取帮助</h3>
 <p>你可以很容易的通过Python解释器获取帮助。如果你想知道一个对象(object)是如何工作的，那么你所需要做的就是调用<code>help(&lt;object&gt;)</code>。另外还有一些有用的方法，<code>dir()</code>会显示该对象的所有方法，还有<code>&lt;object&gt;.__doc__</code>会显示其文档：</p>
 <div class="hlcode"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">help</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">Help</span> <span class="n">on</span> <span class="nb">int</span> <span class="nb">object</span><span class="p">:</span>
@@ -663,12 +872,12 @@
 </pre></div>
 
 
-<h3 id="_20">语法</h3>
+<h3 id="_23">语法</h3>
 <p>Python中没有强制的语句终止字符，且代码块是通过缩进来指示的。缩进表示一个代码块的开始，逆缩进则表示一个代码块的结束。声明以冒号(:)字符结束，并且开启一个缩进级别。单行注释以井号字符(#)开头，多行注释则以多行字符串的形式出现。赋值（事实上是将对象绑定到名字）通过等号(“=”)实现，双等号(“==”)用于相等判断，”+=”和”-=”用于增加/减少运算(由符号右边的值确定增加/减少的值)。这适用于许多数据类型，包括字符串。你也可以在一行上使用多个变量。</p>
 <p>Python具有列表（list）、元组（tuple）和字典（dictionaries）三种基本的数据结构，而集合(sets)则包含在集合库中(但从Python2.5版本开始正式成为Python内建类型)。列表的特点跟一维数组类似（当然你也可以创建类似多维数组的“列表的列表”），字典则是具有关联关系的数组（通常也叫做哈希表），而元组则是不可变的一维数组（Python中“数组”可以包含任何类型的元素，这样你就可以使用混合元素，例如整数、字符串或是嵌套包含列表、字典或元组）。数组中第一个元素索引值(下标)为0，使用负数索引值能够从后向前访问数组元素，<strong>-1表示最后一个元素</strong>。数组元素还能指向函数。</p>
 <p>Python支持有限的多继承形式。私有变量和方法可以通过添加至少两个前导下划线和最多尾随一个下划线的形式进行声明（如“<code>__spam_</code>”，这只是惯例，而不是Python的强制要求）。当然，我们也可以给类的实例取任意名称。</p>
 <p>外部库可以使用 <code>import [libname]</code> 关键字来导入。同时，你还可以用 <code>from [libname] import [funcname]</code> 来导入所需要的函数。</p>
-<h3 id="_21">杂项</h3>
+<h3 id="_24">杂项</h3>
 <ul>
 <li>数值判断可以链接使用，例如 1 &lt; a &lt; 3 能够判断变量 a 是否在1和3之间。</li>
 <li>可以使用 del 删除变量或删除数组中的元素。</li>
@@ -697,7 +906,7 @@
 </pre></div>
 
 
-<h4 id="_22">全局变量</h4>
+<h4 id="_25">全局变量</h4>
 <ul>
 <li>全局变量在函数之外声明，并且可以不需要任何特殊的声明即能读取，但<strong>如果你想要修改全局变量的值，就必须在函数开始之处用global关键字进行声明，否则Python会将此变量按照新的局部变量处理</strong>（请注意，如果不注意很容易被坑）。例如：</li>
 </ul>
@@ -722,7 +931,7 @@
 </pre></div>
 
 
-<h3 id="_23">字符串和编码</h3>
+<h3 id="_26">字符串和编码</h3>
 <p>参考自 <a href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017075323632896">这里<br />
 </a>。</p>
 <p>字符串是一种数据类型，但是，字符串比较特殊的是还有一个编码问题。</p>
@@ -774,7 +983,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-09 03:53:20</p>
+        <p>Site Generated 2019-11-10 02:00:47</p>
       </span>
     </div>
 
