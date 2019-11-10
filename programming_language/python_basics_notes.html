@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>Python Notes - Yilin's Wiki</title>
+    <title>Python Basics Notes - Yilin's Wiki</title>
     <meta name="keywords" content=""/>
     <meta name="description" content=""/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -38,14 +38,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#programming_language">programming_language</a>&nbsp;&#187;&nbsp;Python Notes
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#programming_language">programming_language</a>&nbsp;&#187;&nbsp;Python Basics Notes
     <span class="updated">Page Updated&nbsp;
       2019-07-09 01:01
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">Python Notes</div>
+<div class="page_title">Python Basics Notes</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#python">Python中的五种基本对象类型：</a></li>
@@ -82,10 +82,10 @@
 <li><a href="#_17">内建排序函数</a></li>
 <li><a href="#_18">嵌套列表</a></li>
 <li><a href="#list-comprehension">列表解析或推导（List Comprehension）</a></li>
-<li><a href="#generator">生成器(generator)</a></li>
-<li><a href="#iterator">迭代器(Iterator)</a></li>
 </ul>
 </li>
+<li><a href="#generator">生成器(generator)</a></li>
+<li><a href="#iterator">迭代器(Iterator)</a></li>
 <li><a href="#lambda">lambda函数</a></li>
 <li><a href="#tuple">元组（Tuple）</a><ul>
 <li><a href="#_19">函数与元组</a></li>
@@ -563,7 +563,7 @@
 </pre></div>
 
 
-<h4 id="generator">生成器(generator)</h4>
+<h3 id="generator">生成器(generator)</h3>
 <p>通过 list comprehension 可以直接创建列表，但如果列表过长，会造成空间浪费。</p>
 <p>使用 generator 可以边循环边计算列表元素，节省空间。</p>
 <div class="hlcode"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
@@ -636,7 +636,7 @@
 </pre></div>
 
 
-<h4 id="iterator">迭代器(Iterator)</h4>
+<h3 id="iterator">迭代器(Iterator)</h3>
 <p>可以使用 <code>for</code> 循环的数据类型：</p>
 <ul>
 <li>集合数据类型，<code>list</code>, <code>dict</code>, <code>tuple</code>, <code>set</code>, <code>str</code> 等</li>
@@ -978,12 +978,22 @@
 
 
 <p>可见，1个中文字符经过UTF-8编码后通常会占用3个字节，而1个英文字符只占用1个字节。</p>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/programming_language/python_modules.html">Python 中的模块</a></li>
+    
+    <li><a href="/wiki/programming_language/python_fp_notes.html">Python 函数式编程</a></li>
+    
+    </ul>
+  </div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-10 02:00:47</p>
+        <p>Site Generated 2019-11-10 14:59:54</p>
       </span>
     </div>
 
