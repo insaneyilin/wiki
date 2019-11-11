@@ -51,6 +51,25 @@
 <li><a href="#_1">类和实例</a></li>
 <li><a href="#_2">继承和多态</a></li>
 <li><a href="#_3">获取对象信息</a></li>
+<li><a href="#property">使用 @property</a></li>
+<li><a href="#__slots__">使用 __slots__</a></li>
+<li><a href="#_4">多重继承</a><ul>
+<li><a href="#mixin">Mixin</a></li>
+</ul>
+</li>
+<li><a href="#customize">定制(customize)类</a><ul>
+<li><a href="#__str__">__str__</a></li>
+<li><a href="#__iter__">__iter__</a></li>
+<li><a href="#__getitem__">__getitem__</a></li>
+<li><a href="#__getattr__">__getattr__</a></li>
+<li><a href="#__call__">__call__</a></li>
+</ul>
+</li>
+<li><a href="#_5">枚举类</a></li>
+<li><a href="#metaclass">元类(metaclass)</a><ul>
+<li><a href="#metaclass_1">metaclass</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <p>OOP把对象作为程序的基本单元，一个对象封装了数据和操作数据的函数。</p>
@@ -166,6 +185,324 @@
 <span class="n">fn</span><span class="p">()</span> <span class="c"># 调用fn()与调用obj.power()是一样的</span>
 <span class="c"># 81</span>
 </pre></div>
+
+
+<h2 id="property">使用 @property</h2>
+<p>Python内置的 <code>@property</code> 装饰器负责把一个方法变成属性调用：</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="c"># 把一个getter方法变成属性，只需要加上@property</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score</span>
+
+    <span class="c"># @property本身又创建了另一个装饰器@score.setter，负责把一个setter方法变成属性赋值</span>
+    <span class="nd">@score.setter</span>
+    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;score must be an integer!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;score must between 0 ~ 100!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_score</span> <span class="o">=</span> <span class="n">value</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Student</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="mi">60</span> <span class="c"># OK，实际转化为s.set_score(60)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">score</span> <span class="c"># OK，实际转化为s.get_score()</span>
+<span class="c"># 60</span>
+<span class="n">s</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="mi">9999</span>
+<span class="c"># Traceback (most recent call last):</span>
+<span class="c">#   ...</span>
+<span class="c"># ValueError: score must between 0 ~ 100!</span>
+
+<span class="c"># 可以实现只读属性，只定义getter方法，不定义setter方法就是一个只读属性</span>
+</pre></div>
+
+
+<h2 id="__slots__">使用 <code>__slots__</code></h2>
+<p>Python 是动态语言，创建了一个class的实例后，我们可以给该实例绑定任何属性和方法：</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">stu</span> <span class="o">=</span> <span class="n">Student</span><span class="p">()</span>
+<span class="n">stu</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Bob&#39;</span>  <span class="c"># 动态给实例绑定一个属性</span>
+
+<span class="k">def</span> <span class="nf">set_age</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span> <span class="c"># 定义一个函数作为实例方法</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">MethodType</span>
+<span class="n">s</span><span class="o">.</span><span class="n">set_age</span> <span class="o">=</span> <span class="n">MethodType</span><span class="p">(</span><span class="n">set_age</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="c"># 给实例绑定一个方法</span>
+<span class="n">s</span><span class="o">.</span><span class="n">set_age</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span> <span class="c"># 调用实例方法</span>
+<span class="n">s</span><span class="o">.</span><span class="n">age</span> <span class="c"># 测试结果</span>
+<span class="c"># 25</span>
+
+<span class="c"># 为了给所有实例都绑定方法，可以给class绑定方法：</span>
+<span class="k">def</span> <span class="nf">set_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">score</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
+
+<span class="n">Student</span><span class="o">.</span><span class="n">set_score</span> <span class="o">=</span> <span class="n">set_score</span>
+</pre></div>
+
+
+<p>Python允许在定义class的时候，定义一个特殊的 <code>__slots__</code> 变量，来限制该class实例能添加的属性：</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;age&#39;</span><span class="p">)</span> <span class="c"># 用tuple定义允许绑定的属性名称</span>
+</pre></div>
+
+
+<p>使用 <code>__slots__</code> 要注意， <code>__slots__</code> 定义的属性仅对当前类实例起作用，对继承的子类是不起作用的。</p>
+<h2 id="_4">多重继承</h2>
+<p>Python 支持多重继承：</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Animal</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c"># 大类:</span>
+<span class="k">class</span> <span class="nc">Mammal</span><span class="p">(</span><span class="n">Animal</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Bird</span><span class="p">(</span><span class="n">Animal</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Runnable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Running...&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Flyable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fly</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Flying...&#39;</span><span class="p">)</span>
+
+<span class="c"># 各种动物:</span>
+<span class="k">class</span> <span class="nc">Dog</span><span class="p">(</span><span class="n">Mammal</span><span class="p">,</span> <span class="n">Runnable</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Bat</span><span class="p">(</span><span class="n">Mammal</span><span class="p">,</span> <span class="n">Flyable</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Parrot</span><span class="p">(</span><span class="n">Bird</span><span class="p">,</span> <span class="n">Flyable</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Ostrich</span><span class="p">(</span><span class="n">Bird</span><span class="p">,</span> <span class="n">Runnable</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+
+
+<p>多重继承的问题是越往后，层次的设计越困难，因此推荐用 <strong>组合</strong> 来完成扩展额外功能更友好。</p>
+<h3 id="mixin">Mixin</h3>
+<p>MixIn的目的就是给一个类增加多个功能，这样，在设计类的时候，我们优先考虑通过多重继承来组合多个MixIn的功能，而不是设计多层次的复杂的继承关系。</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Dog</span><span class="p">(</span><span class="n">Mammal</span><span class="p">,</span> <span class="n">RunnableMixIn</span><span class="p">,</span> <span class="n">CarnivorousMixIn</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+
+
+<p>Python自带的很多库也使用了MixIn。举个例子，Python自带了 <code>TCPServer</code> 和 <code>UDPServer</code> 这两类网络服务，而要同时服务多个用户就必须使用多进程或多线程模型，这两种模型由 <code>ForkingMixIn</code> 和 <code>ThreadingMixIn</code> 提供。通过组合，我们就可以创造出合适的服务来。</p>
+<h2 id="customize">定制(customize)类</h2>
+<p>看到类似 <code>__slots__</code> 这种形如 <code>__xxx__</code> 的变量或者函数名就要注意，这些在Python中是有特殊用途的。</p>
+<p><code>__slots__</code> 我们已经知道怎么用了， <code>__len__()</code> 方法我们也知道是为了能让class作用于 <code>len()</code> 函数。</p>
+<p>除此之外，Python的class中还有许多这样有特殊用途的函数，可以帮助我们定制类。</p>
+<h3 id="__str__"><code>__str__</code></h3>
+<p>帮助我们打印对象。</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;Student object (name=</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">__repr__</span> <span class="o">=</span> <span class="n">__str__</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">Student</span><span class="p">(</span><span class="s">&#39;Michael&#39;</span><span class="p">))</span>
+<span class="c"># Student object (name: Michael)</span>
+</pre></div>
+
+
+<h3 id="__iter__"><code>__iter__</code></h3>
+<p>如果一个类想被用于 <code>for ... in</code> 循环，类似list或tuple那样，就必须实现一个 <code>__iter__()</code> 方法，该方法返回一个迭代对象，然后，Python的for循环就会不断调用该迭代对象的 <code>__next__()</code> 方法拿到循环的下一个值，直到遇到StopIteration错误时退出循环。</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Fib</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="c"># 初始化两个计数器a，b</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="c"># 实例本身就是迭代对象，故返回自己</span>
+
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="c"># 计算下一个值</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">100000</span><span class="p">:</span> <span class="c"># 退出循环的条件</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="c"># 返回下一个值</span>
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">Fib</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+
+
+<h3 id="__getitem__"><code>__getitem__</code></h3>
+<p>要实现像list那样按照下标取出元素，需要实现 <code>__getitem__()</code> 方法：</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Fib</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="k">return</span> <span class="n">a</span>
+</pre></div>
+
+
+<p>但上面的写法不支持 <code>slice</code> 操作，需要再做判断：</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Fib</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span> <span class="c"># n是索引</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+            <span class="k">return</span> <span class="n">a</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span> <span class="c"># n是切片</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">start</span>
+            <span class="n">stop</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">stop</span>
+            <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+            <span class="n">L</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">stop</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">start</span><span class="p">:</span>
+                    <span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+            <span class="k">return</span> <span class="n">L</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">Fib</span><span class="p">()</span>
+<span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="c"># [1, 1, 2, 3, 5]</span>
+
+<span class="c"># 但是上面的实现没有对 slice 中的 step 做处理</span>
+<span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>  <span class="c"># 还是 [1, 1, 2, 3, 5]</span>
+</pre></div>
+
+
+<h3 id="__getattr__"><code>__getattr__</code></h3>
+<p>正常情况下，当我们调用类的方法或属性时，如果不存在，就会报错。</p>
+<p>使用 <code>__getattr__()</code> 方法，可以动态返回一个属性。</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Michael&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attr</span><span class="o">==</span><span class="s">&#39;score&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">99</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Student</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">name</span>
+<span class="c"># &#39;Michael&#39;</span>
+<span class="n">s</span><span class="o">.</span><span class="n">score</span>
+<span class="c"># 99</span>
+<span class="n">s</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c"># 1</span>
+</pre></div>
+
+
+<p>注意，只有在没有找到属性的情况下，才调用 <code>__getattr__</code> ，已有的属性，比如name，不会在 <code>__getattr__</code> 中查找。</p>
+<p>实际上可以把一个类的所有属性和方法调用全部动态化处理，好处是可以针对完全动态的情况作调用。</p>
+<p>动态调用的好处举例：</p>
+<p>现在很多网站都搞REST API，比如新浪微博、豆瓣啥的，调用API的URL类似：</p>
+<ul>
+<li>http://api.server/user/friends</li>
+<li>http://api.server/user/timeline/list</li>
+</ul>
+<p>如果要写SDK，给每个URL对应的API都写一个方法，那得累死，而且，API一旦改动，SDK也要改。</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Chain</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Chain</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span>
+
+    <span class="n">__repr__</span> <span class="o">=</span> <span class="n">__str__</span>
+
+<span class="n">Chain</span><span class="p">()</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">timeline</span><span class="o">.</span><span class="n">list</span>
+<span class="c"># &#39;/status/user/timeline/list&#39;</span>
+</pre></div>
+
+
+<p>这样，无论API怎么变，SDK都可以根据URL实现完全动态的调用，而且，不随API的增加而改变！</p>
+<h3 id="__call__"><code>__call__</code></h3>
+<p>类似于 C++ 中的 <code>operator()</code>：</p>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;My name is </span><span class="si">%s</span><span class="s">.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Student</span><span class="p">(</span><span class="s">&#39;Michael&#39;</span><span class="p">)</span>
+<span class="n">s</span><span class="p">()</span> <span class="c"># self参数不要传入</span>
+<span class="c"># My name is Michael.</span>
+</pre></div>
+
+
+<p><code>__call__()</code> 还可以定义参数。对实例进行直接调用就好比对一个函数进行调用一样，所以你完全可以把对象看成函数，把函数看成对象，因为这两者之间本来就没啥根本的区别。</p>
+<p>通过 <code>callable()</code> 函数，我们就可以判断一个对象是否是“可调用”对象。</p>
+<h2 id="_5">枚举类</h2>
+<div class="hlcode"><pre><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="n">Month</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s">&#39;Month&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;Jan&#39;</span><span class="p">,</span> <span class="s">&#39;Feb&#39;</span><span class="p">,</span> <span class="s">&#39;Mar&#39;</span><span class="p">,</span> <span class="s">&#39;Apr&#39;</span><span class="p">,</span> <span class="s">&#39;May&#39;</span><span class="p">,</span> <span class="s">&#39;Jun&#39;</span><span class="p">,</span> <span class="s">&#39;Jul&#39;</span><span class="p">,</span> <span class="s">&#39;Aug&#39;</span><span class="p">,</span> <span class="s">&#39;Sep&#39;</span><span class="p">,</span> <span class="s">&#39;Oct&#39;</span><span class="p">,</span> <span class="s">&#39;Nov&#39;</span><span class="p">,</span> <span class="s">&#39;Dec&#39;</span><span class="p">))</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">Month</span><span class="o">.</span><span class="n">Jan</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">Month</span><span class="o">.</span><span class="n">__members__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;=&gt;&#39;</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+<span class="c"># 自定义枚举值类型</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">unique</span>
+
+<span class="c"># 装饰器 unique 帮助我们检查没有重复</span>
+<span class="nd">@unique</span>
+<span class="k">class</span> <span class="nc">Weekday</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Sun</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># Sun的value被设定为0</span>
+    <span class="n">Mon</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Tue</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">Wed</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">Thu</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">Fri</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">Sat</span> <span class="o">=</span> <span class="mi">6</span>
+</pre></div>
+
+
+<h2 id="metaclass">元类(metaclass)</h2>
+<p><code>type()</code> 函数既可以返回一个对象的类型，又可以创建出新的类型，比如，我们可以通过 <code>type()</code> 函数创建一个 Hello 类而无需通过 <code>class Hello</code> 这样的定义：</p>
+<div class="hlcode"><pre><span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;world&#39;</span><span class="p">):</span> <span class="c"># 先定义函数</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Hello, </span><span class="si">%s</span><span class="s">.&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+<span class="n">Hello</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s">&#39;Hello&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">object</span><span class="p">,),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">hello</span><span class="o">=</span><span class="n">fn</span><span class="p">))</span> <span class="c"># 创建Hello class</span>
+
+<span class="n">h</span> <span class="o">=</span> <span class="n">Hello</span><span class="p">()</span>
+<span class="n">h</span><span class="o">.</span><span class="n">hello</span><span class="p">()</span>
+<span class="c"># Hello, world.</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Hello</span><span class="p">))</span>
+<span class="c"># &lt;class &#39;type&#39;&gt;</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+<span class="c"># &lt;class &#39;__main__.Hello&#39;&gt;</span>
+</pre></div>
+
+
+<h3 id="metaclass_1">metaclass</h3>
+<p>除了使用 <code>type()</code> 动态创建类以外，要控制类的创建行为，还可以使用 <code>metaclass</code> 。</p>
+<p>我们通过类创建实例，通过元类创建类。</p>
+<div class="hlcode"><pre><span class="c"># metaclass是类的模板，所以必须从`type`类型派生：</span>
+<span class="k">class</span> <span class="nc">ListMetaclass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="n">attrs</span><span class="p">[</span><span class="s">&#39;add&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+
+<span class="c"># 传入关键字参数metaclass</span>
+<span class="k">class</span> <span class="nc">MyList</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ListMetaclass</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+
+
+<p>当我们传入关键字参数 <code>metaclass</code> 时，魔术就生效了，它指示Python解释器在创建 <code>MyList</code> 时，要通过 <code>ListMetaclass.__new__()</code> 来创建，在此，我们可以修改类的定义，比如，加上新的方法，然后，返回修改后的定义。</p>
+<p>动态修改有什么意义？直接在 <code>MyList</code> 定义中写上 <code>add()</code> 方法不是更简单吗？正常情况下，确实应该直接写，通过 <code>metaclass</code> 修改纯属变态。</p>
+<p>但是，总会遇到需要通过metaclass修改类定义的。ORM就是一个典型的例子。</p>
+<p>ORM全称“Object Relational Mapping”，即对象-关系映射，就是把关系数据库的一行映射为一个对象，也就是一个类对应一个表，这样，写代码更简单，不用直接操作SQL语句。</p>
+<p>要编写一个ORM框架，所有的类都只能动态定义，因为只有使用者才能根据表的结构定义出对应的类来。</p>
   <div class="relation">
     <h2>Related</h2>
     <ul>
@@ -183,7 +520,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-12 00:30:04</p>
+        <p>Site Generated 2019-11-12 01:22:23</p>
       </span>
     </div>
 
