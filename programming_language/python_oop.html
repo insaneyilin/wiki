@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Python 面向对象编程 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#programming_language">programming_language</a>&nbsp;&#187;&nbsp;Python 面向对象编程
+    <span class="updated">Page Updated&nbsp;
+      2019-11-11 11:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Python 面向对象编程</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">类和实例</a></li>
+<li><a href="#_2">继承和多态</a></li>
+<li><a href="#_3">获取对象信息</a></li>
+</ul>
+</div>
+<p>OOP把对象作为程序的基本单元，一个对象封装了数据和操作数据的函数。</p>
+<p>面向对象的程序设计把计算机程序视为一组对象的集合，而每个对象都可以接收其他对象发过来的消息，并处理这些消息，计算机程序的执行就是一系列消息在各个对象之间传递。</p>
+<p>Python中，所有数据类型都可以视为对象，也可以自定义对象。自定义的对象数据类型就是面向对象中的类（Class）的概念。</p>
+<p>参考自 <a href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017495723838528">廖雪峰Python教程</a></p>
+<hr />
+<h2 id="_1">类和实例</h2>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c"># __init__ 是一个特殊方法，相当于 C++ 中的构造函数</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">score</span><span class="p">):</span>
+        <span class="c"># self 表示要创建的实例本身，类似于 C++ 中的 this 指针</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
+    <span class="c"># 注意类的方法的第一个参数永远是 self</span>
+    <span class="k">def</span> <span class="nf">print_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">print_score</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+
+<span class="c"># stu 是 Student 类(class)的一个实例(instance)</span>
+<span class="n">stu</span> <span class="o">=</span> <span class="n">Student</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+<span class="n">stu</span><span class="o">.</span><span class="n">print_name</span><span class="p">()</span>
+<span class="n">stu</span><span class="o">.</span><span class="n">print_score</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="c"># 关于 python 中的访问限制，如果用 __ 开头（而且不以 __ 结尾），则为私有变量，但实际上还是有办法访问</span>
+<span class="c"># 比如 Student 类有一个私有变量 __var，可以通过 _Student__var 访问到（依赖于 Python解释器）</span>
+<span class="c"># 需要自觉遵守约定不在外部访问私有变量</span>
+<span class="c"># __name__ 这种形式的变量是特殊变量，不是私有变量，外部可以访问到</span>
+<span class="c"># 直接在类作用域定义的变量是类变量，所有实例都能够访问到</span>
+<span class="c"># 类变量既可以通过类名来访问，也可以通过实例名来访问。推荐用类名来访问</span>
+<span class="c"># 要注意相同名称的实例变量将屏蔽掉类变量</span>
+<span class="k">class</span> <span class="nc">Student</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c"># 类变量</span>
+    <span class="n">class_var</span> <span class="o">=</span> <span class="s">&quot;class variable&quot;</span>
+    <span class="c"># __init__ 是一个特殊方法，相当于 C++ 中的构造函数</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">score</span><span class="p">):</span>
+        <span class="c"># self 表示要创建的实例本身，类似于 C++ 中的 this 指针</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__var</span> <span class="o">=</span> <span class="s">&#39;private variable&#39;</span>  <span class="c"># 私有变量</span>
+    <span class="c"># 注意类的方法的第一个参数永远是 self</span>
+    <span class="k">def</span> <span class="nf">print_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">print_score</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+<span class="n">stu</span> <span class="o">=</span> <span class="n">Student</span><span class="p">(</span><span class="s">&#39;Bob&#39;</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">stu</span><span class="o">.</span><span class="n">class_var</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">Student</span><span class="o">.</span><span class="n">class_var</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">stu</span><span class="o">.</span><span class="n">__var</span><span class="p">)</span>  <span class="c"># error</span>
+</pre></div>
+
+
+<h2 id="_2">继承和多态</h2>
+<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Animal</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Animal is running...&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Cat</span><span class="p">(</span><span class="n">Animal</span><span class="p">):</span>
+    <span class="c"># 子类方法 override</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Cat is running...&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Dog</span><span class="p">(</span><span class="n">Animal</span><span class="p">):</span>
+    <span class="c"># 子类方法 override</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Dog is running...&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">animal_run_twice</span><span class="p">(</span><span class="n">animal</span><span class="p">):</span>
+    <span class="n">animal</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">animal</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="c"># 注意由于 Python 没有类型检查，传入的 animal 可以不是 Animal 类的实例，只要有 run 方法就行了</span>
+<span class="c"># “鸭子类型”：一个对象只要“看起来像鸭子，走起路来像鸭子”，那它就可以被看做是鸭子。</span>
+</pre></div>
+
+
+<h2 id="_3">获取对象信息</h2>
+<div class="hlcode"><pre><span class="c"># 可以使用 type() 获取对象类型</span>
+<span class="nb">type</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="nb">type</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="c"># 使用isinstance() 判断继承关系</span>
+<span class="n">instance</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">Animal</span><span class="p">)</span>
+<span class="c"># 使用 dir() 获取一个对象的所有属性和方法，它返回一个包含字符串的list</span>
+<span class="c"># 配合 getattr()、setattr() 以及 hasattr()，我们可以直接操作一个对象的状态：</span>
+<span class="k">class</span> <span class="nc">MyObject</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="k">def</span> <span class="nf">power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">MyObject</span><span class="p">()</span>
+<span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;x&#39;</span><span class="p">)</span> <span class="c"># 有属性&#39;x&#39;吗？</span>
+<span class="c"># True</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">x</span>
+<span class="c"># 9</span>
+<span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">)</span> <span class="c"># 有属性&#39;y&#39;吗？</span>
+<span class="c"># False</span>
+<span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="mi">19</span><span class="p">)</span> <span class="c"># 设置一个属性&#39;y&#39;</span>
+<span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">)</span> <span class="c"># 有属性&#39;y&#39;吗？</span>
+<span class="c"># True</span>
+<span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">)</span> <span class="c"># 获取属性&#39;y&#39;</span>
+<span class="c"># 19</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">y</span> <span class="c"># 获取属性&#39;y&#39;</span>
+<span class="c"># 19</span>
+<span class="c"># 也可以获得对象的方法</span>
+<span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;power&#39;</span><span class="p">)</span> <span class="c"># 有属性&#39;power&#39;吗？</span>
+<span class="c"># True</span>
+<span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;power&#39;</span><span class="p">)</span> <span class="c"># 获取属性&#39;power&#39;</span>
+<span class="c"># &lt;bound method MyObject.power of &lt;__main__.MyObject object at 0x10077a6a0&gt;&gt;</span>
+<span class="n">fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s">&#39;power&#39;</span><span class="p">)</span> <span class="c"># 获取属性&#39;power&#39;并赋值到变量fn</span>
+<span class="n">fn</span> <span class="c"># fn指向obj.power</span>
+<span class="c"># &lt;bound method MyObject.power of &lt;__main__.MyObject object at 0x10077a6a0&gt;&gt;</span>
+<span class="n">fn</span><span class="p">()</span> <span class="c"># 调用fn()与调用obj.power()是一样的</span>
+<span class="c"># 81</span>
+</pre></div>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/programming_language/python_basics_notes.html">Python Basics Notes</a></li>
+    
+    <li><a href="/wiki/programming_language/python_modules.html">Python 中的模块</a></li>
+    
+    <li><a href="/wiki/programming_language/python_fp_notes.html">Python 函数式编程</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-11-12 00:30:04</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
