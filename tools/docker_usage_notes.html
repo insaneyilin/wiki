@@ -97,27 +97,27 @@
 <h2 id="docker_2">使用 Docker</h2>
 <h3 id="docker_3">运行 Docker 容器</h3>
 <p>可以直接运行 Docker 容器完成一些特定的任务：</p>
-<div class="hlcode"><pre>docker run ubuntu:15.10 /bin/echo <span class="s2">&quot;Hello world&quot;</span>
+<div class="hlcode"><pre><span></span>docker run ubuntu:15.10 /bin/echo <span class="s2">&quot;Hello world&quot;</span>
 Hello world
 
-<span class="c"># docker: Docker 的二进制执行文件。</span>
-<span class="c"># run: 与前面的 docker 组合来运行一个容器。</span>
-<span class="c"># ubuntu:15.10: 指定要运行的镜像，Docker 首先从本地主机上查找镜像是否存在，如果不存在，Docker 就会从镜像仓库 Docker Hub 下载公共镜像。</span>
-<span class="c"># /bin/echo &quot;Hello world&quot;: 在启动的容器里执行的命令</span>
+<span class="c1"># docker: Docker 的二进制执行文件。</span>
+<span class="c1"># run: 与前面的 docker 组合来运行一个容器。</span>
+<span class="c1"># ubuntu:15.10: 指定要运行的镜像，Docker 首先从本地主机上查找镜像是否存在，如果不存在，Docker 就会从镜像仓库 Docker Hub 下载公共镜像。</span>
+<span class="c1"># /bin/echo &quot;Hello world&quot;: 在启动的容器里执行的命令</span>
 </pre></div>
 
 
 <p>交互式运行：</p>
-<div class="hlcode"><pre>docker run -i -t ubuntu:15.10 /bin/bash
-<span class="c"># -t: 在新容器内指定一个伪终端或终端。</span>
-<span class="c"># -i: 允许你对容器内的标准输入 (STDIN) 进行交互。</span>
+<div class="hlcode"><pre><span></span>docker run -i -t ubuntu:15.10 /bin/bash
+<span class="c1"># -t: 在新容器内指定一个伪终端或终端。</span>
+<span class="c1"># -i: 允许你对容器内的标准输入 (STDIN) 进行交互。</span>
 </pre></div>
 
 
 <p>后台模式启动容器：</p>
-<div class="hlcode"><pre>docker run -d ubuntu:14.04 /bin/sh -c <span class="s2">&quot;while true; do echo hello world; sleep 1; done&quot;</span>
+<div class="hlcode"><pre><span></span>docker run -d ubuntu:14.04 /bin/sh -c <span class="s2">&quot;while true; do echo hello world; sleep 1; done&quot;</span>
 faae59a0c897a1392f0e38212c106f2fa2a23b4ec23f9d75893bdd2ca9339bca
-<span class="c"># `faae59a0c897a1392f0e38212c106f2fa2a23b4ec23f9d75893bdd2ca9339bca` 这个是 **容器 ID** 。</span>
+<span class="c1"># `faae59a0c897a1392f0e38212c106f2fa2a23b4ec23f9d75893bdd2ca9339bca` 这个是 **容器 ID** 。</span>
 </pre></div>
 
 
@@ -132,12 +132,12 @@ faae59a0c897a1392f0e38212c106f2fa2a23b4ec23f9d75893bdd2ca9339bca
 <li><code>docker rm &lt;NAME&gt;</code> 可以删除相应容器。</li>
 </ul>
 <p>推荐利用 <code>docker exec</code> 方式进入容器：</p>
-<div class="hlcode"><pre>sudo docker <span class="nb">exec</span> -it &lt;CONTAINER ID&gt; /bin/bash
+<div class="hlcode"><pre><span></span>sudo docker <span class="nb">exec</span> -it &lt;CONTAINER ID&gt; /bin/bash
 </pre></div>
 
 
 <p>查看 docker 客户端命令帮助：</p>
-<div class="hlcode"><pre>docker &lt;<span class="nb">command</span>&gt; --help
+<div class="hlcode"><pre><span></span>docker &lt;command&gt; --help
 </pre></div>
 
 
@@ -145,20 +145,20 @@ faae59a0c897a1392f0e38212c106f2fa2a23b4ec23f9d75893bdd2ca9339bca
 <p>当运行容器时，使用的镜像如果在本地中不存在，docker 就会自动从 docker 镜像仓库中下载，默认是从 Docker Hub 公共镜像源下载。</p>
 <p>可以使用 docker images 来列出本地主机上的镜像。</p>
 <p>同一仓库源可以有多个 TAG，代表这个仓库源的不同个版本，我们使用 <code>REPOSITORY:TAG</code> 来定义不同的镜像。</p>
-<div class="hlcode"><pre>docker run -t -i ubuntu:14.04 /bin/bash
+<div class="hlcode"><pre><span></span>docker run -t -i ubuntu:14.04 /bin/bash
 docker run -t -i ubuntu:15.10 /bin/bash
 </pre></div>
 
 
 <p>当我们在本地主机上使用一个不存在的镜像时 Docker 就会自动下载这个镜像。如果我们想预先下载这个镜像，我们可以使用 <code>docker pull</code> 命令来下载它。</p>
-<div class="hlcode"><pre>docker pull ubuntu:13.10
+<div class="hlcode"><pre><span></span>docker pull ubuntu:13.10
 </pre></div>
 
 
 <p>我们可以从 Docker Hub 网站来搜索镜像，Docker Hub 网址为： https://hub.docker.com/</p>
 <p>也可以用 <code>docker search</code> 命令来搜索镜像。搜索之后用 <code>docker pull</code> 拉取镜像</p>
 <p>加载一个本地镜像文件：</p>
-<div class="hlcode"><pre>docker load -i &lt;docker_image_file&gt;
+<div class="hlcode"><pre><span></span>docker load -i &lt;docker_image_file&gt;
 </pre></div>
 
 
@@ -170,49 +170,49 @@ docker run -t -i ubuntu:15.10 /bin/bash
 </ol>
 <h4 id="1">1. 更新已有镜像</h4>
 <p>更新镜像之前，我们需要使用镜像来创建一个容器。</p>
-<div class="hlcode"><pre>docker run -t -i ubuntu:15.10 /bin/bash
+<div class="hlcode"><pre><span></span>docker run -t -i ubuntu:15.10 /bin/bash
 </pre></div>
 
 
 <p>在运行的容器内使用 <code>apt-get update</code> 命令进行更新，然后退出这个容器。</p>
-<div class="hlcode"><pre>docker commit -m<span class="o">=</span><span class="s2">&quot;has update&quot;</span> -a<span class="o">=</span><span class="s2">&quot;runoob&quot;</span> &lt;container id&gt; runoob/ubuntu:v2
+<div class="hlcode"><pre><span></span>docker commit -m<span class="o">=</span><span class="s2">&quot;has update&quot;</span> -a<span class="o">=</span><span class="s2">&quot;runoob&quot;</span> &lt;container id&gt; runoob/ubuntu:v2
 
-<span class="c"># -m:提交的描述信息</span>
-<span class="c"># -a:指定镜像作者</span>
-<span class="c"># &lt;container id&gt;：容器ID</span>
-<span class="c"># runoob/ubuntu:v2:指定要创建的目标镜像名</span>
+<span class="c1"># -m:提交的描述信息</span>
+<span class="c1"># -a:指定镜像作者</span>
+<span class="c1"># &lt;container id&gt;：容器ID</span>
+<span class="c1"># runoob/ubuntu:v2:指定要创建的目标镜像名</span>
 </pre></div>
 
 
 <h4 id="2-dockerfile">2. 使用 Dockerfile</h4>
 <p>我们使用命令 <code>docker build</code> ， 从零开始来创建一个新的镜像。为此，我们需要创建一个 Dockerfile 文件，其中包含一组指令来告诉 Docker 如何构建我们的镜像。</p>
 <p>一个 Dockerfile 例子：</p>
-<div class="hlcode"><pre><span class="n">FROM</span>    <span class="n">centos</span><span class="o">:</span><span class="mf">6.7</span>  <span class="err">#</span> <span class="err">指定使用哪个镜像源</span>
-<span class="n">MAINTAINER</span>      <span class="n">Fisher</span> <span class="s">&quot;fisher@sudops.com&quot;</span>
-<span class="n">RUN</span>     <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">echo</span> <span class="err">&#39;</span><span class="n">root</span><span class="o">:</span><span class="mi">123456</span><span class="err">&#39;</span> <span class="o">|</span><span class="n">chpasswd</span>    <span class="err">#</span> <span class="err">在镜像内执行什么指令</span>
-<span class="n">RUN</span>     <span class="n">useradd</span> <span class="n">runoob</span>
-<span class="n">RUN</span>     <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">echo</span> <span class="err">&#39;</span><span class="n">runoob</span><span class="o">:</span><span class="mi">123456</span><span class="err">&#39;</span> <span class="o">|</span><span class="n">chpasswd</span>
-<span class="n">RUN</span>     <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">echo</span> <span class="o">-</span><span class="n">e</span> <span class="s">&quot;LANG=</span><span class="se">\&quot;</span><span class="s">en_US.UTF-8</span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">&gt;/</span><span class="n">etc</span><span class="o">/</span><span class="k">default</span><span class="o">/</span><span class="n">local</span>
-<span class="n">EXPOSE</span>  <span class="mi">22</span>    <span class="err">#</span> <span class="n">EXPOSE</span> <span class="err">表示暴露容器运行时的监听端口给外部</span>
-<span class="n">EXPOSE</span>  <span class="mi">80</span>
-<span class="n">CMD</span>     <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">sshd</span> <span class="o">-</span><span class="n">D</span>    <span class="err">#</span> <span class="n">CMD</span> <span class="err">为容器运行时默认会执行的命令，一个</span><span class="n">Dockerfile</span><span class="err">仅仅最后一个</span><span class="n">CMD</span><span class="err">起作用</span>
+<div class="hlcode"><pre><span></span><span class="k">FROM</span><span class="w">    </span><span class="nl">centos</span><span class="p">:</span><span class="mf">6.7</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="n">指定使用哪个镜像源</span><span class="w"></span>
+<span class="n">MAINTAINER</span><span class="w">      </span><span class="n">Fisher</span><span class="w"> </span><span class="ss">&quot;fisher@sudops.com&quot;</span><span class="w"></span>
+<span class="n">RUN</span><span class="w">     </span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">echo</span><span class="w"> </span><span class="s1">&#39;root:123456&#39;</span><span class="w"> </span><span class="o">|</span><span class="n">chpasswd</span><span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">在镜像内执行什么指令</span><span class="w"></span>
+<span class="n">RUN</span><span class="w">     </span><span class="n">useradd</span><span class="w"> </span><span class="n">runoob</span><span class="w"></span>
+<span class="n">RUN</span><span class="w">     </span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">echo</span><span class="w"> </span><span class="s1">&#39;runoob:123456&#39;</span><span class="w"> </span><span class="o">|</span><span class="n">chpasswd</span><span class="w"></span>
+<span class="n">RUN</span><span class="w">     </span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">echo</span><span class="w"> </span><span class="o">-</span><span class="n">e</span><span class="w"> </span><span class="ss">&quot;LANG=\&quot;</span><span class="n">en_US</span><span class="p">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span><span class="err">\</span><span class="ss">&quot;&quot;</span><span class="w"> </span><span class="o">&gt;/</span><span class="n">etc</span><span class="o">/</span><span class="k">default</span><span class="o">/</span><span class="k">local</span><span class="w"></span>
+<span class="n">EXPOSE</span><span class="w">  </span><span class="mi">22</span><span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">EXPOSE</span><span class="w"> </span><span class="n">表示暴露容器运行时的监听端口给外部</span><span class="w"></span>
+<span class="n">EXPOSE</span><span class="w">  </span><span class="mi">80</span><span class="w"></span>
+<span class="n">CMD</span><span class="w">     </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">sshd</span><span class="w"> </span><span class="o">-</span><span class="n">D</span><span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">CMD</span><span class="w"> </span><span class="n">为容器运行时默认会执行的命令</span><span class="err">，</span><span class="n">一个Dockerfile仅仅最后一个CMD起作用</span><span class="w"></span>
 </pre></div>
 
 
 <p>使用 <code>docker build</code> 来构建新镜像：</p>
-<div class="hlcode"><pre>docker build -t runoob/centos:6.7 .
+<div class="hlcode"><pre><span></span>docker build -t runoob/centos:6.7 .
 </pre></div>
 
 
 <p>使用 <code>docker tag</code> 来设置镜像标签:</p>
-<div class="hlcode"><pre>docker tag &lt;image id&gt; runoob/centos:dev
+<div class="hlcode"><pre><span></span>docker tag &lt;image id&gt; runoob/centos:dev
 </pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

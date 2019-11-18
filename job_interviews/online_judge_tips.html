@@ -50,21 +50,21 @@
   <p>记录一些小 tips 。</p>
 <h2 id="_1">输入输出</h2>
 <p>输入数据，以 <code>EOF</code> 结束：</p>
-<div class="hlcode"><pre><span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// ...</span>
 <span class="p">}</span>
 </pre></div>
 
 
 <p>输入数据，以 0 结束：</p>
-<div class="hlcode"><pre><span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// ...</span>
 <span class="p">}</span>
 </pre></div>
 
 
 <p>输入数据，有多个 cases ，先输入 cases 数目：</p>
-<div class="hlcode"><pre><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">num_cases</span><span class="p">);</span>
+<div class="hlcode"><pre><span></span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">num_cases</span><span class="p">);</span>
 <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_cases</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">//...</span>
 <span class="p">}</span>
@@ -72,7 +72,7 @@
 
 
 <p>整行输入：</p>
-<div class="hlcode"><pre><span class="c1">// C语言风格</span>
+<div class="hlcode"><pre><span></span><span class="c1">// C语言风格</span>
 <span class="kt">char</span> <span class="n">buff</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
 <span class="n">gets</span><span class="p">(</span><span class="n">buff</span><span class="p">);</span> <span class="c1">// 会接受空格、制表符(&#39;\t&#39;)以及回车键(&#39;\n&#39;)</span>
 
@@ -83,8 +83,8 @@
 
 
 <p>重定向输入输出：</p>
-<div class="hlcode"><pre><span class="cp">#define LOCAL</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
+<div class="hlcode"><pre><span></span><span class="cp">#define LOCAL</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
 <span class="cp">#define INF 1000000000</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
@@ -99,8 +99,8 @@
 </pre></div>
 
 
-<div class="hlcode"><pre><span class="c1">// C++ 风格从文件中进行输入输出</span>
-<span class="cp">#include &lt;fstream&gt;</span>
+<div class="hlcode"><pre><span></span><span class="c1">// C++ 风格从文件中进行输入输出</span>
+<span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
 
 <span class="cm">/* iftream 与 ofstream */</span>
 <span class="n">ifsream</span> <span class="nf">fin</span><span class="p">(</span><span class="s">&quot;data.in&quot;</span><span class="p">);</span>
@@ -111,7 +111,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

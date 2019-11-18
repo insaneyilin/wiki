@@ -96,13 +96,13 @@
 <li>upper_bound 返回非递减序列中第一个大于 val 的元素位置</li>
 </ul>
 <p>自己实现 upper_bound 和 lower_bound。首先分析 lower_bound，即在数组中找到第一个 k 出现的位置。二分查找总是先拿数组中间的数字和 k 作比较。如果中间的数字比 k 大，那么 k 只有可能出现在数组的前半段，下一轮只在前半段查找。如果中间的数字比 k 小，那么 k 只可能出现在数组的后半段。如果中间的数字等于 k ？此时要看中间数字的前一个数字，如果前一个不是 k ，则中间数字就是第一个 k，否则继续在前半段中查找。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">GetNumberOfK</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="n">get_end_k</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">-</span> <span class="n">get_start_k</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="c1">// 返回 [left, right] 中第一个 k 出现的位置</span>
     <span class="kt">int</span> <span class="n">get_start_k</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
         <span class="kt">int</span> <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
@@ -151,8 +151,8 @@
 <p>给定一个二叉树，找出其最大深度。二叉树的深度为根节点到最远叶子节点的距离。</p>
 </blockquote>
 <p>直接根据二叉树的递归定义来做：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/**</span>
 <span class="cm">    * @param root: The root of binary tree.</span>
 <span class="cm">    * @return: An integer</span>
@@ -162,7 +162,7 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">root</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
             <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 
-        <span class="k">return</span> <span class="n">max</span><span class="p">(</span><span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">),</span> <span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nf">max</span><span class="p">(</span><span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">),</span> <span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
@@ -173,8 +173,8 @@
 <p>平衡二叉树任意节点的左右子树深度相差不超过 1 。</p>
 </blockquote>
 <p>利用上面求二叉树深度的代码可以迅速写出如下的代码：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">bool</span> <span class="n">IsBalanced_Solution</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span> <span class="n">root</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">root</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
@@ -186,12 +186,12 @@
         <span class="k">return</span> <span class="nf">IsBalanced_Solution</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">IsBalanced_Solution</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">tree_depth</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*</span><span class="n">root</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">root</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
             <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 
-        <span class="k">return</span> <span class="n">max</span><span class="p">(</span><span class="n">tree_depth</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">),</span> <span class="n">tree_depth</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nf">max</span><span class="p">(</span><span class="n">tree_depth</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">),</span> <span class="n">tree_depth</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
@@ -199,14 +199,14 @@
 
 <p>缺点是需要重复遍历同一节点多次（求每个节点对应子树的深度时会重复遍历一些节点），效率不高。</p>
 <p>如何优化使得每个节点只被遍历一次？利用后序遍历。后序遍历二叉树，在遍历某个节点的左右子树之后，可以根据其左右子树的深度判断它是不是平衡的，同时得到当前节点的深度。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">bool</span> <span class="n">IsBalanced_Solution</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span> <span class="n">root</span><span class="p">)</span> <span class="p">{</span>
         <span class="kt">int</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="k">return</span> <span class="nf">is_balanced</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">depth</span><span class="p">);</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="kt">bool</span> <span class="n">is_balanced</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*</span><span class="n">root</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">depth</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">root</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
         <span class="p">{</span>
@@ -250,8 +250,8 @@
 <p>输入一个正数 S，打印出所有和为 S 的连续正数序列（至少含两个数）。</p>
 </blockquote>
 <p>沿着题目1的思路思考，可以使用两指针。用 small 和 big 分别表示连续序列的最小值和最大值。首先把 small 初始化为 1，big 初始化为 2。如果从 small 到 big 的序列和小于 S。我们可以增大 big。让这个序列包含更多的数字。因为这个序列至少要有两个数字，我们一直增加 small 到 (S + 1) / 2 为止。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">FindContinuousSequence</span><span class="p">(</span><span class="kt">int</span> <span class="n">sum</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">res</span><span class="p">;</span>
         <span class="kt">int</span> <span class="n">small</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">big</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
@@ -277,7 +277,7 @@
         <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="kr">inline</span> <span class="kt">int</span> <span class="n">sequence_sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">small</span><span class="p">,</span> <span class="kt">int</span> <span class="n">big</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">small</span> <span class="o">+</span> <span class="n">big</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">big</span> <span class="o">-</span> <span class="n">small</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
     <span class="p">}</span>
@@ -293,8 +293,8 @@
 
 
 <p>这段代码可以进行时间效率上的优化，注意 sequence_sum 求和会导致很多重复的数字被遍历。可以进行增量求和。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">FindContinuousSequence</span><span class="p">(</span><span class="kt">int</span> <span class="n">sum</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">res</span><span class="p">;</span>
         <span class="kt">int</span> <span class="n">small</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">big</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
@@ -320,7 +320,7 @@
         <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">gen_sequence</span><span class="p">(</span><span class="kt">int</span> <span class="n">small</span><span class="p">,</span> <span class="kt">int</span> <span class="n">big</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">res</span><span class="p">(</span><span class="n">big</span> <span class="o">-</span> <span class="n">small</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
         <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">res</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">res</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">small</span><span class="p">);</span>
@@ -336,8 +336,8 @@
 <p>输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。标点符号当成普通字符处理。如 "I am a student." 翻转后为 "student. a am I"。</p>
 </blockquote>
 <p>思路是先将整个句子作为一个字符串翻转，再翻转每个单词。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">string</span> <span class="n">ReverseSentence</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">str</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
         <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -362,8 +362,8 @@
 <li>如何处理两个单词间的多个空格？在反转字符串中间空格减少到只含一个</li>
 </ul>
 <p>则可以先以空格为 delimit 进行字符串分割，再反向连接（注意特殊情况的处理）：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/**</span>
 <span class="cm">    * @param s : A string</span>
 <span class="cm">    * @return : A string</span>
@@ -381,7 +381,7 @@
         <span class="p">});</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">split</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">,</span> <span class="kt">char</span> <span class="n">delim</span> <span class="o">=</span> <span class="sc">&#39; &#39;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">res</span><span class="p">;</span>
         <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
@@ -406,8 +406,8 @@
 <p>"abcdefg" 左旋转 2 位得到 "cdefgab"。</p>
 <p>从翻转单词顺序得到启发。"hello world" 翻转单词后得到 "world hello" ，很像是左移了一个单词 hello（不考虑空格）。</p>
 <p>先分别翻转两部分，再翻转整个字符串。"abcdefg" -&gt; "bagfedc" -&gt; "cdefgab"</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">string</span> <span class="n">LeftRotateString</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
         <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
@@ -438,7 +438,7 @@
 <p>点数和可能值为 [n, 6n]，定义一个长度为 6n - n + 1 的数组，和为 s 的点数出现的次数保存到数组的第 s - n 个元素中。</p>
 <p>解法2：基于循环求点数和</p>
 <p>考虑用两个数组来保存点数和的总数。在一次循环中，第一个数组中的第 n 个数字表示点数和为 n 出现的次数。在下一次循环中，我们加上一个新的骰子，此时和为 n 的骰子出现的次数应该等于上一次循环中点数和为 n-1, n-2, n-3, n-4, n-5, n-6 的次数的总和，所以我们把另一个数组的第 n 个数字设为前一个数组对应的第 n-1, n-2, n-3, n-4, n-5, n-6 之和。</p>
-<div class="hlcode"><pre><span class="kt">int</span> <span class="n">g_max_value</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+<div class="hlcode"><pre><span></span><span class="kt">int</span> <span class="n">g_max_value</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
 <span class="kt">void</span> <span class="nf">print_probility</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
@@ -491,8 +491,8 @@
 <li>统计数组中 0 的个数</li>
 <li>统计排序后数组中相邻数字之间的空缺总数，如果空缺的总数小于等于 0 的个数，则是顺子</li>
 </ol>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">bool</span> <span class="n">IsContinuous</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">numbers</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">numbers</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
             <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
@@ -530,8 +530,8 @@
 <p>0, 1, 2, ..., n-1 这 n 个数字排成一个圆圈，从数字 0 开始数，删除数到的第 m 个数字，然后从被删的数字的下一个数开始数，删除数到的第 m 个数字。。。求这个圆圈中剩下的最后一个数。</p>
 </blockquote>
 <p>解法1：环形链表模拟</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">LastRemaining_Solution</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">m</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
@@ -568,25 +568,25 @@
 
 <p>时间复杂度为 O(m * n)，空间复杂度 O(n)</p>
 <p>解法2：数学性质</p>
-<div class="hlcode"><pre><span class="err">记</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="err">为</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">...,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="err">这</span> <span class="n">n</span> <span class="err">个数，每次删除第</span> <span class="n">m</span> <span class="err">个数（然后从被删的数的下一个位置开始计数），这样删到最后剩下的那一个数。</span>
+<div class="hlcode"><pre><span></span><span class="err">记</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="err">为</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">...,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="err">这</span> <span class="n">n</span> <span class="err">个数，每次删除第</span> <span class="n">m</span> <span class="err">个数（然后从被删的数的下一个位置开始计数），这样删到最后剩下的那一个数。</span>
 
-<span class="err">第一个被删除的数字为</span> <span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="err">。此时圆圈中的数从</span> <span class="n">n</span> <span class="err">个变成了</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="err">个。为了简单起见，令</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="err">，则剩下的</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="err">个数为</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">...,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="err">。下一次删除从数字</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span> <span class="err">开始计数，相当于在剩下的序列中，</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span> <span class="err">排在最前面，形成</span> <span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="err">。这个序列最后剩下的数字也是关于</span> <span class="n">n</span> <span class="err">和</span> <span class="n">m</span> <span class="err">函数，但由于此时该序列已经不符合</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="err">的定义（从</span> <span class="mi">0</span> <span class="err">开始的连续序列），因此该函数不同于前面定义的函数，记为</span> <span class="n">f</span><span class="err">&#39;</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span><span class="err">。最初序列最后剩下的数字</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="err">一定是删除一个数字之后的序列最后剩下的数字，即</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="err">&#39;</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+<span class="err">第一个被删除的数字为</span> <span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="err">。此时圆圈中的数从</span> <span class="n">n</span> <span class="err">个变成了</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="err">个。为了简单起见，令</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="err">，则剩下的</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="err">个数为</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">...,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="err">。下一次删除从数字</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span> <span class="err">开始计数，相当于在剩下的序列中，</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span> <span class="err">排在最前面，形成</span> <span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="err">。这个序列最后剩下的数字也是关于</span> <span class="n">n</span> <span class="err">和</span> <span class="n">m</span> <span class="err">函数，但由于此时该序列已经不符合</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="err">的定义（从</span> <span class="mi">0</span> <span class="err">开始的连续序列），因此该函数不同于前面定义的函数，记为</span> <span class="n">f</span><span class="s1">&#39;(n-1, m)。最初序列最后剩下的数字 f(n, m) 一定是删除一个数字之后的序列最后剩下的数字，即 f(n, m) == f&#39;</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
 
 <span class="err">我们把剩下的</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="err">个数字</span> <span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="err">做一个映射：</span>
-<span class="n">k</span><span class="o">+</span><span class="mi">1</span> <span class="o">-------------------------&gt;</span> <span class="mi">0</span>
-<span class="n">k</span><span class="o">+</span><span class="mi">2</span> <span class="o">-------------------------&gt;</span> <span class="mi">1</span>
+<span class="n">k</span><span class="o">+</span><span class="mi">1</span> <span class="c1">-------------------------&gt; 0</span>
+<span class="n">k</span><span class="o">+</span><span class="mi">2</span> <span class="c1">-------------------------&gt; 1</span>
 <span class="p">...</span>
-<span class="n">n</span><span class="o">-</span><span class="mi">1</span>  <span class="o">-------------------------&gt;</span> <span class="n">n</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">2</span>
-<span class="mi">0</span>      <span class="o">-------------------------&gt;</span> <span class="n">n</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span>
-<span class="mi">1</span>      <span class="o">-------------------------&gt;</span> <span class="n">n</span><span class="o">-</span><span class="n">k</span>
+<span class="n">n</span><span class="o">-</span><span class="mi">1</span>  <span class="c1">-------------------------&gt; n-k-2</span>
+<span class="mi">0</span>      <span class="c1">-------------------------&gt; n-k-1</span>
+<span class="mi">1</span>      <span class="c1">-------------------------&gt; n-k</span>
 <span class="p">...</span>
-<span class="n">k</span><span class="o">-</span><span class="mi">1</span>   <span class="o">-------------------------&gt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">2</span>
+<span class="n">k</span><span class="o">-</span><span class="mi">1</span>   <span class="c1">-------------------------&gt; n-2</span>
 
-<span class="err">我们把该映射定义为</span> <span class="n">p</span><span class="p">()</span><span class="err">，则</span> <span class="n">p</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="err">，其逆映射为</span> <span class="n">p</span><span class="o">^</span><span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">}(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="err">。</span>
+<span class="err">我们把该映射定义为</span> <span class="n">p</span><span class="p">()</span><span class="err">，则</span> <span class="n">p</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="err">，其逆映射为</span> <span class="n">p</span><span class="o">^</span><span class="err">{</span><span class="o">-</span><span class="mi">1</span><span class="err">}</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="err">。</span>
 
 <span class="err">映射后的序列仍然满足从</span> <span class="mi">0</span> <span class="err">开始的连续序列，可以用</span> <span class="n">f</span> <span class="err">来表示，记为</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span><span class="err">。</span>
 
-<span class="n">f</span><span class="err">&#39;</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">^</span><span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">}</span> <span class="p">[</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">n</span><span class="err">，把</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span> <span class="err">代入，得到：</span>
+<span class="n">f</span><span class="err">&#39;</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">^</span><span class="err">{</span><span class="o">-</span><span class="mi">1</span><span class="err">}</span> <span class="p">[</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">n</span><span class="err">，把</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span> <span class="err">代入，得到：</span>
 
 <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="o">+</span> <span class="n">m</span><span class="p">]</span> <span class="o">%</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">1</span>
 
@@ -594,8 +594,8 @@
 </pre></div>
 
 
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">LastRemaining_Solution</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">m</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
@@ -624,12 +624,12 @@
 <p>不能用循环，循环只是让相同的代码重复执行 n 遍而已，我们可以先定义一个类型，接着创建 n 个该类型的实例，那么这个类型的构造函数将被调用 n 次。</p>
 <p>解法2：利用虚函数</p>
 <p>不能使用 if ，所以不能直接用递归（递归终止条件）。不妨定义两个函数，一个函数充当递归函数的角色，另一个函数处理终止递归的情况。现在还需要的就是在两个函数里二选一，自然要用到 bool 变量，比如 true 时调用第一个函数，false 调用第二个函数。如何把数值 n 转换为 bool 变量。两次取反，非0 的 n 两次取反后为 true，0 两次取反后为 false。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">A</span><span class="p">;</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">;</span>
 <span class="n">A</span><span class="o">*</span> <span class="n">func</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
 
 <span class="k">class</span> <span class="nc">A</span>
 <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">sum</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
@@ -638,7 +638,7 @@
 
 <span class="k">class</span> <span class="nc">B</span> <span class="o">:</span> <span class="k">public</span> <span class="n">A</span>
 <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">sum</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">[</span><span class="o">!!</span><span class="n">n</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">sum</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">n</span><span class="p">;</span>
@@ -659,7 +659,7 @@
 
 <p>解法3：利用函数指针</p>
 <p>本质上还是用两个函数，一个作为递归边界。</p>
-<div class="hlcode"><pre><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="nf">int</span><span class="p">(</span><span class="o">*</span><span class="n">fun</span><span class="p">)(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">);</span>
+<div class="hlcode"><pre><span></span><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="nf">int</span><span class="p">(</span><span class="o">*</span><span class="n">fun</span><span class="p">)(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">);</span>
 
 <span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">terminator</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>
 <span class="p">{</span>
@@ -675,17 +675,17 @@
 
 
 <p>解法4：利用模板</p>
-<div class="hlcode"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="o">&gt;</span>
-<span class="k">struct</span> <span class="kt">sum_solution_t</span>
+<div class="hlcode"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">sum_solution_t</span>
 <span class="p">{</span>
     <span class="k">enum</span>
     <span class="p">{</span>
-        <span class="n">N</span> <span class="o">=</span> <span class="kt">sum_solution_t</span><span class="o">&lt;</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">&gt;::</span><span class="n">N</span> <span class="o">+</span> <span class="n">n</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">sum_solution_t</span><span class="o">&lt;</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">&gt;::</span><span class="n">N</span> <span class="o">+</span> <span class="n">n</span>
     <span class="p">};</span>
 <span class="p">};</span>
 
 <span class="k">template</span> <span class="o">&lt;&gt;</span>
-<span class="k">struct</span> <span class="kt">sum_solution_t</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">sum_solution_t</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span>
 <span class="p">{</span>
     <span class="k">enum</span>
     <span class="p">{</span>
@@ -702,19 +702,19 @@
 <p>写一个函数，求两个整数之和，要求在函数体内不得使用 + - * / 运算符。</p>
 </blockquote>
 <p>如何分析这个问题？不能用四则运算，剩下的只有位运算了。怎么找规律？</p>
-<div class="hlcode"><pre><span class="err">先考虑我们是如何进行</span> <span class="mi">10</span> <span class="err">进制加法的。</span>
+<div class="hlcode"><pre><span></span><span class="err">先考虑我们是如何进行</span> <span class="mi">10</span> <span class="err">进制加法的。</span>
 <span class="err">以</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">17</span> <span class="o">=</span> <span class="mi">22</span> <span class="err">为例子。可以分三步进行：</span>
-<span class="mf">1.</span> <span class="err">只做各个位上的数字相加，不考虑进位</span> <span class="o">-&gt;</span> <span class="mi">5</span><span class="o">+</span><span class="mi">7</span> <span class="err">取个位为</span> <span class="mi">2</span><span class="err">，得</span> <span class="mi">12</span>
-<span class="mf">2.</span> <span class="err">做进位，</span><span class="mi">5</span><span class="o">+</span><span class="mi">7</span><span class="err">的进位为</span> <span class="mi">10</span>
-<span class="mf">3.</span> <span class="err">将前面的两个结果加起来，得</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">17</span> <span class="o">=</span> <span class="mi">22</span>
+<span class="mi">1</span><span class="p">.</span> <span class="err">只做各个位上的数字相加，不考虑进位</span> <span class="o">-&gt;</span> <span class="mi">5</span><span class="o">+</span><span class="mi">7</span> <span class="err">取个位为</span> <span class="mi">2</span><span class="err">，得</span> <span class="mi">12</span>
+<span class="mi">2</span><span class="p">.</span> <span class="err">做进位，</span><span class="mi">5</span><span class="o">+</span><span class="mi">7</span><span class="err">的进位为</span> <span class="mi">10</span>
+<span class="mi">3</span><span class="p">.</span> <span class="err">将前面的两个结果加起来，得</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">17</span> <span class="o">=</span> <span class="mi">22</span>
 
 <span class="err">现在从二进制来考虑。</span>
-<span class="mi">5</span> <span class="err">的二进制为</span> <span class="mo">00101</span>
+<span class="mi">5</span> <span class="err">的二进制为</span> <span class="mi">00101</span>
 <span class="mi">17</span> <span class="err">的二进制为</span> <span class="mi">10001</span>
 
-<span class="mf">1.</span> <span class="err">不考虑进位，</span><span class="mi">10100</span> 
-<span class="mf">2.</span> <span class="err">只看进位，</span><span class="mo">00010</span>
-<span class="mf">3.</span> <span class="err">将两个结果相加，</span><span class="mi">10110</span>
+<span class="mi">1</span><span class="p">.</span> <span class="err">不考虑进位，</span><span class="mi">10100</span> 
+<span class="mi">2</span><span class="p">.</span> <span class="err">只看进位，</span><span class="mi">00010</span>
+<span class="mi">3</span><span class="p">.</span> <span class="err">将两个结果相加，</span><span class="mi">10110</span>
 
 <span class="err">注意第一步不考虑进位做各个二进制位的相加，相当于异或运算。</span>
 <span class="err">第二步只看进位，可以用“与操作</span><span class="o">+</span><span class="err">左移一位”实现。</span>
@@ -725,16 +725,16 @@
 <span class="o">====================================</span>
 <span class="mi">7</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">9</span>
 
-<span class="mi">7</span> <span class="o">:</span> <span class="mo">0111</span>
-<span class="mi">2</span> <span class="o">:</span> <span class="mo">0010</span>
-<span class="mi">9</span> <span class="o">:</span> <span class="mi">1001</span>
+<span class="mi">7</span> <span class="p">:</span> <span class="mi">0111</span>
+<span class="mi">2</span> <span class="p">:</span> <span class="mi">0010</span>
+<span class="mi">9</span> <span class="p">:</span> <span class="mi">1001</span>
 
 <span class="err">不考虑进位的二进制“加”：</span>
 
-<span class="mo">0111</span>
-<span class="mo">0010</span>
-<span class="o">------</span>
-<span class="mo">0101</span>
+<span class="mi">0111</span>
+<span class="mi">0010</span>
+<span class="c1">------</span>
+<span class="mi">0101</span>
 
 <span class="err">相当于“异或”。</span>
 
@@ -744,20 +744,20 @@
 
 <span class="err">使用“与”操作：</span>
 
-<span class="mo">0111</span>
-<span class="mo">0010</span>
-<span class="o">------</span>
-<span class="mo">0010</span>
+<span class="mi">0111</span>
+<span class="mi">0010</span>
+<span class="c1">------</span>
+<span class="mi">0010</span>
 
-<span class="mo">0010</span> <span class="err">左移一位</span> <span class="mo">0100</span><span class="err">，和</span> <span class="mo">0101</span> <span class="err">异或得到</span> <span class="mo">0001</span><span class="err">（不考虑进位的“加法”），和</span><span class="mo">0101</span><span class="err">与得到</span> <span class="mo">0100</span><span class="err">；</span>
+<span class="mi">0010</span> <span class="err">左移一位</span> <span class="mi">0100</span><span class="err">，和</span> <span class="mi">0101</span> <span class="err">异或得到</span> <span class="mi">0001</span><span class="err">（不考虑进位的“加法”），和</span><span class="mi">0101</span><span class="err">与得到</span> <span class="mi">0100</span><span class="err">；</span>
 
-<span class="mo">0100</span> <span class="err">左移一位</span> <span class="mi">1000</span><span class="err">，和</span> <span class="mo">0001</span> <span class="err">异或得到</span> <span class="mi">1001</span><span class="err">，和</span> <span class="mo">0001</span> <span class="err">与得到</span> <span class="mo">0000</span><span class="err">（终止）。</span>
+<span class="mi">0100</span> <span class="err">左移一位</span> <span class="mi">1000</span><span class="err">，和</span> <span class="mi">0001</span> <span class="err">异或得到</span> <span class="mi">1001</span><span class="err">，和</span> <span class="mi">0001</span> <span class="err">与得到</span> <span class="mi">0000</span><span class="err">（终止）。</span>
 <span class="o">====================================</span>
 </pre></div>
 
 
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">Add</span><span class="p">(</span><span class="kt">int</span> <span class="n">num1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num2</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -784,9 +784,9 @@
 <p>标准解法：将构造函数设为私有函数</p>
 <p>C++ 中子类的构造函数会自动调用父类的构造函数，子类的析构函数也会自动调用父类的析构函数。将一个类的构造函数和析构函数都定义为私有，当一个类试图从它那继承（并有 public 的构造函数）的时候，会导致编译错误。</p>
 <p>问题是这个类的构造函数是私有的，如何创建实例？可以利用公有的静态类方法。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">A</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">A</span>
 <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="k">static</span> <span class="n">A</span><span class="o">*</span> <span class="n">create_instance</span><span class="p">()</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="k">new</span> <span class="n">A</span><span class="p">();</span>
@@ -798,14 +798,14 @@
         <span class="n">a</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="n">A</span><span class="p">()</span> <span class="p">{}</span>
     <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{}</span>
 <span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">B</span> <span class="o">:</span> <span class="k">public</span> <span class="n">A</span>
 <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">B</span><span class="p">()</span> <span class="p">{}</span>   <span class="c1">// 编译错误</span>
     <span class="o">~</span><span class="n">B</span><span class="p">()</span> <span class="p">{}</span>  <span class="c1">// 编译错误</span>
 <span class="p">};</span>
@@ -813,19 +813,19 @@
 
 
 <p>更优雅的解法：利用虚拟继承</p>
-<div class="hlcode"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<div class="hlcode"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
 <span class="k">class</span> <span class="nc">MakeSealed</span>
 <span class="p">{</span>
     <span class="k">friend</span> <span class="n">T</span><span class="p">;</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="n">MakeSealed</span><span class="p">()</span> <span class="p">{}</span>
     <span class="o">~</span><span class="n">MakeSealed</span><span class="p">()</span> <span class="p">{}</span>
 <span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">A</span> <span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">MakeSealed</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span>
 <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">A</span><span class="p">()</span> <span class="p">{}</span>
     <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{}</span>
 <span class="p">};</span>
@@ -835,7 +835,7 @@
 <span class="c1">// 但是 B 不是 MakeSealed&lt;A&gt; 的友元，所以编译不通过。</span>
 <span class="k">class</span> <span class="nc">B</span> <span class="o">:</span> <span class="k">public</span> <span class="n">A</span>
 <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">B</span><span class="p">()</span> <span class="p">{}</span>   <span class="c1">// B 不是 MakeSealed&lt;A&gt; 的友元类型</span>
     <span class="o">~</span><span class="n">B</span><span class="p">()</span> <span class="p">{}</span>
 <span class="p">};</span>
@@ -868,7 +868,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

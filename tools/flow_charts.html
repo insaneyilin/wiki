@@ -76,7 +76,7 @@
 <p>下面各种框的图形只是个人喜好，实际使用根据需要调整。</p>
 <h4 id="_3">起止框</h4>
 <p>标准流程的开始、结束。</p>
-<div class="hlcode"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;mermaid&quot;</span><span class="nt">&gt;</span>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;mermaid&quot;</span><span class="nt">&gt;</span>
 graph LR
   a(START)
 <span class="nt">&lt;/div&gt;</span>
@@ -90,10 +90,10 @@ graph LR
 
 <h4 id="_4">处理框</h4>
 <p>算法、程序要执行的处理操作。</p>
-<div class="hlcode"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;mermaid&quot;</span><span class="nt">&gt;</span>
-graph LR
-  a<span class="cp">[</span><span class="nb">PROCESS</span><span class="cp">]</span>
-<span class="nt">&lt;/div&gt;</span>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="n">div</span><span class="w"> </span><span class="k">class</span><span class="o">=</span><span class="ss">&quot;mermaid&quot;</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">graph</span><span class="w"> </span><span class="n">LR</span><span class="w"></span>
+<span class="w">  </span><span class="n">a</span><span class="o">[</span><span class="n">PROCESS</span><span class="o">]</span><span class="w"></span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span><span class="w"></span>
 </pre></div>
 
 
@@ -104,10 +104,10 @@ graph LR
 
 <h4 id="_5">判断框</h4>
 <p>判断条件是否成立。</p>
-<div class="hlcode"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;mermaid&quot;</span><span class="nt">&gt;</span>
-graph LR
-  a{if a &gt; b}
-<span class="nt">&lt;/div&gt;</span>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="nv">div</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;</span><span class="s">mermaid</span><span class="s2">&quot;</span><span class="o">&gt;</span>
+<span class="nv">graph</span> <span class="nv">LR</span>
+  <span class="nv">a</span>{<span class="k">if</span> <span class="nv">a</span> <span class="o">&gt;</span> <span class="nv">b</span>}
+<span class="o">&lt;/</span><span class="nv">div</span><span class="o">&gt;</span>
 </pre></div>
 
 
@@ -118,7 +118,7 @@ graph LR
 
 <h4 id="_6">输入输出框</h4>
 <p>表示数据的输入、输出。（一般用 平行四边形 ，Mermaid 里没找到）</p>
-<div class="hlcode"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;mermaid&quot;</span><span class="nt">&gt;</span>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;mermaid&quot;</span><span class="nt">&gt;</span>
 graph LR
   a&gt;INPUT]
 <span class="nt">&lt;/div&gt;</span>
@@ -144,7 +144,7 @@ graph LR
 <li>循环结构（如 while 语句）</li>
 </ul>
 <h4 id="if">if 语句</h4>
-<div class="hlcode"><pre><span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;mermaid&quot;</span><span class="o">&gt;</span>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="k">class</span><span class="o">=</span><span class="s">&quot;mermaid&quot;</span><span class="o">&gt;</span>
 <span class="n">graph</span> <span class="n">TB</span>
   <span class="n">id1</span><span class="p">{</span><span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">}</span><span class="o">--</span><span class="n">True</span><span class="o">--&gt;</span><span class="n">id2</span><span class="p">[</span><span class="n">Process</span> <span class="n">A</span><span class="p">]</span>
   <span class="n">id1</span><span class="o">--</span><span class="n">False</span><span class="o">--&gt;</span><span class="n">id3</span><span class="p">[</span><span class="n">Process</span> <span class="n">B</span><span class="p">]</span>
@@ -163,17 +163,17 @@ graph TB
 </div>
 
 <h4 id="while">while 循环语句</h4>
-<div class="hlcode"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;mermaid&quot;</span><span class="nt">&gt;</span>
-graph LR
-  id1(START)--&gt;id2&gt;INPUT DATA]
-  id2--&gt;id3<span class="cp">[</span><span class="nb">INIT</span><span class="cp">]</span>
-  id3--&gt;id4{while ...}
-  id4--True--&gt;id5<span class="cp">[</span><span class="nx">UPDATE</span><span class="cp">]</span>
-  id5--&gt;id4
-  id4--False--&gt;id6<span class="cp">[</span><span class="nx">POSTPROCESS</span><span class="cp">]</span>
-  id6--&gt;id7&gt;OUTPUT DATA]
-  id7--&gt;id8(END)
-<span class="nt">&lt;/div&gt;</span>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="nv">div</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;</span><span class="s">mermaid</span><span class="s2">&quot;</span><span class="o">&gt;</span>
+<span class="nv">graph</span> <span class="nv">LR</span>
+  <span class="nv">id1</span><span class="ss">(</span><span class="nv">START</span><span class="ss">)</span><span class="o">--&gt;</span><span class="nv">id2</span><span class="o">&gt;</span><span class="nv">INPUT</span> <span class="nv">DATA</span>]
+  <span class="nv">id2</span><span class="o">--&gt;</span><span class="nv">id3</span>[<span class="nv">INIT</span>]
+  <span class="nv">id3</span><span class="o">--&gt;</span><span class="nv">id4</span>{<span class="k">while</span> ...}
+  <span class="nv">id4</span><span class="o">--</span><span class="nv">True</span><span class="o">--&gt;</span><span class="nv">id5</span>[<span class="nv">UPDATE</span>]
+  <span class="nv">id5</span><span class="o">--&gt;</span><span class="nv">id4</span>
+  <span class="nv">id4</span><span class="o">--</span><span class="nv">False</span><span class="o">--&gt;</span><span class="nv">id6</span>[<span class="nv">POSTPROCESS</span>]
+  <span class="nv">id6</span><span class="o">--&gt;</span><span class="nv">id7</span><span class="o">&gt;</span><span class="nv">OUTPUT</span> <span class="nv">DATA</span>]
+  <span class="nv">id7</span><span class="o">--&gt;</span><span class="nv">id8</span><span class="ss">(</span><span class="k">END</span><span class="ss">)</span>
+<span class="o">&lt;/</span><span class="nv">div</span><span class="o">&gt;</span>
 </pre></div>
 
 
@@ -193,7 +193,7 @@ graph LR
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

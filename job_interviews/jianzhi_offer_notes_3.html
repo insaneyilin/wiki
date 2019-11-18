@@ -86,24 +86,24 @@
 <blockquote>
 <p>操作给定的二叉树，将其变换为源二叉树的镜像。</p>
 <p>二叉树的镜像定义：</p>
-<div class="hlcode"><pre>    <span class="err">源二叉树</span> 
+<div class="hlcode"><pre><span></span>    <span class="err">源二叉树</span> 
        <span class="mi">8</span>
-      <span class="o">/</span>  \
+      <span class="o">/</span>  <span class="err">\</span>
      <span class="mi">6</span>   <span class="mi">10</span>
-    <span class="o">/</span> <span class="err">\</span>  <span class="o">/</span> \
+    <span class="o">/</span> <span class="err">\</span>  <span class="o">/</span> <span class="err">\</span>
    <span class="mi">5</span>  <span class="mi">7</span> <span class="mi">9</span>  <span class="mi">11</span>
 
    <span class="err">镜像二叉树</span>
        <span class="mi">8</span>
-      <span class="o">/</span>  \
+      <span class="o">/</span>  <span class="err">\</span>
      <span class="mi">10</span>   <span class="mi">6</span>
-    <span class="o">/</span> <span class="err">\</span>  <span class="o">/</span> \
+    <span class="o">/</span> <span class="err">\</span>  <span class="o">/</span> <span class="err">\</span>
    <span class="mi">11</span> <span class="mi">9</span> <span class="mi">7</span>   <span class="mi">5</span>
 </pre></div>
 
 
 </blockquote>
-<div class="hlcode"><pre><span class="n">TreeNode</span><span class="o">*</span> <span class="nf">mirror</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*&amp;</span><span class="n">root</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="n">TreeNode</span><span class="o">*</span> <span class="nf">mirror</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*&amp;</span><span class="n">root</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">root</span> <span class="o">||</span> <span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">))</span> <span class="p">{</span>
         <span class="k">return</span> <span class="n">root</span><span class="p">;</span>
     <span class="p">}</span>
@@ -122,8 +122,8 @@
 <p>这题完全考察思路是否清晰，如果没有把各个循环以及边界条件想清楚就开始写代码，很容易越写越乱。</p>
 <p>画图，分析循环结束条件。</p>
 <p>我的思路，直接用递归，注意找边界条件：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">printMatrix</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">matrix</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">res</span><span class="p">;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">matrix</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
@@ -196,8 +196,8 @@
 <p>入栈1,2,3,4,5</p>
 <p>出栈4,5,3,2,1</p>
 <p>遍历压栈顺序，先将第一个放入栈中，这里是1，然后判断栈顶元素是不是出栈顺序的第一个元素，这里是4，很显然1≠4，所以我们继续压栈，直到相等以后开始出栈，出栈一个元素，则将出栈顺序向后移动一位，直到不相等，这样循环等压栈顺序遍历完成，如果辅助栈还不为空，说明弹出序列不是该栈的弹出顺序。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">bool</span> <span class="n">IsPopOrder</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pushV</span><span class="p">,</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">popV</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
         <span class="kt">int</span> <span class="n">idx_pop</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -221,12 +221,12 @@
 <p>要求遍历结果按层存储，给出非递归和递归实现。</p>
 </blockquote>
 <p>非递归，利用队列，将 NULL 作为层间分隔符：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
     <span class="cm">/**</span>
 <span class="cm">    * @param root: The root of binary tree.</span>
 <span class="cm">    * @return: Level order a list of lists of integer</span>
 <span class="cm">    */</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">levelOrder</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*</span><span class="n">root</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// write your code here</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">result</span><span class="p">;</span>
@@ -269,12 +269,12 @@
 
 
 <p>递归，DFS 实现，对于层次遍历反而是其递归版本不太好想到：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
     <span class="cm">/**</span>
 <span class="cm">    * @param root: The root of binary tree.</span>
 <span class="cm">    * @return: Level order a list of lists of integer</span>
 <span class="cm">    */</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">levelOrder</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*</span><span class="n">root</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// write your code here</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">result</span><span class="p">;</span>
@@ -284,7 +284,7 @@
         <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="kt">void</span> <span class="n">levelOrder</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*</span><span class="n">root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">level</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">root</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
@@ -306,8 +306,8 @@
 </blockquote>
 <p>在后序遍历序列中，最后一个数字是树的根节点。数组中前面的数字可以分为两个部分：第一部分为左子树节点的值，它们都比根节点的值小；第二部分是右子树节点的值，它们都比根节点的值大。</p>
 <p>然后可以用相同的方法确定每一部分对应的子树的结果，这样就形成了递归。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">bool</span> <span class="n">VerifySquenceOfBST</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">sequence</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="n">verify</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sequence</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
     <span class="p">}</span>
@@ -343,8 +343,8 @@
 <p>给定一个二叉树，找出所有路径中各节点相加总和等于给定 目标值 的路径。一个有效的路径，指的是从根节点到叶节点的路径。</p>
 </blockquote>
 <p>注意本题递归实现是 DFS + 回溯，下面代码中有一些细节要注意，比如 当前路径 path 的 pop_back：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/**</span>
 <span class="cm">     * @param root the root of binary tree</span>
 <span class="cm">     * @param target an integer</span>
@@ -362,7 +362,7 @@
         <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="kt">void</span> <span class="n">path_sum</span><span class="p">(</span><span class="n">TreeNode</span> <span class="o">*</span><span class="n">root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">path</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">root</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
             <span class="k">return</span><span class="p">;</span>
@@ -391,7 +391,7 @@
 <blockquote>
 <p>给出一个链表，每个节点包含一个额外增加的随机指针可以指向链表中的任何节点或空的节点。返回一个深拷贝的链表。 </p>
 </blockquote>
-<div class="hlcode"><pre><span class="k">struct</span> <span class="n">RandomListNode</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">struct</span> <span class="n">RandomListNode</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">label</span><span class="p">;</span>
     <span class="n">RandomListNode</span> <span class="o">*</span><span class="n">next</span><span class="p">,</span> <span class="o">*</span><span class="n">random</span><span class="p">;</span>
     <span class="n">RandomListNode</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="o">:</span> <span class="n">label</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">next</span><span class="p">(</span><span class="nb">NULL</span><span class="p">),</span> <span class="n">random</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{}</span>
@@ -421,8 +421,8 @@
 <p>输入一个字符串，打印出该字符串的所有排列。如输入 abc，输出 abc, acb, bac, bca, cab, cba</p>
 </blockquote>
 <p>思路：把一个字符串看成两部分组成：第一部分为第一个字符，第二部分是后面的所有字符。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">Permutation</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">res</span><span class="p">;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
@@ -453,8 +453,8 @@
 
 
 <p>如果有重复字符：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/**</span>
 <span class="cm">     * @param nums: A list of integers.</span>
 <span class="cm">     * @return: A list of unique permutations.</span>
@@ -499,8 +499,8 @@
 
 <p>扩展题目，字符串置换：给定两个字符串，请设计一个方法来判定其中一个字符串是否为另一个字符串的置换。<br />
 这就不需要用求排列的方法了，直接对字符排序，再进行比较即可：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/**</span>
 <span class="cm">    * @param A a string</span>
 <span class="cm">    * @param B a string</span>
@@ -541,7 +541,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

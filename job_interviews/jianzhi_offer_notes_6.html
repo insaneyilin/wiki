@@ -59,9 +59,9 @@
 <h2 id="7">第 7 章 两个面试案例</h2>
 <h3 id="1">案例1</h3>
 <p>问下面代码的输出结果：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">A</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">A</span>
 <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">A</span><span class="p">()</span> <span class="o">:</span> <span class="n">n2</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">n1</span><span class="p">(</span><span class="n">n2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
     <span class="p">{}</span>
 
@@ -71,7 +71,7 @@
             <span class="o">&lt;&lt;</span> <span class="s">&quot;n2: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">n1</span><span class="p">;</span>
     <span class="kt">int</span> <span class="n">n2</span><span class="p">;</span>
 <span class="p">};</span>
@@ -87,19 +87,19 @@
 </pre></div>
 
 
-<div class="hlcode"><pre><span class="err">错误答案：</span><span class="n">n1</span> <span class="err">是</span> <span class="mi">2</span><span class="err">，</span><span class="n">n2</span> <span class="err">是</span> <span class="mi">1</span>
+<div class="hlcode"><pre><span></span><span class="err">错误答案：</span><span class="n">n1</span> <span class="err">是</span> <span class="mi">2</span><span class="err">，</span><span class="n">n2</span> <span class="err">是</span> <span class="mi">1</span>
 <span class="err">正确答案：</span><span class="n">n1</span> <span class="err">是一个溢出的数，</span><span class="n">n2</span> <span class="err">是</span> <span class="mi">0</span>
 </pre></div>
 
 
 <p>C++ 不是按照初始化列表中的参数顺序初始化成员变量的，而是按照成员变量在类中的声明顺序。本例中，n1 在 n2 之前声明。</p>
 <p>编程题：实现 StrToInt。</p>
-<div class="hlcode"><pre><span class="n">class</span> <span class="n">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
-    <span class="kt">int</span> <span class="n">StrToInt</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="n">Solution</span> {
+<span class="n">public:</span>
+    <span class="nb">int</span> <span class="n">StrToInt</span>(<span class="n">string</span> <span class="n">str</span>) {
 
-    <span class="p">}</span>
-<span class="p">};</span>
+    }
+};
 </pre></div>
 
 
@@ -119,9 +119,9 @@
 </li>
 <li>如果没有指向父节点的指针？</li>
 </ul>
-<div class="hlcode"><pre><span class="mf">1.</span> <span class="err">找从根节点到</span> <span class="n">node1</span> <span class="err">的路径，存储在一个数组中</span>
-<span class="mf">2.</span> <span class="err">找从根节点到</span> <span class="n">node2</span> <span class="err">的路径，存储在一个数组中</span>
-<span class="mf">3.</span> <span class="err">遍历两条路径，直到遇到一个不同的节点，则前面的那个为最低公共祖先</span>
+<div class="hlcode"><pre><span></span><span class="mi">1</span><span class="p">.</span> <span class="err">找从根节点到</span> <span class="n">node1</span> <span class="err">的路径，存储在一个数组中</span>
+<span class="mi">2</span><span class="p">.</span> <span class="err">找从根节点到</span> <span class="n">node2</span> <span class="err">的路径，存储在一个数组中</span>
+<span class="mi">3</span><span class="p">.</span> <span class="err">遍历两条路径，直到遇到一个不同的节点，则前面的那个为最低公共祖先</span>
 
 <span class="err">时间复杂度</span> <span class="n">O</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="err">，最坏时间复杂度</span> <span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="err">；空间复杂度和时间复杂度一样。</span>
 </pre></div>
@@ -157,7 +157,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

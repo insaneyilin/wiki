@@ -85,7 +85,7 @@
 <p>解法1：基于 partition</p>
 <p>partiton 可以得到数组的第 k 大数字。本题令 k = n/2 即可。注意这种方法时间复杂度为 O(n) 而不是 O(n * log(n))，分析的时候利用递归式。</p>
 <p>解法2：设置一个计数器来保存主元素</p>
-<div class="hlcode"><pre><span class="kt">int</span> <span class="nf">major_num</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="kt">int</span> <span class="nf">major_num</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
   <span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
@@ -111,7 +111,7 @@
 <p>解法1：利用 partition，时间复杂度O(n)</p>
 <p>如果允许改变原数组，空间复杂度 O(1)，否则需要先复制一份原数组，空间复杂度 O(n)。</p>
 <p>基于数组的第 k 个元素进行调整，使得比第 k 个数字小的所有数字都位于数组的左边，比第 k 个数字大的所有数字都位于数组的右边。这样调整之后，左边的 k 个数字就是最小的 k 个数字（这 k 个数字不一定有序）。</p>
-<div class="hlcode"><pre><span class="c1">// 按照“左小右大”划分数组，每次取 left 位置元素作为 pivot</span>
+<div class="hlcode"><pre><span></span><span class="c1">// 按照“左小右大”划分数组，每次取 left 位置元素作为 pivot</span>
 <span class="kt">int</span> <span class="nf">partition</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">int</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">];</span>
@@ -168,7 +168,7 @@
 <p>set 和 multiset 一般都是基于红黑树（一种平衡 BST）实现的。</p>
 <p>创建一个大小为 k 的容器存储最小的 k 个数字。每次从 n 个数中读入一个数。如果容器中的已有数字少于 k 个，直接把新读入的数放到容器中。如果容器中已经有 k 个数，找出已有 k 个数中的最大值，和这次新读入的数比较，保留较小的数在容器中。</p>
 <p>最小的 k 个数应该用大顶堆；最大的 k 个数用小顶堆。</p>
-<div class="hlcode"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">get_k_least_numbers</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">get_k_least_numbers</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
@@ -206,18 +206,18 @@
 </blockquote>
 <p>经典题之一。</p>
 <p>本质是动态规划思想。</p>
-<div class="hlcode"><pre><span class="err">设数组为</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">...,</span> <span class="n">a</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="err">。</span>
+<div class="hlcode"><pre><span></span><span class="n">设数组为</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="p">...,</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="err">。</span><span class="w"></span>
 
-<span class="err">记</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="err">为以</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="err">为结尾的连续子数组的最大和。</span>
+<span class="n">记</span><span class="w"> </span><span class="n">D</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="n">为以</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="n">为结尾的连续子数组的最大和</span><span class="err">。</span><span class="w"></span>
 
-<span class="err">则</span> <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">则</span><span class="w"> </span><span class="n">D</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"></span>
 
-<span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+<span class="n">D</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">D</span><span class="o">[</span><span class="n">i - 1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">),</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
 </pre></div>
 
 
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/**</span>
 <span class="cm">    * @param nums: A list of integers</span>
 <span class="cm">    * @return: A integer indicate the sum of max subarray</span>
@@ -254,8 +254,8 @@
 
 
 <p>分析一下上面的状态转移方程，当 <code>D[i - 1] &lt;= 0</code> 时，<code>D[i] = a[i]</code>，实际上可以不用数组 <code>D[]</code> 。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/**</span>
 <span class="cm">    * @param nums: A list of integers</span>
 <span class="cm">    * @return: A integer indicate the sum of max subarray</span>
@@ -303,8 +303,8 @@
 <p>先分析从 1346 到 21345 的数，1 的出现分为两种情况：(1) 1 出现在最高位（本例中是万位），从 1346 到 21345 里，1 出现在 10000 至 19999 这 10000 个数字的万位，出现了 10000 次。注意并不是对所有 5 位数万位出现的次数都是 10000 次。例如 12345，2346 到 12345 中出现 1 的数为 10000 到 12345，1 出现了 2346 次。 (2) 1 出现在除最高位之外的其他四位中的情况。把 1346 到 21345 再分成两段，1346 至 11345 和 11346 至 21345，在每一段除万位之外的 4 位中，选择其中一位是 1，其余 3 位可以在 0 至 9 这 10 个数字中任意选择，根据排列组合规则， 1 总共出现的次数为 2 * 10^3 = 2000 次。</p>
 <p>至于从 1 到 1345 中 1 出现的次数，可以利用递归求得，将其分为 1 至 345 和 346 至 1345 两段。</p>
 <p>这种思路是每次去掉最高位做递归，递归的次数和位数相同。一个数 n 有 O(log(n)) 位，因此这种思路时间复杂度为 O(log(n))</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/*</span>
 <span class="cm">     * param k : As description.</span>
 <span class="cm">     * param n : As description.</span>
@@ -347,7 +347,7 @@
 </blockquote>
 <p>例子，数组 {3, 32, 321}，能够排成的最小的数是 321323。</p>
 <p>这题的本质是排序，根据一个排序规则将数组排列。</p>
-<div class="hlcode"><pre><span class="k">auto</span> <span class="n">cmp</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">auto</span> <span class="n">cmp</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="o">+</span> <span class="n">a</span><span class="p">;</span>
 <span class="p">};</span>
 </pre></div>
@@ -371,8 +371,8 @@
 <p>解法2：空间换时间</p>
 <p>一个丑数（除了1）是另一个丑数乘以 2 或 3 或 5 的结果。可以创建一个数组，里面的数字是排好序的丑数，每一个丑数都是前面的丑数乘以 2 或 3 或 5 得到的。</p>
 <p>现在的问题是如何确保数组里面的丑数都是排好序的。直接利用 C++ 中的 heap（priority_queue）或者 bst（set ）来解决。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/*</span>
 <span class="cm">    * @param k: The number k.</span>
 <span class="cm">    * @return: The kth prime number as description.</span>
@@ -420,7 +420,7 @@
 </blockquote>
 <p>直观想法：从头开始扫描这个字符串中的每个字符，当访问到某字符时，将该字符与其他字符比较，如果没有重复，输出。时间复杂度 O(n^2)。</p>
 <p>空间换时间，利用 Hash 表，记录每个字符出现的次数。两次扫描字符串，第一次生成 Hash 表，第二次判断次数并输出。</p>
-<div class="hlcode"><pre><span class="kt">char</span> <span class="nf">first_not_repeated_char</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="kt">char</span> <span class="nf">first_not_repeated_char</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
         <span class="k">return</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
@@ -464,12 +464,12 @@ graph TB
 
 <p>先把数组分割成子数组，先统计出子数组内部的逆序对的数目，然后再统计出两个相邻子数组之间的逆序对的数目。在统计逆序对的过程中，还需要对数组进行排序。</p>
 <p>利用归并排序的思想完成求逆序对数目。</p>
-<div class="hlcode"><pre><span class="err">归并排序是将数列</span> <span class="n">a</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">h</span><span class="p">]</span> <span class="err">分成两半</span> <span class="n">a</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">mid</span><span class="p">]</span> <span class="err">和</span> <span class="n">a</span><span class="p">[</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">h</span><span class="p">]</span> <span class="err">分别进行归并排序，然后再将这两半合并起来。在合并的过程中（设</span> <span class="n">l</span><span class="o">&lt;=</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">mid</span><span class="err">，</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;=</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">h</span><span class="err">），当</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="err">时，并不产生逆序数；当</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="err">时，在前半部分中比</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="err">大的数都比</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="err">大（即</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="err">到</span> <span class="n">a</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="err">都大于</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="err">），逆序数要加上</span> <span class="n">mid</span> <span class="o">-</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="err">。因此，可以在归并排序中的合并过程中计算逆序数</span><span class="p">.</span>
+<div class="hlcode"><pre><span></span><span class="n">归并排序是将数列</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">l, h</span><span class="o">]</span><span class="w"> </span><span class="n">分成两半</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">l, mid</span><span class="o">]</span><span class="w"> </span><span class="n">和</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">mid+1, h</span><span class="o">]</span><span class="w"> </span><span class="n">分别进行归并排序</span><span class="err">，</span><span class="n">然后再将这两半合并起来</span><span class="err">。</span><span class="n">在合并的过程中</span><span class="err">（</span><span class="n">设</span><span class="w"> </span><span class="n">l</span><span class="o">&lt;=</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">mid</span><span class="err">，</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;=</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">h</span><span class="err">），</span><span class="n">当</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="n">时</span><span class="err">，</span><span class="n">并不产生逆序数</span><span class="err">；</span><span class="n">当</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="n">时</span><span class="err">，</span><span class="n">在前半部分中比</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="n">大的数都比</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="n">大</span><span class="err">（</span><span class="n">即</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="n">到</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="w"> </span><span class="n">都大于</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="err">），</span><span class="n">逆序数要加上</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="err">。</span><span class="n">因此</span><span class="err">，</span><span class="n">可以在归并排序中的合并过程中计算逆序数</span><span class="p">.</span><span class="w"></span>
 </pre></div>
 
 
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">InversePairs</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
         <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -477,7 +477,7 @@ graph TB
         <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="c1">// return the number of inverse pairs</span>
     <span class="kt">int</span> <span class="n">merge_sort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">tmp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span>
     <span class="p">{</span>
@@ -546,7 +546,7 @@ graph TB
 <p>解法3：不用辅助空间</p>
 <p>仍然顺着解法 2 的思路，之所以从尾部出发，是因为两个链表从尾节点出发到达公共节点的长度相同。如果我们知道两个链表的长度，那么让长的链表从头部出发先走若干步，接着再同时在两个链表上遍历，这样找到的第一个相同的节点就是它们的第一个公共节点。</p>
 <p>时间复杂度 O(m + n)，空间复杂度 O(1)。</p>
-<div class="hlcode"><pre> <span class="cm">/**</span>
+<div class="hlcode"><pre><span></span> <span class="cm">/**</span>
 <span class="cm"> * Definition for singly-linked list.</span>
 <span class="cm"> * struct ListNode {</span>
 <span class="cm"> *     int val;</span>
@@ -555,7 +555,7 @@ graph TB
 <span class="cm"> * };</span>
 <span class="cm"> */</span>
 <span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="cm">/**</span>
 <span class="cm">    * @param headA: the first list</span>
 <span class="cm">    * @param headB: the second list</span>
@@ -565,7 +565,7 @@ graph TB
         <span class="c1">// write your code here</span>
         <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">get_length_of_list</span><span class="p">(</span><span class="n">headA</span><span class="p">);</span>
         <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">get_length_of_list</span><span class="p">(</span><span class="n">headB</span><span class="p">);</span>
-        <span class="kt">int</span> <span class="n">diff_len</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="o">?</span> <span class="n">m</span> <span class="o">-</span> <span class="n">n</span> <span class="o">:</span> <span class="n">n</span> <span class="o">-</span> <span class="n">m</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">diff_len</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="o">?</span> <span class="n">m</span> <span class="o">-</span> <span class="nl">n</span> <span class="p">:</span> <span class="n">n</span> <span class="o">-</span> <span class="n">m</span><span class="p">;</span>
 
         <span class="n">ListNode</span> <span class="o">*</span><span class="n">p_long</span> <span class="o">=</span> <span class="n">headA</span><span class="p">;</span>
         <span class="n">ListNode</span> <span class="o">*</span><span class="n">p_short</span> <span class="o">=</span> <span class="n">headB</span><span class="p">;</span>
@@ -590,7 +590,7 @@ graph TB
         <span class="k">return</span> <span class="n">p_short</span><span class="p">;</span>
     <span class="p">}</span>
 
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">get_length_of_list</span><span class="p">(</span><span class="n">ListNode</span> <span class="o">*</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
         <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="k">while</span> <span class="p">(</span><span class="n">head</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
@@ -630,7 +630,7 @@ graph TB
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

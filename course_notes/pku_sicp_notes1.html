@@ -73,12 +73,12 @@
 <h1 id="_1">序</h1>
 <h2 id="_2">命令式和函数式计算</h2>
 <p>程序设计的主流是命令式 (imperative) 程序设计，计算基于一组基本操 作，在一个环境里进行。操作效果是改变环境的状态，体现在所创建和 修改的状态中:</p>
-<div class="hlcode"><pre><span class="err">初始状态</span> <span class="o">-&gt;</span> <span class="p">...</span> <span class="o">-&gt;</span> <span class="err">中间状态</span> <span class="o">-&gt;</span> <span class="p">...</span> <span class="o">-&gt;</span> <span class="err">结束状态</span>
+<div class="hlcode"><pre><span></span><span class="err">初始状态</span> <span class="o">-&gt;</span> <span class="p">...</span> <span class="o">-&gt;</span> <span class="err">中间状态</span> <span class="o">-&gt;</span> <span class="p">...</span> <span class="o">-&gt;</span> <span class="err">结束状态</span>
 </pre></div>
 
 
 <p>函数式 (functional) 程序设计中计算过程被看成是数据的变换，程序的 行为就是对数据的一系列变换:</p>
-<div class="hlcode"><pre><span class="err">数据</span> <span class="o">-&gt;</span> <span class="p">...</span> <span class="o">-&gt;</span> <span class="err">数据</span> <span class="o">-&gt;</span> <span class="p">...</span> <span class="o">-&gt;</span> <span class="err">数据</span>
+<div class="hlcode"><pre><span></span><span class="err">数据</span> <span class="o">-&gt;</span> <span class="p">...</span> <span class="o">-&gt;</span> <span class="err">数据</span> <span class="o">-&gt;</span> <span class="p">...</span> <span class="o">-&gt;</span> <span class="err">数据</span>
 </pre></div>
 
 
@@ -150,42 +150,42 @@
 <h2 id="scheme_1">scheme 中的表达式</h2>
 <p>一些简单的 Scheme 表达式举例</p>
 <p>数字是基本表达式：</p>
-<div class="hlcode"><pre><span class="o">&gt;</span> <span class="mi">235</span>
+<div class="hlcode"><pre><span></span><span class="nb">&gt;</span> <span class="mi">235</span>
 <span class="mi">235</span>
 </pre></div>
 
 
 <p>简单的算术表达式：</p>
-<div class="hlcode"><pre><span class="o">&gt;</span> <span class="p">(</span><span class="o">+</span> <span class="mi">123</span> <span class="mi">456</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">123</span> <span class="mi">456</span><span class="p">)</span>
 <span class="mi">579</span>
-<span class="o">&gt;</span> <span class="p">(</span><span class="o">+</span> <span class="mf">1.2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nb">&gt;</span> <span class="p">(</span><span class="nb">+</span> <span class="mf">1.2</span> <span class="mi">3</span><span class="p">)</span>
 <span class="mf">4.2</span>
 </pre></div>
 
 
 <p>表达式的形式：<strong>带括号的前缀形式</strong>。</p>
 <p>有些运算符允许多个参数，如连加：</p>
-<div class="hlcode"><pre><span class="o">&gt;</span> <span class="p">(</span><span class="o">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
 <span class="mi">10</span>
 </pre></div>
 
 
 <p>表达式可以任意嵌套：</p>
-<div class="hlcode"><pre><span class="o">&gt;</span> <span class="p">(</span><span class="o">+</span> <span class="mi">1</span> <span class="p">(</span><span class="o">*</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+<div class="hlcode"><pre><span></span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="p">(</span><span class="nb">*</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
 <span class="mi">7</span>
 </pre></div>
 
 
 <p>可以写任意复杂的表达式(组合式)，如：</p>
-<div class="hlcode"><pre><span class="o">&gt;</span> <span class="p">(</span><span class="o">+</span> <span class="p">(</span><span class="o">*</span> <span class="mi">3</span> <span class="p">(</span><span class="o">+</span> <span class="p">(</span><span class="o">*</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="o">+</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)))</span> <span class="p">(</span><span class="o">+</span> <span class="p">(</span><span class="o">-</span> <span class="mi">10</span> <span class="mi">7</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
+<div class="hlcode"><pre><span></span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">*</span> <span class="mi">3</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">*</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)))</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">-</span> <span class="mi">10</span> <span class="mi">7</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
 
 <p>复杂表达式难写难读。采用适当格式有利于正确书写和阅读:</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="o">+</span>
-  <span class="p">(</span><span class="o">*</span> <span class="mi">3</span>
-     <span class="p">(</span><span class="o">+</span> <span class="p">(</span><span class="o">*</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="o">+</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)))</span>
-  <span class="p">(</span><span class="o">+</span> <span class="p">(</span><span class="o">-</span> <span class="mi">10</span> <span class="mi">7</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nb">+</span>
+  <span class="p">(</span><span class="nb">*</span> <span class="mi">3</span>
+     <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">*</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">-</span> <span class="mi">10</span> <span class="mi">7</span><span class="p">)</span>
      <span class="mi">6</span><span class="p">))</span>
 </pre></div>
 
@@ -193,17 +193,17 @@
 <h2 id="scheme_2">scheme 中命名和环境</h2>
 <p>编程语言必须提供为对象<strong>命名</strong>的机制，这是<strong>最基本的抽象机制</strong>。</p>
 <p>用 define 为对象值命名(给名字关联一个值)：</p>
-<div class="hlcode"><pre><span class="o">&gt;</span> <span class="p">(</span><span class="n">define</span> <span class="n">size</span> <span class="mi">10</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">size</span>
+<div class="hlcode"><pre><span></span><span class="nb">&gt;</span> <span class="p">(</span><span class="nv">define</span> <span class="nv">size</span> <span class="mi">10</span><span class="p">)</span>
+<span class="nb">&gt;</span> <span class="nv">size</span>
 <span class="mi">10</span>
-<span class="o">&gt;</span> <span class="p">(</span><span class="o">*</span> <span class="n">size</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nb">&gt;</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">size</span> <span class="mi">3</span><span class="p">)</span>
 <span class="mi">30</span>
 </pre></div>
 
 
 <p>可以用任意复杂的表达式描述要求关联于变量的值：</p>
-<div class="hlcode"><pre><span class="o">&gt;</span> <span class="p">(</span><span class="n">define</span> <span class="n">num</span> <span class="p">(</span><span class="o">*</span> <span class="n">size</span> <span class="mi">30</span><span class="p">))</span>
-<span class="o">&gt;</span> <span class="n">num</span>
+<div class="hlcode"><pre><span></span><span class="nb">&gt;</span> <span class="p">(</span><span class="nv">define</span> <span class="nv">num</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">size</span> <span class="mi">30</span><span class="p">))</span>
+<span class="nb">&gt;</span> <span class="nv">num</span>
 <span class="mi">300</span>
 </pre></div>
 
@@ -237,23 +237,23 @@
 <li>为控制程序复杂性，必须有抽象机制，Scheme 用“过程定义”</li>
 </ul>
 <p>求平方过程的定义:</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">square</span> <span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span> <span class="n">x</span> <span class="n">x</span><span class="p">))</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nv">define</span> <span class="p">(</span><span class="nv">square</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
 </pre></div>
 
 
 <p>包括：过程名，形式参数，做什么(如何求值) 求值这种定义表达式，将相应计算过程关联于名字(这里的square)</p>
 <p>定义好的过程就像基本操作，可以通过名字使用：</p>
-<div class="hlcode"><pre><span class="o">&gt;</span> <span class="p">(</span><span class="n">square</span> <span class="mi">2</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="nb">&gt;</span> <span class="p">(</span><span class="nv">square</span> <span class="mi">2</span><span class="p">)</span>
 <span class="mi">4</span>
-<span class="o">&gt;</span> <span class="p">(</span><span class="n">square</span> <span class="p">(</span><span class="o">*</span> <span class="p">(</span><span class="o">+</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">&gt;</span> <span class="p">(</span><span class="nv">square</span> <span class="p">(</span><span class="nb">*</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">4</span><span class="p">))</span>
 <span class="mi">64</span>
 </pre></div>
 
 
 <p>可以用过程名来定义新的过程（复合过程）：</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">sum_of_squares</span> <span class="n">x</span> <span class="n">y</span><span class="p">)</span>
-    <span class="p">(</span><span class="o">+</span> <span class="p">(</span><span class="n">square</span> <span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="n">square</span> <span class="n">y</span><span class="p">)))</span>
-<span class="o">&gt;</span> <span class="p">(</span><span class="n">sum_of_squares</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nv">define</span> <span class="p">(</span><span class="nv">sum_of_squares</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nv">square</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nv">square</span> <span class="nv">y</span><span class="p">)))</span>
+<span class="nb">&gt;</span> <span class="p">(</span><span class="nv">sum_of_squares</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
 <span class="mi">25</span>
 </pre></div>
 
@@ -293,48 +293,48 @@
 <h2 id="_5">条件表达式和谓词</h2>
 <p>复杂计算的描述中总需要描述条件和选择。</p>
 <p>求绝对值的过程：</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">abs</span> <span class="n">x</span><span class="p">)</span>
-    <span class="p">(</span><span class="n">cond</span> <span class="p">((</span><span class="o">&gt;</span> <span class="n">x</span> <span class="mi">0</span><span class="p">)</span> <span class="n">x</span><span class="p">)</span>
-          <span class="p">((</span><span class="o">=</span> <span class="n">x</span> <span class="mi">0</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
-          <span class="p">((</span><span class="o">&lt;</span> <span class="n">x</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="o">-</span> <span class="n">x</span><span class="p">))))</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nv">define</span> <span class="p">(</span><span class="nb">abs</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">cond</span> <span class="p">((</span><span class="nb">&gt;</span> <span class="nv">x</span> <span class="mi">0</span><span class="p">)</span> <span class="nv">x</span><span class="p">)</span>
+          <span class="p">((</span><span class="nb">=</span> <span class="nv">x</span> <span class="mi">0</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+          <span class="p">((</span><span class="nb">&lt;</span> <span class="nv">x</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">x</span><span class="p">))))</span>
 </pre></div>
 
 
 <p>scheme 中条件表达式的一般形式：</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="nx">cond</span> <span class="p">(</span><span class="o">&lt;</span><span class="nx">p1</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">e1</span><span class="o">&gt;</span><span class="p">)</span>
-      <span class="p">(</span><span class="o">&lt;</span><span class="nx">p2</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">e2</span><span class="o">&gt;</span><span class="p">)</span>
-      <span class="nx">......</span>
-      <span class="p">(</span><span class="o">&lt;</span><span class="nx">pn</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">en</span><span class="o">&gt;</span><span class="p">))</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nb">cond</span> <span class="p">(</span><span class="nv">&lt;p1&gt;</span> <span class="nv">&lt;e1&gt;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">&lt;p2&gt;</span> <span class="nv">&lt;e2&gt;</span><span class="p">)</span>
+      <span class="o">......</span>
+      <span class="p">(</span><span class="nv">&lt;pn&gt;</span> <span class="nv">&lt;en&gt;</span><span class="p">))</span>
 </pre></div>
 
 
 <p>依次求值各个 p(条件)，遇到第一个非false的条件后求值对应的 e，以其值作为整个cond 表达式的值</p>
 <p>简化上面的 abs 过程：</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">abs</span> <span class="n">x</span><span class="p">)</span>
-    <span class="p">(</span><span class="n">cond</span> <span class="p">((</span><span class="o">&lt;</span> <span class="n">x</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="o">-</span> <span class="n">x</span><span class="p">))</span>
-          <span class="p">(</span><span class="k">else</span> <span class="n">x</span><span class="p">)))</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nv">define</span> <span class="p">(</span><span class="nb">abs</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">cond</span> <span class="p">((</span><span class="nb">&lt;</span> <span class="nv">x</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">x</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">else</span> <span class="nv">x</span><span class="p">)))</span>
 </pre></div>
 
 
 <p>else 表示永远成立的条件，只应该放在最后。</p>
 <p>使用 if 的条件表达式形式：</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="k">if</span> <span class="o">&lt;</span><span class="nx">predicate</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">consequent</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">alternative</span><span class="o">&gt;</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="k">if</span> <span class="nv">&lt;predicate&gt;</span> <span class="nv">&lt;consequent&gt;</span> <span class="nv">&lt;alternative&gt;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>cond 和 if 都是特殊形式，有特殊的求值规则</p>
 <p>逻辑组合运算符 and 和 or 也是特殊形式，采用特殊求值方式：</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="ow">and</span> <span class="o">&lt;</span><span class="nx">e1</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">e2</span><span class="o">&gt;</span> <span class="nx">...</span> <span class="o">&lt;</span><span class="nx">en</span><span class="o">&gt;</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nb">and</span> <span class="nv">&lt;e1&gt;</span> <span class="nv">&lt;e2&gt;</span> <span class="o">...</span> <span class="nv">&lt;en&gt;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>and求值规则：逐个求值 e，直到某个 e 求出假，或最后一个 e 求值完成。以最后求值的那个子表达式的值作为值。</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="ow">or</span> <span class="o">&lt;</span><span class="nx">e1</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">e2</span><span class="o">&gt;</span> <span class="nx">...</span> <span class="o">&lt;</span><span class="nx">en</span><span class="o">&gt;</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nb">or</span> <span class="nv">&lt;e1&gt;</span> <span class="nv">&lt;e2&gt;</span> <span class="o">...</span> <span class="nv">&lt;en&gt;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>or： 逐个求值 e，直到某个 e 求出真，或最后一个 e 求值完成。以最后求值的那个子表达式的值作为值</p>
-<div class="hlcode"><pre><span class="p">(</span><span class="ow">not</span> <span class="o">&lt;</span><span class="nx">e</span><span class="o">&gt;</span><span class="p">)</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nb">not</span> <span class="nv">&lt;e&gt;</span><span class="p">)</span>
 </pre></div>
 
 
@@ -345,13 +345,13 @@
 <p>什么是有效的计算？</p>
 <p>看一个例子：</p>
 <p>如果按照平方根的数学定义</p>
-<div class="hlcode"><pre><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">is</span> <span class="n">the</span> <span class="n">y</span> <span class="n">that</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="n">and</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+<div class="hlcode"><pre><span></span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">is</span> <span class="n">the</span> <span class="n">y</span> <span class="n">that</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">and</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
 </pre></div>
 
 
-<div class="hlcode"><pre><span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">sqrt</span> <span class="n">x</span><span class="p">)</span>
-    <span class="p">(</span><span class="n">the</span> <span class="n">y</span> <span class="p">(</span><span class="n">and</span> <span class="p">(</span><span class="o">&gt;=</span> <span class="n">y</span> <span class="mi">0</span><span class="p">)</span>
-                <span class="p">(</span><span class="o">=</span> <span class="n">x</span> <span class="p">(</span><span class="o">*</span> <span class="n">y</span> <span class="n">y</span><span class="p">)))))</span>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="nv">define</span> <span class="p">(</span><span class="nb">sqrt</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">the</span> <span class="nv">y</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nb">&gt;=</span> <span class="nv">y</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="p">(</span><span class="nb">=</span> <span class="nv">x</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">y</span> <span class="nv">y</span><span class="p">)))))</span>
 </pre></div>
 
 
@@ -362,19 +362,19 @@
 <li>如果猜测值足够好就结束</li>
 <li>否则就改进猜测值并重复这一过程</li>
 </ul>
-<div class="hlcode"><pre><span class="p">;</span> <span class="err">注意括号不能乱加，比如下面返回</span> <span class="n">guess</span> <span class="err">不能写成</span> <span class="p">(</span><span class="n">guess</span><span class="p">)</span><span class="err">，加括号的要是</span> <span class="n">applicable</span> <span class="err">的才行</span>
-<span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">sqrt_iter</span> <span class="n">guess</span> <span class="n">x</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="n">good_enough</span> <span class="n">guess</span> <span class="n">x</span><span class="p">)</span>
-        <span class="n">guess</span>
-        <span class="p">(</span><span class="n">sqrt_iter</span> <span class="p">(</span><span class="n">improve</span> <span class="n">guess</span> <span class="n">x</span><span class="p">)</span> <span class="n">x</span><span class="p">)))</span>
+<div class="hlcode"><pre><span></span><span class="c1">; 注意括号不能乱加，比如下面返回 guess 不能写成 (guess)，加括号的要是 applicable 的才行</span>
+<span class="p">(</span><span class="nv">define</span> <span class="p">(</span><span class="nv">sqrt_iter</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">good_enough</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+        <span class="nv">guess</span>
+        <span class="p">(</span><span class="nv">sqrt_iter</span> <span class="p">(</span><span class="nv">improve</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">x</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">good_enough</span> <span class="n">guess</span> <span class="n">x</span><span class="p">)</span>
-    <span class="p">(</span><span class="o">&lt;</span> <span class="p">(</span><span class="n">abs</span> <span class="p">(</span><span class="o">-</span> <span class="p">(</span><span class="o">*</span> <span class="n">guess</span> <span class="n">guess</span><span class="p">)</span> <span class="n">x</span><span class="p">))</span> <span class="mf">0.001</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">define</span> <span class="p">(</span><span class="nv">good_enough</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">&lt;</span> <span class="p">(</span><span class="nb">abs</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">guess</span> <span class="nv">guess</span><span class="p">)</span> <span class="nv">x</span><span class="p">))</span> <span class="mf">0.001</span><span class="p">))</span>
 
-<span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">improve</span> <span class="n">guess</span> <span class="n">x</span><span class="p">)</span>
-    <span class="p">(</span><span class="n">average</span> <span class="n">guess</span> <span class="p">(</span><span class="o">/</span> <span class="n">x</span> <span class="n">guess</span><span class="p">)))</span>
+<span class="p">(</span><span class="nv">define</span> <span class="p">(</span><span class="nv">improve</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">average</span> <span class="nv">guess</span> <span class="p">(</span><span class="nb">/</span> <span class="nv">x</span> <span class="nv">guess</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="n">define</span> <span class="p">(</span><span class="n">sqrt</span> <span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="n">sqrt_iter</span> <span class="mf">1.0</span> <span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">define</span> <span class="p">(</span><span class="nb">sqrt</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nv">sqrt_iter</span> <span class="mf">1.0</span> <span class="nv">x</span><span class="p">))</span>
 </pre></div>
 
 
@@ -396,7 +396,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

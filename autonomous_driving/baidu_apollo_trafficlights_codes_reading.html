@@ -88,33 +88,33 @@
 <li>{ Timestamp, {Signal ID, Detected BBox, Signal Color} }</li>
 </ul>
 <h2 id="1-onboard">1 Onboard 部分</h2>
-<div class="hlcode"><pre><span class="n">modules</span><span class="o">/</span><span class="n">perception</span><span class="o">/</span><span class="n">onboard</span><span class="o">/</span><span class="n">component</span><span class="o">/</span><span class="n">trafficlights_perception_component</span><span class="p">.</span><span class="n">h</span>
-<span class="n">modules</span><span class="o">/</span><span class="n">perception</span><span class="o">/</span><span class="n">onboard</span><span class="o">/</span><span class="n">component</span><span class="o">/</span><span class="n">trafficlights_perception_component</span><span class="p">.</span><span class="n">cc</span>
+<div class="hlcode"><pre><span></span><span class="n">modules</span><span class="o">/</span><span class="n">perception</span><span class="o">/</span><span class="n">onboard</span><span class="o">/</span><span class="n">component</span><span class="o">/</span><span class="n">trafficlights_perception_component</span>.<span class="n">h</span>
+<span class="n">modules</span><span class="o">/</span><span class="n">perception</span><span class="o">/</span><span class="n">onboard</span><span class="o">/</span><span class="n">component</span><span class="o">/</span><span class="n">trafficlights_perception_component</span>.<span class="n">cc</span>
 </pre></div>
 
 
 <p><code>TrafficLightsPerceptionComponent</code>: 红绿灯模块对应的 CyberRT 组件</p>
 <p>对应 dag 文件：</p>
 <p>modules/perception/production/dag/dag_streaming_perception_trafficlights.dag</p>
-<div class="hlcode"><pre><span class="n">module_config</span> <span class="p">{</span>
-  <span class="n">module_library</span> <span class="o">:</span> <span class="s">&quot;/apollo/bazel-bin/modules/perception/onboard/component/libperception_component_camera.so&quot;</span>
-  <span class="n">components</span> <span class="p">{</span>
-    <span class="n">class_name</span> <span class="o">:</span> <span class="s">&quot;TrafficLightsPerceptionComponent&quot;</span>
-    <span class="n">config</span> <span class="p">{</span>
-      <span class="nl">name:</span> <span class="s">&quot;TrafficLightsComponent&quot;</span>
-      <span class="nl">config_file_path:</span> <span class="s">&quot;/apollo/modules/perception/production/conf/perception/camera/trafficlights_perception_component.config&quot;</span>
-      <span class="nl">flag_file_path:</span> <span class="s">&quot;/apollo/modules/perception/production/conf/perception/perception_common.flag&quot;</span>
-      <span class="n">readers</span> <span class="p">{</span>
-          <span class="nl">channel:</span> <span class="s">&quot;/apollo/perception/traffic_light_status&quot;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="hlcode"><pre><span></span><span class="n">module_config</span> {
+  <span class="n">module_library</span> : <span class="s">&quot;/apollo/bazel-bin/modules/perception/onboard/component/libperception_component_camera.so&quot;</span>
+  <span class="n">components</span> {
+    <span class="n">class_name</span> : <span class="s">&quot;TrafficLightsPerceptionComponent&quot;</span>
+    <span class="n">config</span> {
+      <span class="n">name:</span> <span class="s">&quot;TrafficLightsComponent&quot;</span>
+      <span class="n">config_file_path:</span> <span class="s">&quot;/apollo/modules/perception/production/conf/perception/camera/trafficlights_perception_component.config&quot;</span>
+      <span class="n">flag_file_path:</span> <span class="s">&quot;/apollo/modules/perception/production/conf/perception/perception_common.flag&quot;</span>
+      <span class="n">readers</span> {
+          <span class="n">channel:</span> <span class="s">&quot;/apollo/perception/traffic_light_status&quot;</span>
+      }
+    }
+  }
+}
 </pre></div>
 
 
 <p>处理入口函数：</p>
-<div class="hlcode"><pre><span class="kt">void</span> <span class="n">TrafficLightsPerceptionComponent</span><span class="o">::</span><span class="n">OnReceiveImage</span><span class="p">(</span>
+<div class="hlcode"><pre><span></span><span class="kt">void</span> <span class="n">TrafficLightsPerceptionComponent</span><span class="o">::</span><span class="n">OnReceiveImage</span><span class="p">(</span>
     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">apollo</span><span class="o">::</span><span class="n">drivers</span><span class="o">::</span><span class="n">Image</span><span class="o">&gt;</span> <span class="n">msg</span><span class="p">,</span>  <span class="c1">// 图像消息</span>
     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">camera_name</span>  <span class="c1">// 相机名</span>
     <span class="p">);</span>
@@ -123,30 +123,30 @@
 
 <p>这是一个回调(callback)函数，当接收到对应相机的图像消息时自动调用。</p>
 <p><code>OnReceiveImage()</code> 主要处理流程：</p>
-<div class="hlcode"><pre><span class="mf">1.</span> <span class="err">投影选相机</span>
+<div class="hlcode"><pre><span></span><span class="mi">1</span><span class="p">.</span> <span class="err">投影选相机</span>
 
 <span class="err">查询定位和地图信号灯信息，根据信号灯在图像平面上的投影情况选择用于检测红绿灯的相机，保存相机选择结果。</span>
 
-<span class="mf">2.</span> <span class="err">判断当前图像时间戳和上一次处理时间戳间隔，若间隔过小，跳过</span>
+<span class="mi">2</span><span class="p">.</span> <span class="err">判断当前图像时间戳和上一次处理时间戳间隔，若间隔过小，跳过</span>
 
 <span class="err">这一步是为了降低实际检测的处理频率，红绿灯检测不需要很高的帧率</span>
 
-<span class="mf">3.</span> <span class="err">同步当前图像和相机选择结果</span>
+<span class="mi">3</span><span class="p">.</span> <span class="err">同步当前图像和相机选择结果</span>
 
 <span class="err">判断当前图像是否来自于要用于检测红绿灯的相机。如果不是则直接返回，不用继续处理当前图像；如果是则继续进行下一步。</span>
 
-<span class="mf">4.</span> <span class="err">调用红绿灯检测算法模块，给出红绿灯识别结果</span>
+<span class="mi">4</span><span class="p">.</span> <span class="err">调用红绿灯检测算法模块，给出红绿灯识别结果</span>
 
-<span class="o">-</span> <span class="n">Detect</span><span class="o">:</span> <span class="err">检测，根据地图红绿灯投影在</span> <span class="n">Crop</span> <span class="n">ROI</span> <span class="err">中检测红绿灯</span> <span class="mi">2</span><span class="n">D</span> <span class="err">框</span>
-<span class="o">-</span> <span class="n">Recognize</span><span class="o">:</span> <span class="err">识别，对检测出的红绿灯</span> <span class="mi">2</span><span class="n">D</span> <span class="err">框内容进行分类（红、绿、黑、黄）</span>
-<span class="o">-</span> <span class="n">Revise</span><span class="o">:</span> <span class="err">修正，处理可能出现的漏检</span><span class="p">(</span><span class="n">Unknown</span><span class="p">)</span><span class="err">、误识别情况</span>
+<span class="o">-</span> <span class="n">Detect</span><span class="p">:</span> <span class="err">检测，根据地图红绿灯投影在</span> <span class="n">Crop</span> <span class="n">ROI</span> <span class="err">中检测红绿灯</span> <span class="mi">2</span><span class="n">D</span> <span class="err">框</span>
+<span class="o">-</span> <span class="n">Recognize</span><span class="p">:</span> <span class="err">识别，对检测出的红绿灯</span> <span class="mi">2</span><span class="n">D</span> <span class="err">框内容进行分类（红、绿、黑、黄）</span>
+<span class="o">-</span> <span class="n">Revise</span><span class="p">:</span> <span class="err">修正，处理可能出现的漏检</span><span class="p">(</span><span class="k">Unknown</span><span class="p">)</span><span class="err">、误识别情况</span>
 
-<span class="mf">5.</span> <span class="err">同步感知红绿灯识别结果和</span> <span class="n">V2X</span> <span class="err">红绿灯结果，输出。</span>
+<span class="mi">5</span><span class="p">.</span> <span class="err">同步感知红绿灯识别结果和</span> <span class="n">V2X</span> <span class="err">红绿灯结果，输出。</span>
 </pre></div>
 
 
 <p>相关代码：</p>
-<div class="hlcode"><pre><span class="kt">void</span> <span class="n">TrafficLightsPerceptionComponent</span><span class="o">::</span><span class="n">OnReceiveImage</span><span class="p">(</span>
+<div class="hlcode"><pre><span></span><span class="kt">void</span> <span class="n">TrafficLightsPerceptionComponent</span><span class="o">::</span><span class="n">OnReceiveImage</span><span class="p">(</span>
     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">apollo</span><span class="o">::</span><span class="n">drivers</span><span class="o">::</span><span class="n">Image</span><span class="o">&gt;</span> <span class="n">msg</span><span class="p">,</span>
     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">camera_name</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lck</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span>
@@ -240,23 +240,23 @@
           <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span> <span class="n">v2x_color</span> <span class="o">=</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_UNKNOWN_COLOR</span><span class="p">;</span>
           <span class="kt">bool</span> <span class="n">blink</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
           <span class="k">switch</span> <span class="p">(</span><span class="n">v2x_light</span><span class="p">.</span><span class="n">color</span><span class="p">())</span> <span class="p">{</span>
-            <span class="nl">default:</span>
-            <span class="k">case</span> <span class="n">apollo</span>:<span class="o">:</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="n">UNKNOWN</span><span class="o">:</span>
+            <span class="k">default</span><span class="o">:</span>
+            <span class="k">case</span> <span class="n">apollo</span><span class="o">::</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="nl">UNKNOWN</span><span class="p">:</span>
               <span class="n">v2x_color</span> <span class="o">=</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_UNKNOWN_COLOR</span><span class="p">;</span>
               <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="n">apollo</span>:<span class="o">:</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="n">RED</span><span class="o">:</span>
+            <span class="k">case</span> <span class="n">apollo</span><span class="o">::</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="nl">RED</span><span class="p">:</span>
               <span class="n">v2x_color</span> <span class="o">=</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_RED</span><span class="p">;</span>
               <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="n">apollo</span>:<span class="o">:</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="n">YELLOW</span><span class="o">:</span>
+            <span class="k">case</span> <span class="n">apollo</span><span class="o">::</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="nl">YELLOW</span><span class="p">:</span>
               <span class="n">v2x_color</span> <span class="o">=</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_YELLOW</span><span class="p">;</span>
               <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="n">apollo</span>:<span class="o">:</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="n">GREEN</span><span class="o">:</span>
+            <span class="k">case</span> <span class="n">apollo</span><span class="o">::</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="nl">GREEN</span><span class="p">:</span>
               <span class="n">v2x_color</span> <span class="o">=</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_GREEN</span><span class="p">;</span>
               <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="n">apollo</span>:<span class="o">:</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="n">BLACK</span><span class="o">:</span>
+            <span class="k">case</span> <span class="n">apollo</span><span class="o">::</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="nl">BLACK</span><span class="p">:</span>
               <span class="n">v2x_color</span> <span class="o">=</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_BLACK</span><span class="p">;</span>
               <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="n">apollo</span>:<span class="o">:</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="n">FLASH_GREEN</span><span class="o">:</span>
+            <span class="k">case</span> <span class="n">apollo</span><span class="o">::</span><span class="n">v2x</span><span class="o">::</span><span class="n">SingleTrafficLight</span><span class="o">::</span><span class="nl">FLASH_GREEN</span><span class="p">:</span>
               <span class="n">v2x_color</span> <span class="o">=</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_GREEN</span><span class="p">;</span>
               <span class="n">blink</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
               <span class="k">break</span><span class="p">;</span>
@@ -272,7 +272,7 @@
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">};</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">light</span> <span class="o">:</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">traffic_lights</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">light</span> <span class="p">:</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">traffic_lights</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">sync_single_light</span><span class="p">(</span><span class="n">light</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -281,30 +281,30 @@
 
 <hr />
 <h2 id="2">2 算法部分</h2>
-<div class="hlcode"><pre><span class="n">modules</span><span class="o">/</span><span class="n">perception</span><span class="o">/</span><span class="n">camera</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">traffic_light</span>
-  <span class="err">├──</span> <span class="n">preprocessor</span>
-  <span class="err">└──</span> <span class="n">detector</span>
-        <span class="err">└──</span> <span class="n">detection</span>
-        <span class="err">└──</span> <span class="n">recognition</span>
-  <span class="err">└──</span> <span class="n">tracker</span>
+<div class="hlcode"><pre><span></span><span class="n">modules</span><span class="o">/</span><span class="n">perception</span><span class="o">/</span><span class="n">camera</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">traffic_light</span>
+  ├── <span class="n">preprocessor</span>
+  └── <span class="n">detector</span>
+        └── <span class="n">detection</span>
+        └── <span class="n">recognition</span>
+  └── <span class="n">tracker</span>
 </pre></div>
 
 
 <h3 id="21-preprocessor">2.1 preprocessor</h3>
 <p>预处理，主要完成的任务是通过投影地图信号灯到图像平面来选择相机。</p>
-<div class="hlcode"><pre><span class="n">preprocessor</span><span class="o">/</span>
-  <span class="err">├──</span> <span class="n">tl_preprocess</span><span class="p">.</span><span class="n">proto</span>          <span class="err">#</span> <span class="err">配置定义</span>
+<div class="hlcode"><pre><span></span><span class="n">preprocessor</span><span class="o">/</span>
+  <span class="err">├──</span> <span class="n">tl_preprocess</span><span class="p">.</span><span class="n">proto</span>          <span class="o">#</span> <span class="err">配置定义</span>
   <span class="err">├──</span> <span class="n">tl_preprocessor</span><span class="p">.</span><span class="n">cc</span>
-  <span class="err">├──</span> <span class="n">tl_preprocessor</span><span class="p">.</span><span class="n">h</span>            <span class="err">#</span> <span class="err">投影选相机预处理</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span>
+  <span class="err">├──</span> <span class="n">tl_preprocessor</span><span class="p">.</span><span class="n">h</span>            <span class="o">#</span> <span class="err">投影选相机预处理</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span>
   <span class="err">├──</span> <span class="n">pose</span><span class="p">.</span><span class="n">cc</span>
-  <span class="err">├──</span> <span class="n">pose</span><span class="p">.</span><span class="n">h</span>                       <span class="err">#</span> <span class="err">主车和相机</span> <span class="n">Pose</span> <span class="err">封装</span>
+  <span class="err">├──</span> <span class="n">pose</span><span class="p">.</span><span class="n">h</span>                       <span class="o">#</span> <span class="err">主车和相机</span> <span class="n">Pose</span> <span class="err">封装</span>
   <span class="err">├──</span> <span class="n">multi_camera_projection</span><span class="p">.</span><span class="n">cc</span>
-  <span class="err">└──</span> <span class="n">multi_camera_projection</span><span class="p">.</span><span class="n">h</span>    <span class="err">#</span> <span class="err">多相机投影</span>
+  <span class="err">└──</span> <span class="n">multi_camera_projection</span><span class="p">.</span><span class="n">h</span>    <span class="o">#</span> <span class="err">多相机投影</span>
 </pre></div>
 
 
 <p><code>tl_preprocessor.cc</code> 主要函数介绍：</p>
-<div class="hlcode"><pre><span class="c1">// 投影选相机</span>
+<div class="hlcode"><pre><span></span><span class="c1">// 投影选相机</span>
 <span class="kt">bool</span> <span class="n">TLPreprocessor</span><span class="o">::</span><span class="n">UpdateCameraSelection</span><span class="p">(</span>
     <span class="k">const</span> <span class="n">CarPose</span> <span class="o">&amp;</span><span class="n">pose</span><span class="p">,</span> <span class="k">const</span> <span class="n">TLPreprocessorOption</span> <span class="o">&amp;</span><span class="n">option</span><span class="p">,</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">lights</span><span class="p">)</span> <span class="p">{</span>
@@ -333,10 +333,10 @@
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">*</span><span class="n">selected_camera_name</span><span class="p">,</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">lights</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// 两个数组，分别保存投影在/不在图像上的灯</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="n">light_ptrs</span> <span class="o">:</span> <span class="n">lights_on_image_array_</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">light_ptrs</span> <span class="p">:</span> <span class="n">lights_on_image_array_</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">light_ptrs</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
   <span class="p">}</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="n">light_ptrs</span> <span class="o">:</span> <span class="n">lights_outside_image_array_</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">light_ptrs</span> <span class="p">:</span> <span class="n">lights_outside_image_array_</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">light_ptrs</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
   <span class="p">}</span>
   <span class="c1">// project light region on each camera&#39;s image plane</span>
@@ -384,7 +384,7 @@
       <span class="p">}</span>
       <span class="c1">// 投影边界检查</span>
       <span class="k">auto</span> <span class="n">lights</span> <span class="o">=</span> <span class="n">lights_on_image_array</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">cam_id</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="n">light</span> <span class="o">:</span> <span class="n">lights</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">light</span> <span class="p">:</span> <span class="n">lights</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// check boundary</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">OutOfValidRegion</span><span class="p">(</span><span class="n">light</span><span class="o">-&gt;</span><span class="n">region</span><span class="p">.</span><span class="n">projection_roi</span><span class="p">,</span>
                              <span class="n">projection_</span><span class="p">.</span><span class="n">getImageWidth</span><span class="p">(</span><span class="n">camera_name</span><span class="p">),</span>
@@ -411,7 +411,7 @@
 
 
 <p><code>multi_camera_projection.cc</code> ：</p>
-<div class="hlcode"><pre><span class="kt">bool</span> <span class="n">MultiCamerasProjection</span><span class="o">::</span><span class="n">BoundaryBasedProject</span><span class="p">(</span>
+<div class="hlcode"><pre><span></span><span class="kt">bool</span> <span class="n">MultiCamerasProjection</span><span class="o">::</span><span class="n">BoundaryBasedProject</span><span class="p">(</span>
     <span class="k">const</span> <span class="n">base</span><span class="o">::</span><span class="n">BrownCameraDistortionModelPtr</span> <span class="n">camera_model</span><span class="p">,</span>
     <span class="k">const</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix4d</span><span class="o">&amp;</span> <span class="n">c2w_pose</span><span class="p">,</span>
     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">PointXYZID</span><span class="o">&gt;&amp;</span> <span class="n">points</span><span class="p">,</span>
@@ -447,7 +447,7 @@
   <span class="kt">int</span> <span class="n">max_x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
   <span class="kt">int</span> <span class="n">min_y</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">();</span>
   <span class="kt">int</span> <span class="n">max_y</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">pt</span> <span class="o">:</span> <span class="n">pts2d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="nl">pt</span> <span class="p">:</span> <span class="n">pts2d</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">min_x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">min_x</span><span class="p">);</span>
     <span class="n">max_x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_x</span><span class="p">);</span>
     <span class="n">min_y</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">min_y</span><span class="p">);</span>
@@ -468,19 +468,19 @@
 <h3 id="22-detectordetection">2.2 detector/detection</h3>
 <p>检测，根据灯的投影在 Crop ROI 中给出红绿灯 2D 框</p>
 <p><img alt="" src="/wiki/attach/images/baidu_apollo_trafficlights_codes_reading/tl_detect.png" /></p>
-<div class="hlcode"><pre><span class="n">detection</span><span class="o">/</span>
-  <span class="err">├──</span> <span class="n">detection</span><span class="p">.</span><span class="n">proto</span>    <span class="err">#</span> <span class="err">配置定义</span>
+<div class="hlcode"><pre><span></span><span class="n">detection</span><span class="o">/</span>
+  <span class="err">├──</span> <span class="n">detection</span><span class="p">.</span><span class="n">proto</span>    <span class="o">#</span> <span class="err">配置定义</span>
   <span class="err">├──</span> <span class="n">detection</span><span class="p">.</span><span class="n">cc</span>
-  <span class="err">├──</span> <span class="n">detection</span><span class="p">.</span><span class="n">h</span>        <span class="err">#</span> <span class="n">TrafficLightDetection</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span>
+  <span class="err">├──</span> <span class="n">detection</span><span class="p">.</span><span class="n">h</span>        <span class="o">#</span> <span class="n">TrafficLightDetection</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span>
   <span class="err">├──</span> <span class="n">cropbox</span><span class="p">.</span><span class="n">cc</span>
-  <span class="err">├──</span> <span class="n">cropbox</span><span class="p">.</span><span class="n">h</span>          <span class="err">#</span> <span class="err">用于根据红绿灯投影框获取</span> <span class="n">Crop</span> <span class="n">ROI</span>
-  <span class="err">├──</span> <span class="n">select</span><span class="p">.</span><span class="n">cc</span>
-  <span class="err">└──</span> <span class="n">select</span><span class="p">.</span><span class="n">h</span>           <span class="err">#</span> <span class="err">候选检测框与红绿灯投影框匹配</span>
+  <span class="err">├──</span> <span class="n">cropbox</span><span class="p">.</span><span class="n">h</span>          <span class="o">#</span> <span class="err">用于根据红绿灯投影框获取</span> <span class="n">Crop</span> <span class="n">ROI</span>
+  <span class="err">├──</span> <span class="k">select</span><span class="p">.</span><span class="n">cc</span>
+  <span class="err">└──</span> <span class="k">select</span><span class="p">.</span><span class="n">h</span>           <span class="o">#</span> <span class="err">候选检测框与红绿灯投影框匹配</span>
 </pre></div>
 
 
 <p><code>detection.cc</code> 主要函数介绍:</p>
-<div class="hlcode"><pre><span class="kt">bool</span> <span class="n">TrafficLightDetection</span><span class="o">::</span><span class="n">Detect</span><span class="p">(</span><span class="k">const</span> <span class="n">TrafficLightDetectorOptions</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+<div class="hlcode"><pre><span></span><span class="kt">bool</span> <span class="n">TrafficLightDetection</span><span class="o">::</span><span class="n">Detect</span><span class="p">(</span><span class="k">const</span> <span class="n">TrafficLightDetectorOptions</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
                                    <span class="n">CameraFrame</span> <span class="o">*</span><span class="n">frame</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// ...</span>
   <span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">data_provider</span> <span class="o">=</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">data_provider</span><span class="p">;</span>
@@ -586,7 +586,7 @@
 
 
 <p><code>cropbox.cc</code> :</p>
-<div class="hlcode"><pre><span class="kt">void</span> <span class="n">CropBox</span><span class="o">::</span><span class="n">Init</span><span class="p">(</span><span class="kt">float</span> <span class="n">crop_scale</span><span class="p">,</span> <span class="kt">int</span> <span class="n">min_crop_size</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="kt">void</span> <span class="n">CropBox</span><span class="o">::</span><span class="n">Init</span><span class="p">(</span><span class="kt">float</span> <span class="n">crop_scale</span><span class="p">,</span> <span class="kt">int</span> <span class="n">min_crop_size</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">crop_scale_</span> <span class="o">=</span> <span class="n">crop_scale</span><span class="p">;</span>          <span class="c1">// 缩放倍数</span>
   <span class="n">min_crop_size_</span> <span class="o">=</span> <span class="n">min_crop_size</span><span class="p">;</span>    <span class="c1">// 最小 crop size</span>
 <span class="p">}</span>
@@ -646,7 +646,7 @@
 
 
 <p><code>select.cc</code> :</p>
-<div class="hlcode"><pre><span class="kt">void</span> <span class="n">Select</span><span class="o">::</span><span class="n">SelectTrafficLights</span><span class="p">(</span>
+<div class="hlcode"><pre><span></span><span class="kt">void</span> <span class="n">Select</span><span class="o">::</span><span class="n">SelectTrafficLights</span><span class="p">(</span>
     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">refined_bboxes</span><span class="p">,</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">hdmap_bboxes</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// 将投影框和候选检测框进行匈牙利匹配</span>
@@ -674,7 +674,7 @@
       <span class="kt">double</span> <span class="n">max_score</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">;</span>
       <span class="k">auto</span> <span class="n">detect_score</span> <span class="o">=</span> <span class="n">refined_bboxes</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">region</span><span class="p">.</span><span class="n">detect_score</span><span class="p">;</span>
       <span class="kt">double</span> <span class="n">detection_score</span> <span class="o">=</span>
-          <span class="n">detect_score</span> <span class="o">&gt;</span> <span class="n">max_score</span> <span class="o">?</span> <span class="n">max_score</span> <span class="o">:</span> <span class="n">detect_score</span><span class="p">;</span>
+          <span class="n">detect_score</span> <span class="o">&gt;</span> <span class="n">max_score</span> <span class="o">?</span> <span class="nl">max_score</span> <span class="p">:</span> <span class="n">detect_score</span><span class="p">;</span>
 
       <span class="kt">double</span> <span class="n">distance_weight</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">;</span>
       <span class="kt">double</span> <span class="n">detection_weight</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">distance_weight</span><span class="p">;</span>
@@ -737,21 +737,21 @@
 
 <h3 id="23-detectorrecognition">2.3 detector/recognition</h3>
 <p>识别，对检测结果进行分类，给出颜色识别结果</p>
-<div class="hlcode"><pre><span class="n">recognition</span><span class="o">/</span>
-  <span class="err">├──</span> <span class="n">recognition</span><span class="p">.</span><span class="n">proto</span>  <span class="err">#</span> <span class="err">配置定义</span>
+<div class="hlcode"><pre><span></span><span class="n">recognition</span><span class="o">/</span>
+  <span class="err">├──</span> <span class="n">recognition</span><span class="p">.</span><span class="n">proto</span>  <span class="o">#</span> <span class="err">配置定义</span>
   <span class="err">├──</span> <span class="n">recognition</span><span class="p">.</span><span class="n">cc</span>
-  <span class="err">├──</span> <span class="n">recognition</span><span class="p">.</span><span class="n">h</span>      <span class="err">#</span> <span class="n">TrafficLightRecognition</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span>
+  <span class="err">├──</span> <span class="n">recognition</span><span class="p">.</span><span class="n">h</span>      <span class="o">#</span> <span class="n">TrafficLightRecognition</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span>
   <span class="err">├──</span> <span class="n">classify</span><span class="p">.</span><span class="n">cc</span>
-  <span class="err">└──</span> <span class="n">classify</span><span class="p">.</span><span class="n">h</span>         <span class="err">#</span> <span class="n">classification</span> <span class="n">inference</span>
+  <span class="err">└──</span> <span class="n">classify</span><span class="p">.</span><span class="n">h</span>         <span class="o">#</span> <span class="n">classification</span> <span class="n">inference</span>
 </pre></div>
 
 
 <p>主要函数：</p>
-<div class="hlcode"><pre><span class="kt">bool</span> <span class="n">TrafficLightRecognition</span><span class="o">::</span><span class="n">Detect</span><span class="p">(</span><span class="k">const</span> <span class="n">TrafficLightDetectorOptions</span><span class="o">&amp;</span> <span class="n">options</span><span class="p">,</span>
+<div class="hlcode"><pre><span></span><span class="kt">bool</span> <span class="n">TrafficLightRecognition</span><span class="o">::</span><span class="n">Detect</span><span class="p">(</span><span class="k">const</span> <span class="n">TrafficLightDetectorOptions</span><span class="o">&amp;</span> <span class="n">options</span><span class="p">,</span>
                                      <span class="n">CameraFrame</span><span class="o">*</span> <span class="n">frame</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span><span class="o">&gt;</span> <span class="n">candidate</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span> <span class="n">light</span> <span class="o">:</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">traffic_lights</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span> <span class="nl">light</span> <span class="p">:</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">traffic_lights</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">light</span><span class="o">-&gt;</span><span class="n">region</span><span class="p">.</span><span class="n">is_detected</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">candidate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">light</span><span class="p">;</span>
       <span class="c1">// 检测模型输出的检测框有三个类别，分别对应方形、竖直和水平形状</span>
@@ -785,10 +785,10 @@
 
 <h3 id="24-tracker">2.4 tracker</h3>
 <p>修正，红绿灯语义、时序校正</p>
-<div class="hlcode"><pre><span class="n">tracker</span><span class="o">/</span>
-  <span class="err">├──</span> <span class="n">semantic</span><span class="p">.</span><span class="n">proto</span>         <span class="err">#</span> <span class="err">配置定义</span>
+<div class="hlcode"><pre><span></span><span class="n">tracker</span><span class="o">/</span>
+  <span class="err">├──</span> <span class="n">semantic</span><span class="p">.</span><span class="n">proto</span>         <span class="o">#</span> <span class="err">配置定义</span>
   <span class="err">├──</span> <span class="n">semantic_decision</span><span class="p">.</span><span class="n">cc</span>
-  <span class="err">└──</span> <span class="n">semantic_decision</span><span class="p">.</span><span class="n">h</span>    <span class="err">#</span> <span class="n">SemanticReviser</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span>
+  <span class="err">└──</span> <span class="n">semantic_decision</span><span class="p">.</span><span class="n">h</span>    <span class="o">#</span> <span class="n">SemanticReviser</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span>
 </pre></div>
 
 
@@ -797,7 +797,7 @@
 <p>时序校正：</p>
 <p>基于一些规则对模型结果进行后处理。例如，某帧漏检出现 unknown color，根据前 1.5 秒内有颜色的输出将当前帧结果修正为该颜色，保证输出结果稳定；黄灯误识别为红灯，将之后的颜色均校正为红色(硬策略，避免黄灯出现在红灯之后给 PnC 造成困扰)。</p>
 <p>主要函数：</p>
-<div class="hlcode"><pre><span class="kt">bool</span> <span class="n">SemanticReviser</span><span class="o">::</span><span class="n">Track</span><span class="p">(</span><span class="k">const</span> <span class="n">TrafficLightTrackerOptions</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+<div class="hlcode"><pre><span></span><span class="kt">bool</span> <span class="n">SemanticReviser</span><span class="o">::</span><span class="n">Track</span><span class="p">(</span><span class="k">const</span> <span class="n">TrafficLightTrackerOptions</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
                             <span class="n">CameraFrame</span> <span class="o">*</span><span class="n">frame</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">double</span> <span class="n">time_stamp</span> <span class="o">=</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">timestamp</span><span class="p">;</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">lights_ref</span> <span class="o">=</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">traffic_lights</span><span class="p">;</span>
@@ -850,7 +850,7 @@
 </pre></div>
 
 
-<div class="hlcode"><pre><span class="c1">// 保存同语义红绿灯信息的数据结构</span>
+<div class="hlcode"><pre><span></span><span class="c1">// 保存同语义红绿灯信息的数据结构</span>
 <span class="c1">// 假设同语义的红绿灯状态是一致的</span>
 <span class="k">struct</span> <span class="n">SemanticTable</span> <span class="p">{</span>
   <span class="kt">double</span> <span class="n">time_stamp</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
@@ -867,7 +867,7 @@
 
 
 <p>同语义灯校正：</p>
-<div class="hlcode"><pre><span class="n">base</span><span class="o">::</span><span class="n">TLColor</span> <span class="n">SemanticReviser</span><span class="o">::</span><span class="n">ReviseBySemantic</span><span class="p">(</span>
+<div class="hlcode"><pre><span></span><span class="n">base</span><span class="o">::</span><span class="n">TLColor</span> <span class="n">SemanticReviser</span><span class="o">::</span><span class="n">ReviseBySemantic</span><span class="p">(</span>
     <span class="n">SemanticTable</span> <span class="n">semantic_table</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">lights</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vote</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_TOTAL_COLOR_NUM</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">lights_ref</span> <span class="o">=</span> <span class="o">*</span><span class="n">lights</span><span class="p">;</span>
@@ -913,7 +913,7 @@
 
 
 <p>时序校正：</p>
-<div class="hlcode"><pre><span class="kt">void</span> <span class="n">SemanticReviser</span><span class="o">::</span><span class="n">ReviseByTimeSeries</span><span class="p">(</span>
+<div class="hlcode"><pre><span></span><span class="kt">void</span> <span class="n">SemanticReviser</span><span class="o">::</span><span class="n">ReviseByTimeSeries</span><span class="p">(</span>
     <span class="kt">double</span> <span class="n">time_stamp</span><span class="p">,</span> <span class="n">SemanticTable</span> <span class="n">semantic_table</span><span class="p">,</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">base</span><span class="o">::</span><span class="n">TrafficLightPtr</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">lights</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">ADEBUG</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;revise &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">semantic_table</span><span class="p">.</span><span class="n">semantic</span>
@@ -938,7 +938,7 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">time_stamp</span> <span class="o">-</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">time_stamp</span> <span class="o">&lt;</span> <span class="n">revise_time_s_</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">ADEBUG</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;revise by time series&quot;</span><span class="p">;</span>
       <span class="k">switch</span> <span class="p">(</span><span class="n">cur_color</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="n">base</span>:<span class="o">:</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_YELLOW</span><span class="o">:</span>
+        <span class="k">case</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="nl">TL_YELLOW</span><span class="p">:</span>
           <span class="k">if</span> <span class="p">(</span><span class="n">iter</span><span class="o">-&gt;</span><span class="n">color</span> <span class="o">==</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_RED</span><span class="p">)</span> <span class="p">{</span>
             <span class="n">ReviseLights</span><span class="p">(</span><span class="n">lights</span><span class="p">,</span> <span class="n">semantic_table</span><span class="p">.</span><span class="n">light_ids</span><span class="p">,</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">color</span><span class="p">);</span>
             <span class="n">iter</span><span class="o">-&gt;</span><span class="n">time_stamp</span> <span class="o">=</span> <span class="n">time_stamp</span><span class="p">;</span>
@@ -948,8 +948,8 @@
             <span class="n">ADEBUG</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;High confidence color &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">s_color_strs</span><span class="p">[</span><span class="n">cur_color</span><span class="p">];</span>
           <span class="p">}</span>
           <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="n">base</span>:<span class="o">:</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_RED</span><span class="o">:</span>
-        <span class="k">case</span> <span class="n">base</span>:<span class="o">:</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_GREEN</span><span class="o">:</span>
+        <span class="k">case</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="nl">TL_RED</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="nl">TL_GREEN</span><span class="p">:</span>
           <span class="n">UpdateHistoryAndLights</span><span class="p">(</span><span class="n">semantic_table</span><span class="p">,</span> <span class="n">lights</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">iter</span><span class="p">);</span>
           <span class="k">if</span> <span class="p">(</span><span class="n">time_stamp</span> <span class="o">-</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">last_bright_time_stamp</span> <span class="o">&gt;</span> <span class="n">blink_threshold_s_</span> <span class="o">&amp;&amp;</span>
               <span class="n">iter</span><span class="o">-&gt;</span><span class="n">last_dark_time_stamp</span> <span class="o">&gt;</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">last_bright_time_stamp</span><span class="p">)</span> <span class="p">{</span>
@@ -958,7 +958,7 @@
           <span class="n">iter</span><span class="o">-&gt;</span><span class="n">last_bright_time_stamp</span> <span class="o">=</span> <span class="n">time_stamp</span><span class="p">;</span>
           <span class="n">ADEBUG</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;High confidence color &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">s_color_strs</span><span class="p">[</span><span class="n">cur_color</span><span class="p">];</span>
           <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="n">base</span>:<span class="o">:</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_BLACK</span><span class="o">:</span>
+        <span class="k">case</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="nl">TL_BLACK</span><span class="p">:</span>
           <span class="n">iter</span><span class="o">-&gt;</span><span class="n">last_dark_time_stamp</span> <span class="o">=</span> <span class="n">time_stamp</span><span class="p">;</span>
           <span class="n">iter</span><span class="o">-&gt;</span><span class="n">hystertic_window</span><span class="p">.</span><span class="n">hysteretic_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
           <span class="k">if</span> <span class="p">(</span><span class="n">iter</span><span class="o">-&gt;</span><span class="n">color</span> <span class="o">==</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_UNKNOWN_COLOR</span> <span class="o">||</span>
@@ -969,8 +969,8 @@
             <span class="n">ReviseLights</span><span class="p">(</span><span class="n">lights</span><span class="p">,</span> <span class="n">semantic_table</span><span class="p">.</span><span class="n">light_ids</span><span class="p">,</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">color</span><span class="p">);</span>
           <span class="p">}</span>
           <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="n">base</span>:<span class="o">:</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_UNKNOWN_COLOR</span><span class="o">:</span>
-        <span class="nl">default:</span>
+        <span class="k">case</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="nl">TL_UNKNOWN_COLOR</span><span class="p">:</span>
+        <span class="k">default</span><span class="o">:</span>
           <span class="n">ReviseLights</span><span class="p">(</span><span class="n">lights</span><span class="p">,</span> <span class="n">semantic_table</span><span class="p">.</span><span class="n">light_ids</span><span class="p">,</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">color</span><span class="p">);</span>
           <span class="k">break</span><span class="p">;</span>
       <span class="p">}</span>
@@ -986,7 +986,7 @@
       <span class="n">iter</span><span class="o">-&gt;</span><span class="n">blink</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">index</span> <span class="o">:</span> <span class="n">semantic_table</span><span class="p">.</span><span class="n">light_ids</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">index</span> <span class="p">:</span> <span class="n">semantic_table</span><span class="p">.</span><span class="n">light_ids</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">lights_ref</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">status</span><span class="p">.</span><span class="n">blink</span> <span class="o">=</span>
           <span class="p">(</span><span class="n">iter</span><span class="o">-&gt;</span><span class="n">blink</span> <span class="o">&amp;&amp;</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">color</span> <span class="o">==</span> <span class="n">base</span><span class="o">::</span><span class="n">TLColor</span><span class="o">::</span><span class="n">TL_GREEN</span><span class="p">);</span>
     <span class="p">}</span>
@@ -1008,7 +1008,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

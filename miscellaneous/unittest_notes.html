@@ -110,7 +110,7 @@
 <li>Verify，验证结果是否符合预期</li>
 <li>Teardown，重置状态</li>
 </ul>
-<div class="hlcode"><pre><span class="n">TEST_F</span><span class="p">(</span><span class="n">MyTest</span><span class="p">,</span> <span class="n">test1</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">MyTest</span><span class="p">,</span> <span class="n">test1</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// Setup</span>
   <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
   <span class="n">Init</span><span class="p">();</span>
@@ -134,7 +134,7 @@
 <h3 id="_5">单测技巧</h3>
 <h4 id="private">如何测试 private 函数</h4>
 <p>在 UT Makefile 中定义：</p>
-<div class="hlcode"><pre><span class="o">-</span><span class="n">Dprivate</span><span class="o">=</span><span class="n">public</span> <span class="o">-</span><span class="n">Dprotected</span><span class="o">=</span><span class="n">public</span>
+<div class="hlcode"><pre><span></span><span class="o">-</span><span class="n">Dprivate</span><span class="o">=</span><span class="k">public</span> <span class="o">-</span><span class="n">Dprotected</span><span class="o">=</span><span class="k">public</span>
 </pre></div>
 
 
@@ -142,8 +142,8 @@
 <p>mocking 有假装、嘲讽的意思。</p>
 <p>mock 对象就是可以模拟其他对象行为的一种对象，它可以使单元测试易于编写。</p>
 <p>看这样一个例子：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
- <span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
   <span class="kt">int</span> <span class="n">func1</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">func2</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
@@ -151,7 +151,7 @@
       <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">}</span>
- <span class="nl">protected:</span>
+ <span class="k">protected</span><span class="o">:</span>
   <span class="k">virtual</span> <span class="kt">int</span> <span class="n">func2</span><span class="p">();</span>
 <span class="p">};</span>
 </pre></div>
@@ -162,9 +162,9 @@
 <p>针对与上下游之间的网络通信，数据发送/接收等功能做单测时，会用到 stub 技术。可以开发一个简单的桩程序 stub 来代替下游模块，并提供接口用来在 UT 用例中设置 stub 返 回的结果数据。但考虑该方法具有一定开发成本，使用起来不是很方便，加上，网络通信， 数据发送/接收等功能的测试更像是接口，联调类测试，放在单测中进行本身就不是很合适。 故一般不建议采用。</p>
 <h5 id="_6">子类化重写</h5>
 <p>利用虚函数特性进行 mock，缺点是被 mock 的函数必须是 virtual 函数。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">MockA1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
- <span class="nl">protected:</span>
-  <span class="k">virtual</span> <span class="kt">int</span> <span class="n">func2</span><span class="p">()</span> <span class="n">override</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">MockA1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
+ <span class="k">protected</span><span class="o">:</span>
+  <span class="k">virtual</span> <span class="kt">int</span> <span class="n">func2</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
     <span class="k">return</span> <span class="mi">100</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">};</span>
@@ -187,7 +187,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

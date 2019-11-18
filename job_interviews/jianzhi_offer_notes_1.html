@@ -171,8 +171,8 @@
 <li>如果把析构函数标记为虚函数，则求 sizeof ，在 32 位机器上得到 4 ， 在 64 位机器上得到的是  8 。原因是，编译器一旦发现一个类型中有虚函数，就会为该类型生成一个 <strong>虚函数表</strong> ，并<strong>在该类型的每一个实例中添加一个指向虚函数表的指针</strong>。</li>
 </ol>
 <h4 id="c">C++ 拷贝构造函数定义</h4>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
- <span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
   <span class="n">A</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
   <span class="p">}</span>
@@ -191,16 +191,16 @@
     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
   <span class="p">}</span>
 
- <span class="nl">private:</span>
+ <span class="k">private</span><span class="o">:</span>
   <span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
 <span class="p">};</span>
 </pre></div>
 
 
 <h4 id="1">面试题1：赋值运算符的实现</h4>
-<div class="hlcode"><pre><span class="c1">// 题目：如下为类型 CMyString 的声明，请为该类型添加赋值运算符函数</span>
+<div class="hlcode"><pre><span></span><span class="c1">// 题目：如下为类型 CMyString 的声明，请为该类型添加赋值运算符函数</span>
 <span class="k">class</span> <span class="nc">CMyString</span> <span class="p">{</span>
- <span class="nl">public:</span>
+ <span class="k">public</span><span class="o">:</span>
   <span class="n">CMyString</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">pData</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">);</span>
   <span class="n">CMyString</span><span class="p">(</span><span class="k">const</span> <span class="n">CMyString</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">);</span>
   <span class="o">~</span><span class="n">CMyString</span><span class="p">();</span>
@@ -209,7 +209,7 @@
 
   <span class="kt">void</span> <span class="nf">Print</span><span class="p">();</span>
 
- <span class="nl">private:</span>
+ <span class="k">private</span><span class="o">:</span>
   <span class="kt">char</span> <span class="o">*</span><span class="n">m_pData</span><span class="p">;</span>
 <span class="p">};</span>
 </pre></div>
@@ -224,7 +224,7 @@
 <li>构造 Unit Tests 验证实现（如连续赋值、自赋值的情况）</li>
 <li>可以利用 swap trick：</li>
 </ul>
-<div class="hlcode"><pre><span class="c1">// 实现赋值运算符函数</span>
+<div class="hlcode"><pre><span></span><span class="c1">// 实现赋值运算符函数</span>
 <span class="c1">// 利用局部变量自动释放原有内存</span>
 <span class="n">CMyString</span><span class="o">&amp;</span> <span class="n">CMyString</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">CMyString</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">str</span> <span class="o">!=</span> <span class="k">this</span><span class="p">)</span> <span class="p">{</span>
@@ -267,14 +267,14 @@
 <li>由于在main函数之前初始化，所以没有线程安全的问题，但是潜在问题在于 no-local static 对象（函数外的static对象）在不同编译单元（可理解为cpp文件和其包含的头文件）中的初始化顺序是未定义的。如果在初始化完成之前调用 Instance()方法会返回一个未定义的实例。</li>
 </ul>
 <h5 id="meyers-singleton">Meyers Singleton</h5>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
- <span class="nl">public:</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Singleton</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
   <span class="k">static</span> <span class="n">Singleton</span><span class="o">&amp;</span> <span class="n">Instance</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">static</span> <span class="n">Singleton</span> <span class="n">instance_</span><span class="p">;</span>  <span class="c1">// 使用 local static 对象</span>
     <span class="k">return</span> <span class="n">instance_</span><span class="p">;</span>
   <span class="p">}</span>
 
- <span class="nl">private:</span>
+ <span class="k">private</span><span class="o">:</span>
   <span class="c1">// 构造函数声明为私有，防止外部显式构造新实例</span>
   <span class="n">Singleton</span><span class="p">()</span>   <span class="p">{</span>
     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Singleton 类构造函数&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
@@ -309,7 +309,7 @@
 <li>异常输入值（空指针）</li>
 </ul>
 <h4 id="c_1">C 语言风格字符串</h4>
-<div class="hlcode"><pre><span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<div class="hlcode"><pre><span></span><span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
 <span class="n">strcpy</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="s">&quot;0123456789&quot;</span><span class="p">);</span>  <span class="c1">// 错误，&quot;0123456789&quot; 实际长度为 11，末尾有 &#39;\0&#39;</span>
 </pre></div>
 
@@ -322,7 +322,7 @@
 <p>分析：字符串就是数组，如果允许另开一个数组，从前向后替换很容易写出 O(n) 的算法。如果不允许开新数组，那么从前向后替换的时间复杂度为 O(n^2)，因为每替换一次后面的字符都要移动。如果从后向前进行替换（设置两个指针，一个指向原字符串末尾，一个指向替换后的新字符串末尾），则可以实现每个字符只移动一次，这样时间复杂度仍为 O(n)，不过需要先扫描一遍原字符串并计算新字符串的长度。</p>
 <h4 id="_3">链表</h4>
 <p>动态数据结构，插入、删除节点效率高；不支持随机存取，查找效率低。</p>
-<div class="hlcode"><pre><span class="k">struct</span> <span class="n">ListNode</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">struct</span> <span class="n">ListNode</span> <span class="p">{</span>
   <span class="n">ListNode</span><span class="p">(</span><span class="kt">int</span> <span class="n">v_</span><span class="p">)</span> <span class="o">:</span> <span class="n">val</span><span class="p">(</span><span class="n">v_</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
   <span class="p">}</span>
@@ -341,7 +341,7 @@
 <h4 id="5">面试题5：从尾到头打印链表</h4>
 <p>如果允许修改链表 ==&gt; 链表逆序。</p>
 <p>不允许修改链表，使用栈或者递归。</p>
-<div class="hlcode"><pre><span class="k">struct</span> <span class="n">ListNode</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">struct</span> <span class="n">ListNode</span> <span class="p">{</span>
   <span class="n">ListNode</span><span class="p">(</span><span class="kt">int</span> <span class="n">v_</span><span class="p">)</span> <span class="o">:</span> <span class="n">val</span><span class="p">(</span><span class="n">v_</span><span class="p">),</span> <span class="n">next</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{}</span>
 
   <span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
@@ -435,7 +435,7 @@ f(n-1) &amp; f(n-2)<br />
 <p>输入一个 10 进制整数，输出其二进制表示中 1 的个数。</p>
 </blockquote>
 <p>先判断整数的二进制表示中最右边一位是不是 1 。接着把输入的整数右移一位，再判断最右边一位是不是 1。这样每次移动一位，直到整个整数变成 0 为止。如何判断最右边一位是不是 1？与整数 1 进行与运算：</p>
-<div class="hlcode"><pre><span class="kt">int</span> <span class="nf">count_binary_ones</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="kt">int</span> <span class="nf">count_binary_ones</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
   <span class="k">while</span> <span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">num</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
@@ -453,7 +453,7 @@ f(n-1) &amp; f(n-2)<br />
 <p>这里介绍一个性质，任意整数 n，n 与 (n - 1) 进行与操作可以将 n 的二进制的最右边一个 1（不一定是最右边一位）变为 0。<br />
 （把一个整数减去 1，再和原整数做与运算，会把该整数最右边一个 1 变成 0。）</p>
 <p>利用这个性质可以解决这一题：</p>
-<div class="hlcode"><pre><span class="kt">int</span> <span class="nf">count_binary_ones</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="kt">int</span> <span class="nf">count_binary_ones</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
   <span class="k">while</span> <span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="p">{</span>
     <span class="o">++</span><span class="n">cnt</span><span class="p">;</span>
@@ -495,7 +495,7 @@ f(n-1) &amp; f(n-2)<br />
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

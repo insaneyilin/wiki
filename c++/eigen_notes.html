@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Eigen C++ Library cheatsheet - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#c++">c++</a>&nbsp;&#187;&nbsp;Eigen C++ Library cheatsheet
+    <span class="updated">Page Updated&nbsp;
+      2019-11-18 23:23
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Eigen C++ Library cheatsheet</div>
+
+  <p>矩阵创建</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;Eigen/Dense&gt;</span><span class="cp"></span>
+
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">M1</span><span class="p">;</span>  <span class="c1">// 固定size</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="o">&gt;</span> <span class="n">M2</span><span class="p">;</span>  <span class="c1">// 列长度不定</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="o">&gt;</span> <span class="n">M3</span><span class="p">;</span>  <span class="c1">// 动态size</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">RowMajor</span><span class="o">&gt;</span> <span class="n">M4</span><span class="p">;</span>  <span class="c1">// 行优先存储（默认是列优先）</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix3f</span> <span class="n">M5</span><span class="p">;</span>
+<span class="n">Vector3f</span> <span class="n">x</span><span class="p">;</span>  <span class="c1">// 3x1</span>
+<span class="n">RowVector3f</span> <span class="n">a</span><span class="p">;</span>  <span class="c1">// 1x3</span>
+<span class="n">VectorXd</span> <span class="n">v</span><span class="p">;</span>  <span class="c1">// dynamic column vector</span>
+</pre></div>
+
+
+<p>属性、赋值等</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;Eigen/Dense&gt;</span><span class="cp"></span>
+
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix3d</span> <span class="n">A</span><span class="p">;</span>
+<span class="n">A</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="mf">5.0</span><span class="p">);</span>   <span class="c1">// A 中元素全部设置为 5.0</span>
+
+<span class="c1">// 按照行列下标访问</span>
+<span class="n">A</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="n">A</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+<span class="c1">// 行、列数</span>
+<span class="n">A</span><span class="p">.</span><span class="n">rows</span><span class="p">();</span>
+<span class="n">A</span><span class="p">.</span><span class="n">cols</span><span class="p">();</span>
+
+<span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+     <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span>
+     <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">;</span>  <span class="c1">// 按照 row-major 顺序赋值（注意和存储方式不同）</span>
+
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Dynamic</span><span class="o">&gt;</span> <span class="n">B</span><span class="p">;</span>
+<span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">A</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">A</span><span class="p">;</span>  <span class="c1">// horizontally stacked</span>
+<span class="n">B</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+<span class="c1">// 单位阵</span>
+<span class="n">MatrixXd</span><span class="o">::</span><span class="n">Identity</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+<span class="n">Matrix3d</span><span class="o">::</span><span class="n">Identity</span><span class="p">();</span>
+<span class="n">B</span><span class="p">.</span><span class="n">setIdentity</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+
+<span class="c1">// 类似的有全零矩阵 Zero()，随机矩阵 Random()</span>
+<span class="n">Matrix3d</span><span class="o">::</span><span class="n">Zero</span><span class="p">();</span>
+<span class="n">A</span><span class="p">.</span><span class="n">setZero</span><span class="p">();</span>
+
+<span class="c1">// 线性增长数组</span>
+<span class="n">VectorXd</span><span class="o">::</span><span class="n">LinSpaced</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">);</span>
+<span class="n">v</span><span class="p">.</span><span class="n">setLinSpaced</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">);</span>
+<span class="n">VectorXi</span><span class="o">::</span><span class="n">LinSpaced</span><span class="p">(((</span><span class="n">hi</span> <span class="o">-</span> <span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="n">step</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="n">low</span><span class="p">,</span> <span class="n">low</span> <span class="o">+</span> <span class="n">step</span> <span class="o">*</span> <span class="p">(</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>  <span class="c1">// low:step:hi</span>
+
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3f</span> <span class="n">v</span><span class="p">(</span><span class="mf">1.f</span><span class="p">,</span> <span class="mf">2.f</span><span class="p">,</span> <span class="mf">3.f</span><span class="p">);</span>
+</pre></div>
+
+
+<p>子数组，子矩阵</p>
+<div class="hlcode"><pre><span></span><span class="n">Eigen</span><span class="o">::</span><span class="n">VectorXd</span> <span class="n">v</span><span class="p">;</span>
+<span class="n">v</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+<span class="n">v</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">v</span><span class="p">.</span><span class="n">head</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">v</span><span class="p">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">v</span><span class="p">.</span><span class="n">tail</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">v</span><span class="p">.</span><span class="n">segment</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>  <span class="c1">// [v[1], v[2]]</span>
+
+<span class="n">MatrixXd</span> <span class="n">A</span><span class="p">;</span>
+<span class="n">A</span><span class="p">.</span><span class="n">reize</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="n">A</span><span class="p">.</span><span class="n">block</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">);</span>  <span class="c1">// 以 (i, j) 为左上角元素取一个 size 为 (rows, cols) 的子矩阵</span>
+<span class="n">A</span><span class="p">.</span><span class="n">row</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>  <span class="c1">// 第 i 行</span>
+<span class="n">A</span><span class="p">.</span><span class="n">col</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>  <span class="c1">// 第 j 列</span>
+
+<span class="c1">// 转置</span>
+<span class="n">A</span><span class="p">.</span><span class="n">transpose</span><span class="p">();</span>
+
+<span class="c1">// 逆矩阵</span>
+<span class="n">A</span><span class="p">.</span><span class="n">inverse</span><span class="p">();</span>
+
+<span class="c1">// 求行列式值</span>
+<span class="n">A</span><span class="p">.</span><span class="n">determinant</span><span class="p">();</span>
+</pre></div>
+
+
+<p>矩阵、向量计算相关</p>
+<div class="hlcode"><pre><span></span><span class="c1">// 矩阵乘法，矩阵向量乘法可以直接进行</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix3f</span> <span class="n">A</span><span class="p">;</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix3f</span> <span class="n">B</span><span class="p">;</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix3f</span> <span class="n">C</span><span class="p">;</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span><span class="p">;</span>
+
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3f</span> <span class="n">x</span><span class="p">;</span>
+<span class="n">A</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
+
+<span class="c1">// 逐元素计算</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">cwiseProduct</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
+
+<span class="n">A</span><span class="p">.</span><span class="n">array</span><span class="p">().</span><span class="n">sin</span><span class="p">();</span>
+<span class="n">A</span><span class="p">.</span><span class="n">array</span><span class="p">().</span><span class="n">cos</span><span class="p">();</span>
+
+<span class="n">A</span><span class="p">.</span><span class="n">cwiseAbs</span><span class="p">();</span>  <span class="c1">// A 中所有元素取绝对值</span>
+
+<span class="n">A</span><span class="p">.</span><span class="n">minCoeff</span><span class="p">();</span>  <span class="c1">// A 中最小元素</span>
+<span class="n">A</span><span class="p">.</span><span class="n">maxCoeff</span><span class="p">();</span>  <span class="c1">// A 中最大元素</span>
+
+<span class="c1">// 向量计算</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3f</span> <span class="n">x</span><span class="p">;</span>
+<span class="n">x</span><span class="p">.</span><span class="n">norm</span><span class="p">();</span>  <span class="c1">// 模长</span>
+
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3f</span> <span class="n">y</span><span class="p">;</span>
+<span class="n">x</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+<span class="n">x</span><span class="p">.</span><span class="n">cross</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+
+<span class="c1">// 类型转换</span>
+<span class="n">A</span><span class="p">.</span><span class="n">cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+</pre></div>
+
+
+<p>解线性方程组</p>
+<div class="hlcode"><pre><span></span><span class="c1">// A x = b，求 x</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">ldlt</span><span class="p">().</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>  <span class="c1">// A sym. p.s.d.    #include &lt;Eigen/Cholesky&gt;</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">llt</span><span class="p">()</span> <span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>  <span class="c1">// A sym. p.d.      #include &lt;Eigen/Cholesky&gt;</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">lu</span><span class="p">()</span>  <span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>  <span class="c1">// Stable and fast. #include &lt;Eigen/LU&gt;</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">qr</span><span class="p">()</span>  <span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>  <span class="c1">// No pivoting.     #include &lt;Eigen/QR&gt;</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">svd</span><span class="p">()</span> <span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>  <span class="c1">// Stable, slowest. #include &lt;Eigen/SVD&gt;</span>
+</pre></div>
+
+
+<p>求特征值</p>
+<div class="hlcode"><pre><span></span><span class="n">A</span><span class="p">.</span><span class="n">eigenvalues</span><span class="p">();</span>
+<span class="n">EigenSolver</span><span class="o">&lt;</span><span class="n">Matrix3d</span><span class="o">&gt;</span> <span class="n">eig</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>
+<span class="n">eig</span><span class="p">.</span><span class="n">eigenvalues</span><span class="p">();</span>
+<span class="n">eig</span><span class="p">.</span><span class="n">eigenvectors</span><span class="p">();</span>
+</pre></div>
+
+
+<p>常量矩阵</p>
+<div class="hlcode"><pre><span></span><span class="k">static</span> <span class="k">const</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix3f</span> <span class="n">A</span> <span class="o">=</span>
+    <span class="p">(</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix3f</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+                          <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span>
+                          <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">).</span><span class="n">finished</span><span class="p">();</span>
+</pre></div>
+
+
+<p>几何变换</p>
+<div class="hlcode"><pre><span></span><span class="c1">// 四元数</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Quaterniond</span> <span class="n">quatd</span><span class="p">;</span>
+<span class="n">quatd</span><span class="p">.</span><span class="n">setFromTwoVectors</span><span class="p">(</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">vec</span><span class="p">);</span>
+
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix3d</span> <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">quatd</span><span class="p">.</span><span class="n">toRotationMatrix</span><span class="p">();</span>
+
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Quaterniond</span> <span class="n">quatd</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">);</span>
+<span class="n">quatd</span><span class="p">.</span><span class="n">normalize</span><span class="p">();</span>
+<span class="n">quatd</span><span class="p">.</span><span class="n">norm</span><span class="p">();</span>
+
+<span class="c1">// 仿射变换</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Affine3d</span> <span class="n">pose</span> <span class="o">=</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Affine3d</span><span class="o">::</span><span class="n">Identity</span><span class="p">();</span>
+<span class="n">pose</span><span class="p">.</span><span class="n">translation</span><span class="p">()</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>  <span class="c1">// 3x1</span>
+<span class="n">pose</span><span class="p">.</span><span class="n">linear</span><span class="p">()</span> <span class="o">=</span> <span class="n">quatd</span><span class="p">.</span><span class="n">toRotationMatrix</span><span class="p">();</span>  <span class="c1">// 4x4</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">pose</span><span class="p">.</span><span class="n">translation</span><span class="p">();</span>
+<span class="n">rot_mat</span> <span class="o">=</span> <span class="n">pose</span><span class="p">.</span><span class="n">linear</span><span class="p">();</span>
+
+<span class="c1">// 从四元数、平移向量构造 Affine3d</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Quaterniond</span> <span class="n">q</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span> <span class="n">t</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">);</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Affine3d</span> <span class="n">pose</span><span class="p">;</span>
+<span class="n">pose</span> <span class="o">=</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Translation3d</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">q</span><span class="p">;</span>  <span class="c1">// 这里把 * 看成变换的复合</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;pose: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">pose</span><span class="p">.</span><span class="n">matrix</span><span class="p">();</span>
+</pre></div>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/c++/cxx11_multi_thread_and_async.html">C++11 多线程与异步调用</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

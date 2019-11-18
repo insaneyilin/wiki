@@ -130,11 +130,11 @@
 <li>根据 <code>tools</code> 下面的工具去自己修改、编写新工具</li>
 </ul>
 <p>利用 grep 来迅速定位代码：</p>
-<div class="hlcode"><pre><span class="n">grep</span> <span class="o">-</span><span class="n">n</span> <span class="o">-</span><span class="n">H</span> <span class="o">-</span><span class="n">R</span> <span class="s">&quot;xxx&quot;</span> <span class="o">*</span>
+<div class="hlcode"><pre><span></span><span class="n">grep</span> <span class="o">-</span><span class="n">n</span> <span class="o">-</span><span class="n">H</span> <span class="o">-</span><span class="n">R</span> <span class="ss">&quot;xxx&quot;</span> <span class="o">*</span>
 
-<span class="cp"># -n 显示行号</span>
-<span class="cp"># -H 显示文件名</span>
-<span class="cp"># -R 递归查找子目录</span>
+<span class="o">#</span> <span class="o">-</span><span class="n">n</span> <span class="err">显示行号</span>
+<span class="o">#</span> <span class="o">-</span><span class="n">H</span> <span class="err">显示文件名</span>
+<span class="o">#</span> <span class="o">-</span><span class="n">R</span> <span class="err">递归查找子目录</span>
 </pre></div>
 
 
@@ -152,12 +152,12 @@
 <li>假设卷积核的大小为 <code>I*J</code>，每个输出通道的 feature map （特征图）大小均为 <code>M*N</code>，则该层每个样本做一次前向传播时的计算量为： <code>Calculations = I * J * M * N * K * L</code></li>
 <li>在 mnist/lenet_train_val.prototxt 中找到卷积核参数描述：</li>
 </ul>
-<div class="hlcode"><pre><span class="n">convolution_param</span> <span class="p">{</span>
-    <span class="nl">num_output:</span> <span class="mi">50</span>  <span class="c1">// 对应上面的 L</span>
-    <span class="nl">kernel_size:</span> <span class="mi">5</span>  <span class="c1">// 对应上面的 I J</span>
-    <span class="nl">stride:</span> <span class="mi">1</span>  <span class="c1">// 滑动窗口每次移动的步长</span>
+<div class="hlcode"><pre><span></span><span class="n">convolution_param</span> <span class="err">{</span>
+    <span class="n">num_output</span><span class="p">:</span> <span class="mi">50</span>  <span class="o">//</span> <span class="err">对应上面的</span> <span class="n">L</span>
+    <span class="n">kernel_size</span><span class="p">:</span> <span class="mi">5</span>  <span class="o">//</span> <span class="err">对应上面的</span> <span class="n">I</span> <span class="n">J</span>
+    <span class="n">stride</span><span class="p">:</span> <span class="mi">1</span>  <span class="o">//</span> <span class="err">滑动窗口每次移动的步长</span>
     <span class="p">......</span>
-<span class="p">}</span>
+<span class="err">}</span>
 </pre></div>
 
 
@@ -172,10 +172,10 @@
 <li>全连接层主要计算为“矩阵与向量乘积”： $y = W * x$，这里 x 为输入向量，y 为输出向量，W 为权值矩阵；</li>
 <li>全连接层中，直接将前一层输出展开为一维向量（不考虑 batch 的维度）：</li>
 </ul>
-<div class="hlcode"><pre><span class="n">inner_product_param</span> <span class="p">{</span>
-    <span class="nl">num_output:</span> <span class="mi">500</span>  <span class="c1">// 输出向量维数</span>
+<div class="hlcode"><pre><span></span><span class="n">inner_product_param</span> <span class="err">{</span>
+    <span class="n">num_output</span><span class="p">:</span> <span class="mi">500</span>  <span class="o">//</span> <span class="err">输出向量维数</span>
     <span class="p">......</span>
-<span class="p">}</span>
+<span class="err">}</span>
 </pre></div>
 
 
@@ -333,22 +333,22 @@
 <li>如果网络权值可视化中出现图案相关性高、缺乏结构性等情况，可能说明训练结果不好</li>
 </ul>
 <p>训练脚本时这么写：</p>
-<div class="hlcode"><pre><span class="n">xxx</span><span class="p">.</span><span class="n">sh</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span> <span class="n">xxx</span><span class="p">.</span><span class="n">log</span> <span class="o">&amp;</span>
-<span class="cp"># 2&gt;&amp;1 表示 stdout 和 stderr 都重定向到 xxx.log</span>
-<span class="cp"># 最后的 &amp; 表示在后台运行</span>
+<div class="hlcode"><pre><span></span><span class="n">xxx</span><span class="p">.</span><span class="n">sh</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span> <span class="n">xxx</span><span class="p">.</span><span class="n">log</span> <span class="o">&amp;</span>
+<span class="o">#</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span> <span class="err">表示</span> <span class="k">stdout</span> <span class="err">和</span> <span class="n">stderr</span> <span class="err">都重定向到</span> <span class="n">xxx</span><span class="p">.</span><span class="n">log</span>
+<span class="o">#</span> <span class="err">最后的</span> <span class="o">&amp;</span> <span class="err">表示在后台运行</span>
 </pre></div>
 
 
 <p>可以用 tail -f xxx.log 观察 log 文件的更新</p>
 <p>可以使用如下命令提取 log 文件中的 loss 值：</p>
-<div class="hlcode"><pre><span class="n">cat</span> <span class="n">xxx</span><span class="p">.</span><span class="n">log</span> <span class="o">|</span> <span class="n">grep</span> <span class="s">&quot;Train net output&quot;</span> <span class="o">|</span> <span class="n">awk</span> <span class="err">&#39;</span><span class="p">{</span><span class="n">print</span> <span class="err">$</span><span class="mi">11</span><span class="p">}</span><span class="err">&#39;</span>
+<div class="hlcode"><pre><span></span><span class="n">cat</span> <span class="n">xxx</span><span class="p">.</span><span class="n">log</span> <span class="o">|</span> <span class="n">grep</span> <span class="ss">&quot;Train net output&quot;</span> <span class="o">|</span> <span class="n">awk</span> <span class="s1">&#39;{print $11}&#39;</span>
 </pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

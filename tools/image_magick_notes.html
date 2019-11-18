@@ -66,34 +66,34 @@
 <hr />
 <h3 id="mac-imagemagick">Mac 下安装 ImageMagick</h3>
 <p>直接用 homebrew：</p>
-<div class="hlcode"><pre><span class="n">brew</span> <span class="n">install</span> <span class="n">imagemagick</span>
+<div class="hlcode"><pre><span></span><span class="n">brew</span> <span class="n">install</span> <span class="n">imagemagick</span>
 </pre></div>
 
 
 <hr />
 <h3 id="_1">常用命令</h3>
 <h4 id="_2">图像格式转换</h4>
-<div class="hlcode"><pre><span class="n">convert</span> <span class="n">test</span><span class="p">.</span><span class="n">jpg</span> <span class="n">test</span><span class="p">.</span><span class="n">png</span>
+<div class="hlcode"><pre><span></span><span class="k">convert</span> <span class="n">test</span><span class="p">.</span><span class="n">jpg</span> <span class="n">test</span><span class="p">.</span><span class="n">png</span>
 </pre></div>
 
 
 <h4 id="_3">缩放</h4>
-<div class="hlcode"><pre><span class="n">convert</span> <span class="o">-</span><span class="n">resize</span> <span class="mi">50</span><span class="o">%</span> <span class="n">test</span><span class="p">.</span><span class="n">png</span> <span class="n">result</span><span class="p">.</span><span class="n">png</span>
+<div class="hlcode"><pre><span></span><span class="k">convert</span> <span class="o">-</span><span class="n">resize</span> <span class="mi">50</span><span class="o">%</span> <span class="n">test</span><span class="p">.</span><span class="n">png</span> <span class="k">result</span><span class="p">.</span><span class="n">png</span>
 </pre></div>
 
 
 <h4 id="_4">旋转</h4>
-<div class="hlcode"><pre><span class="n">convert</span> <span class="o">-</span><span class="n">rotate</span> <span class="o">-</span><span class="mi">90</span> <span class="n">test</span><span class="p">.</span><span class="n">png</span> <span class="n">result</span><span class="p">.</span><span class="n">png</span>
+<div class="hlcode"><pre><span></span><span class="k">convert</span> <span class="o">-</span><span class="n">rotate</span> <span class="o">-</span><span class="mi">90</span> <span class="n">test</span><span class="p">.</span><span class="n">png</span> <span class="k">result</span><span class="p">.</span><span class="n">png</span>
 </pre></div>
 
 
 <h4 id="_5">裁剪</h4>
-<div class="hlcode"><pre><span class="n">convert</span> <span class="o">-</span><span class="n">crop</span> <span class="mi">50</span><span class="n">x50</span><span class="o">+</span><span class="mi">10</span><span class="o">+</span><span class="mi">10</span> <span class="n">test</span><span class="p">.</span><span class="n">png</span> <span class="n">result</span><span class="p">.</span><span class="n">png</span>
+<div class="hlcode"><pre><span></span><span class="k">convert</span> <span class="o">-</span><span class="n">crop</span> <span class="mi">50</span><span class="n">x50</span><span class="o">+</span><span class="mi">10</span><span class="o">+</span><span class="mi">10</span> <span class="n">test</span><span class="p">.</span><span class="n">png</span> <span class="k">result</span><span class="p">.</span><span class="n">png</span>
 </pre></div>
 
 
 <h4 id="_6">图片压缩</h4>
-<div class="hlcode"><pre><span class="cp"># 会覆盖原有图片</span>
+<div class="hlcode"><pre><span></span><span class="o">#</span> <span class="err">会覆盖原有图片</span>
 <span class="n">mogrify</span> <span class="o">-</span><span class="n">quality</span> <span class="mi">20</span> <span class="n">test</span><span class="p">.</span><span class="n">jpg</span>
 </pre></div>
 
@@ -103,8 +103,8 @@
 <p>Magick++ 是 ImageMagick 的 C++ API。</p>
 <p>在我的 Mac (macOS High Sierra 10.13.6) 上，使用 homebrew 安装完 ImageMagick 就可以直接用 Magick++。</p>
 <p>例子：</p>
-<div class="hlcode"><pre><span class="c1">// main.cc</span>
-<span class="cp">#include &lt;Magick++.h&gt;</span>
+<div class="hlcode"><pre><span></span><span class="c1">// main.cc</span>
+<span class="cp">#include</span> <span class="cpf">&lt;Magick++.h&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">//InitializeMagick(*argv);  // for Windows</span>
@@ -117,7 +117,7 @@
 
 
 <p>CMakeLists.txt :</p>
-<div class="hlcode"><pre>project(magick++_demo)
+<div class="hlcode"><pre><span></span>project(magick++_demo)
 find_package(ImageMagick COMPONENTS Magick++)
 
 include_directories(<span class="cp">${</span><span class="n">ImageMagick_INCLUDE_DIRS</span><span class="cp">}</span>)
@@ -129,7 +129,7 @@ target_link_libraries(demo <span class="cp">${</span><span class="n">ImageMagick
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 

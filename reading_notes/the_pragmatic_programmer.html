@@ -211,9 +211,9 @@
 <p>再思考一下头文件和实现文件中的注释，没有理由在这两种文件之间重复函数或类头注释。应该用头文件记载接口问题，实现文件记载代码使用者无需了解的实际细节。</p>
 <p>inadvertent duplication</p>
 <p>设计的不合理。例子：</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Line</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Line</span>
 <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">Point</span> <span class="n">start</span><span class="p">;</span>
     <span class="n">Point</span> <span class="n">end</span><span class="p">;</span>
     <span class="kt">double</span> <span class="n">length</span><span class="p">;</span>
@@ -222,9 +222,9 @@
 
 
 <p>上面的代码有重复，因为长度是由起点和终点决定的，应该令长度成为<strong>可计算字段</strong>。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Line</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Line</span>
 <span class="p">{</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">Point</span> <span class="n">start</span><span class="p">;</span>
     <span class="n">Point</span> <span class="n">end</span><span class="p">;</span>
     <span class="kt">double</span> <span class="nf">length</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">start</span><span class="p">.</span><span class="n">distanceTo</span><span class="p">(</span><span class="n">end</span><span class="p">);</span> <span class="p">}</span>
@@ -233,19 +233,19 @@
 
 
 <p>但实际开发中往往会由于性能原因迫使我们违反DRY原则。例如我们需要缓存数据，以避免重复昂贵的计算操作。这里的窍门是<strong>使影响局部化</strong>。对DRY原则的违反没有暴露给外界，类中的方法要注意保持行为良好。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Line</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Line</span>
 <span class="p">{</span>
-<span class="nl">private:</span>
+<span class="k">private</span><span class="o">:</span>
     <span class="n">Point</span> <span class="n">start</span><span class="p">;</span>
     <span class="n">Point</span> <span class="n">end</span><span class="p">;</span>
     <span class="kt">bool</span> <span class="n">changed</span><span class="p">;</span>
     <span class="kt">double</span> <span class="n">length</span><span class="p">;</span>
-<span class="nl">public:</span>
-    <span class="kt">void</span> <span class="nf">setStart</span><span class="p">(</span><span class="n">Point</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="n">start</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="n">changed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
-    <span class="kt">void</span> <span class="nf">setEnd</span><span class="p">(</span><span class="n">Point</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="n">end</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="n">changed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
-    <span class="n">Point</span> <span class="nf">getStart</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">start</span><span class="p">;</span> <span class="p">}</span>
-    <span class="n">Point</span> <span class="nf">getEnd</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">end</span><span class="p">;</span> <span class="p">}</span>
-    <span class="kt">double</span> <span class="nf">getLength</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">setStart</span><span class="p">(</span><span class="n">Point</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="n">start</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="n">changed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">setEnd</span><span class="p">(</span><span class="n">Point</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span> <span class="n">end</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span> <span class="n">changed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">Point</span> <span class="n">getStart</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">start</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">Point</span> <span class="n">getEnd</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">end</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">double</span> <span class="n">getLength</span><span class="p">()</span>
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">changed</span><span class="p">)</span>
         <span class="p">{</span>
@@ -424,7 +424,7 @@
 <ul>
 <li>复杂循环的边界条件容易出错。使用循环不变项，对循环的最终目标进行描述，同时进行了一般化。可以写成断言。</li>
 </ul>
-<div class="hlcode"><pre><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<div class="hlcode"><pre><span></span><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
 <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 <span class="c1">// Loop invariant: m = max(arr[0:i-1])</span>
 <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
@@ -444,7 +444,7 @@
 <p>当你的程序发现某件被认为不可能的事情发生时，应该尽早终止它。</p>
 <p>Java，RunTimeException</p>
 <p>C语言，使用宏。</p>
-<div class="hlcode"><pre><span class="cp">#define CHECK(LINE, EXPECTED)    \</span>
+<div class="hlcode"><pre><span></span><span class="cp">#define CHECK(LINE, EXPECTED)    \</span>
 <span class="cp">{  int rc = LINE;</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">!=</span> <span class="n">EXPECTED</span><span class="p">)</span>    \
         <span class="n">ut_abort</span><span class="p">(</span><span class="n">__FILE__</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">,</span> <span class="err">#</span><span class="n">LINE</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="n">EXPECTED</span><span class="p">);</span>  <span class="p">}</span>
@@ -464,7 +464,7 @@
 <p>“这绝不会发生”--自我欺骗。</p>
 <p>用断言确保它绝不会发生。</p>
 <p>C/C++中往往有assert或_assert宏。</p>
-<div class="hlcode"><pre><span class="c1">// 使用断言确保传入的指针不为NULL</span>
+<div class="hlcode"><pre><span></span><span class="c1">// 使用断言确保传入的指针不为NULL</span>
 <span class="kt">void</span> <span class="nf">writeString</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">string</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">assert</span><span class="p">(</span><span class="n">string</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">);</span>
 <span class="p">}</span>
@@ -479,7 +479,7 @@
 <p>绝对不要把必须执行的代码放在assert中，因为断言可能在编译时被关闭</p>
 <p>断言不能替代错误处理，断言检查的是<strong>绝对不应该发生的事情</strong>。</p>
 <p>下面是一个错误使用断言的例子：</p>
-<div class="hlcode"><pre><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Enter &#39;Y&#39; or &#39;N&#39;: &quot;</span><span class="p">);</span>
+<div class="hlcode"><pre><span></span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Enter &#39;Y&#39; or &#39;N&#39;: &quot;</span><span class="p">);</span>
 <span class="n">ch</span> <span class="o">=</span> <span class="n">getchar</span><span class="p">();</span>
 <span class="n">assert</span><span class="p">((</span><span class="n">ch</span> <span class="o">==</span> <span class="sc">&#39;Y&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">ch</span> <span class="o">==</span> <span class="sc">&#39;N&#39;</span><span class="p">));</span>    <span class="c1">// BAD IDEA!!</span>
 </pre></div>
@@ -489,7 +489,7 @@
 <p>要警惕断言中执行的方法、语句的作用，防止出现“海森堡虫子（Heisenbug）”，即调试改变了被调试系统的行为。</p>
 <h3 id="24">24 何时使用异常</h3>
 <p>如果不使用异常，可能写出这种代码：（程序的正常逻辑被错误处理所遮蔽）</p>
-<div class="hlcode"><pre><span class="n">retcode</span> <span class="o">=</span> <span class="n">OK</span><span class="p">;</span>
+<div class="hlcode"><pre><span></span><span class="n">retcode</span> <span class="o">=</span> <span class="n">OK</span><span class="p">;</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">retcode</span> <span class="o">=</span> <span class="n">BAD_READ</span><span class="p">;</span>
 <span class="p">}</span>
@@ -509,19 +509,19 @@
 
 
 <p>如果使用异常，代码会简洁很多（Java示例）：</p>
-<div class="hlcode"><pre><span class="n">retcode</span> <span class="o">=</span> <span class="n">OK</span><span class="p">;</span>
-<span class="n">try</span> <span class="p">{</span>
-    <span class="n">socket</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
-    <span class="n">process</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
-    <span class="n">socket</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">address</span><span class="p">);</span>
-    <span class="n">processAddress</span><span class="p">(</span><span class="n">address</span><span class="p">);</span>
-    <span class="p">......</span>
-<span class="p">}</span>
-<span class="n">catch</span> <span class="p">(</span><span class="n">IOException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">retcode</span> <span class="o">=</span> <span class="n">BAD_READ</span><span class="p">;</span>
-    <span class="n">Logger</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;Error reading individual: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="p">.</span><span class="n">getMessage</span><span class="p">());</span>
-<span class="p">}</span>
-<span class="k">return</span> <span class="n">retcode</span><span class="p">;</span>
+<div class="hlcode"><pre><span></span><span class="nv">retcode</span> <span class="o">=</span> <span class="nv">OK</span><span class="c1">;</span>
+<span class="nv">try</span> {
+    <span class="nv">socket</span>.<span class="nv">read</span><span class="ss">(</span><span class="nv">name</span><span class="ss">)</span><span class="c1">;</span>
+    <span class="nv">process</span><span class="ss">(</span><span class="nv">name</span><span class="ss">)</span><span class="c1">;</span>
+    <span class="nv">socket</span>.<span class="nv">read</span><span class="ss">(</span><span class="nv">address</span><span class="ss">)</span><span class="c1">;</span>
+    <span class="nv">processAddress</span><span class="ss">(</span><span class="nv">address</span><span class="ss">)</span><span class="c1">;</span>
+    ......
+}
+<span class="nv">catch</span> <span class="ss">(</span><span class="nv">IOException</span> <span class="nv">e</span><span class="ss">)</span> {
+    <span class="nv">retcode</span> <span class="o">=</span> <span class="nv">BAD_READ</span><span class="c1">;</span>
+    <span class="nv">Logger</span>.<span class="nv">log</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">Error reading individual: </span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nv">e</span>.<span class="nv">getMessage</span><span class="ss">())</span><span class="c1">;</span>
+}
+<span class="k">return</span> <span class="nv">retcode</span><span class="c1">;</span>
 </pre></div>
 
 
@@ -543,9 +543,9 @@
 <p>将资源封装在类中很有用。</p>
 <p>资源配平与异常</p>
 <p>在C++的异常处理机制下配平资源</p>
-<div class="hlcode"><pre><span class="kt">void</span> <span class="nf">doSomething</span><span class="p">()</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="kt">void</span> <span class="nf">doSomething</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">Node</span> <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">();</span>
-    <span class="n">try</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
         <span class="c1">// do something</span>
     <span class="p">}</span>
     <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
@@ -560,10 +560,10 @@
 <p>上面的代码违反了DRY原则。如果不使用指针，即Node n;则不会有该问题。</p>
 <p>有些情况不得不使用指针？</p>
 <p>在另一个类中包装资源。(RAII ，或者用智能指针)</p>
-<div class="hlcode"><pre><span class="c1">// Wrapper class for Node</span>
+<div class="hlcode"><pre><span></span><span class="c1">// Wrapper class for Node</span>
 <span class="k">class</span> <span class="nc">NodeResource</span> <span class="p">{</span>
     <span class="n">Node</span> <span class="o">*</span><span class="n">n</span><span class="p">;</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="n">NodeResource</span><span class="p">()</span>  <span class="p">{</span> <span class="n">n</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">();</span> <span class="p">}</span>
     <span class="o">~</span><span class="n">NodeResource</span><span class="p">()</span>  <span class="p">{</span> <span class="k">delete</span> <span class="n">n</span><span class="p">;</span> <span class="p">}</span>
 
@@ -571,7 +571,7 @@
 <span class="p">};</span>
 <span class="kt">void</span> <span class="nf">doSomething2</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">NodeResource</span> <span class="n">n</span><span class="p">;</span>
-    <span class="n">try</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
         <span class="c1">// do something</span>
     <span class="p">}</span>
     <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
@@ -583,16 +583,16 @@
 
 <p>注意这里重载了-&gt;运算符，这样它的使用者可以直接访问所包含的Node对象中的字段。</p>
 <p>Java中利用finally字句配平：</p>
-<div class="hlcode"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="p">()</span> <span class="n">throws</span> <span class="n">IOException</span> <span class="p">{</span>
-    <span class="n">File</span> <span class="n">tmpFile</span> <span class="o">=</span> <span class="n">new</span> <span class="n">File</span><span class="p">(</span><span class="n">tmpFileName</span><span class="p">);</span>
-    <span class="n">FileWriter</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">new</span> <span class="n">FileWriter</span><span class="p">(</span><span class="n">tmpFile</span><span class="p">);</span>
-    <span class="n">try</span> <span class="p">{</span>
-        <span class="c1">// do some work</span>
-    <span class="p">}</span>
-    <span class="n">finally</span> <span class="p">{</span>
-        <span class="n">tmpFile</span><span class="p">.</span><span class="n">delete</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<div class="hlcode"><pre><span></span><span class="nv">public</span> <span class="nv">void</span> <span class="nv">doSomething</span><span class="ss">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> {
+    <span class="nv">File</span> <span class="nv">tmpFile</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">File</span><span class="ss">(</span><span class="nv">tmpFileName</span><span class="ss">)</span><span class="c1">;</span>
+    <span class="nv">FileWriter</span> <span class="nv">tmp</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">FileWriter</span><span class="ss">(</span><span class="nv">tmpFile</span><span class="ss">)</span><span class="c1">;</span>
+    <span class="nv">try</span> {
+        <span class="o">//</span> <span class="k">do</span> <span class="nv">some</span> <span class="nv">work</span>
+    }
+    <span class="nv">finally</span> {
+        <span class="nv">tmpFile</span>.<span class="nv">delete</span><span class="ss">()</span><span class="c1">;</span>
+    }
+}
 </pre></div>
 
 
@@ -600,18 +600,18 @@
 <h2 id="ch5">ch5 弯曲，或折断</h2>
 <h3 id="26">26 解耦与得墨忒耳法则</h3>
 <p>把代码组织成最小组织单位（模块），并限制它们之间的交互。</p>
-<div class="hlcode"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">plotDate</span><span class="p">(</span><span class="n">Date</span> <span class="n">aDate</span><span class="p">,</span> <span class="n">Selection</span> <span class="n">aSelection</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">public</span> <span class="n">void</span> <span class="n">plotDate</span><span class="p">(</span><span class="nb">Date</span> <span class="n">aDate</span><span class="p">,</span> <span class="n">Selection</span> <span class="n">aSelection</span><span class="p">)</span> <span class="err">{</span>
     <span class="n">TimeZone</span> <span class="n">tz</span> <span class="o">=</span> <span class="n">aSelection</span><span class="p">.</span><span class="n">getRecorder</span><span class="p">().</span><span class="n">getLocation</span><span class="p">().</span><span class="n">getTimeZone</span><span class="p">();</span>
     <span class="p">...</span>
-<span class="p">}</span>
+<span class="err">}</span>
 </pre></div>
 
 
 <p>上面三个类不必要的耦合在了一起：Selection, Recorder, Location。这种编码风格增加了耦合。</p>
 <p>应该直接要求提供你所需的东西，而不是自行“挖通”调用层次。</p>
-<div class="hlcode"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">plotDate</span><span class="p">(</span><span class="n">Date</span> <span class="n">aDate</span><span class="p">,</span> <span class="n">TimeZone</span> <span class="n">aTz</span><span class="p">)</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">public</span> <span class="n">void</span> <span class="n">plotDate</span><span class="p">(</span><span class="nb">Date</span> <span class="n">aDate</span><span class="p">,</span> <span class="n">TimeZone</span> <span class="n">aTz</span><span class="p">)</span> <span class="err">{</span>
     <span class="p">...</span>
-<span class="p">}</span>
+<span class="err">}</span>
 <span class="n">plotDate</span><span class="p">(</span><span class="n">someDate</span><span class="p">,</span> <span class="n">someSelection</span><span class="p">.</span><span class="n">getTimeZone</span><span class="p">);</span>
 </pre></div>
 
@@ -619,12 +619,12 @@
 <p>增加包装方法，避免“组合爆炸”（如果n个对象之间全部都互相了解，那么对一个对象的改动就可能导致其他n-1个对象都需要改动）</p>
 <p>函数的得墨忒耳法则：使模块之间的耦合减至最少，阻止你为了获得对第三个对象的方法的访问而进入某个对象。</p>
 <p>在C++中，具有较大响应集的类更容易出错（响应集：类的各个方法直接调用的函数的数目）。</p>
-<div class="hlcode"><pre><span class="k">class</span> <span class="nc">Demeter</span> <span class="p">{</span>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Demeter</span> <span class="p">{</span>
     <span class="n">A</span> <span class="o">*</span><span class="n">a</span><span class="p">;</span>
     <span class="kt">int</span> <span class="nf">func</span><span class="p">();</span>
-<span class="nl">public:</span>
+<span class="k">public</span><span class="o">:</span>
     <span class="c1">// ...</span>
-    <span class="kt">void</span> <span class="nf">example</span><span class="p">(</span><span class="n">B</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="n">example</span><span class="p">(</span><span class="n">B</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
 <span class="p">};</span>
 <span class="kt">void</span> <span class="n">Demeter</span><span class="o">::</span><span class="n">example</span><span class="p">(</span><span class="n">B</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">C</span> <span class="n">c</span><span class="p">;</span>                <span class="c1">// 函数的得墨忒耳法则规定，对象的方法应该只调用属于以下情形的方法</span>
@@ -754,7 +754,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-17 03:18:32</p>
+        <p>Site Generated 2019-11-18 23:44:09</p>
       </span>
     </div>
 
