@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>< 程序员的自我修养 > 读书笔记 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#reading_notes">reading_notes</a>&nbsp;&#187;&nbsp;< 程序员的自我修养 > 读书笔记
+    <span class="updated">Page Updated&nbsp;
+      2019-11-26 01:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">< 程序员的自我修养 > 读书笔记</div>
+
+  <p>程序员的自我修养 -- 链接、装载与库</p>
+<blockquote>
+<p>程序员可以不自己造轮子，但是对轮子的构造了解的越详细越好，这就是程序员的自我修养吧。</p>
+</blockquote>
+<p>学习偏底层的知识可能无法对日常的学习工作产生直接的影响，但会带来潜移默化的帮助：</p>
+<ul>
+<li>当你的程序无法启动时</li>
+<li>当你的代码链接失败时</li>
+<li>当你的代码发生“段错误”时</li>
+</ul>
+<p>技术优劣取决于需求。</p>
+<p>基本功永不过时。</p>
+<div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ch1">ch1 温故而知新</a></li>
+</ul>
+</div>
+<hr />
+<h2 id="ch1">ch1 温故而知新</h2>
+<p>计算机软硬件基本结构。</p>
+<p>硬件的关键部件：</p>
+<ul>
+<li>CPU</li>
+<li>内存</li>
+<li>IO 设备</li>
+</ul>
+<p>CPU频率低 -&gt; CPU 倍频 -&gt; 多核 CPU。</p>
+<p>早期计算机没有复杂的图形功能，CPU核心频率不高，等于内存的频率，因而它们都直接连接在一根总线（Bus）上。</p>
+<p>北桥，南桥。</p>
+<p>随着技术的发展，CPU频率有了很大的提升，加上图形功能的要求，此时CPU频率是内存频率的倍数，内存频率跟不上而保持与总线频率一致，CPU以倍频方式与总线进行通信。3D游戏和多媒体的发展促使了图形芯片的诞生，而图形芯片需要CPU和内存之间大量交换数据，I/O总线实在太慢，人们因而设计了高速的北桥芯片方便高速交换数据。</p>
+<p>北桥运行速度高，如果低速设备也直接连在北桥，无疑会造成非常复杂的设计。因而引入南桥专门处理低速设备。</p>
+<p>通过增加CPU数量来提升速度，也就是多核CPU。</p>
+<p>硬件处理能力是有限的，操作系统需要做的，就是除了提供抽象接口之外，管理硬件资源。</p>
+<p>硬件的抽象，在 UNIX 系统中，访问硬件同访问文件方式一样。</p>
+<p>文件系统。磁盘存储方式。物理扇区，逻辑扇区。</p>
+<p>不能让 CPU 一次只能运行一个程序 -&gt; 多任务(multi-tasking)系统：</p>
+<ol>
+<li>每个应用程序都以进程(Process)的方式运行。</li>
+<li>每个进程有自己独立的地址空间，进程之间的地址空间相互隔离</li>
+<li>CPU 由系统根据进程优先级高低统一分配</li>
+<li>抢占式(Preemptive)的 CPU 分配机制可以让系统强制剥夺 CPU 资源并分配给它认为目前最需要的进程</li>
+</ol>
+<p>如果分配给每个进程的时间都很短，CPU 在多个进程间快速的切换，就能造成很多进程同时运行的假象。</p>
+<p>如何将计算机的物理内存分配给多个程序使用。增加中间层，使用间接的地址访问方法。</p>
+<p>进程 -&gt; 虚拟地址（中间层） -&gt; 物理地址。</p>
+<p>分段（Segmentation）：基本思路就是程序需要多少内存，就设置多大的虚拟内存并映射到某个物理地址空间，只要程序访问虚拟空间的地址超出了设置的内存大小，硬件自动判断为非法访问，拒绝请求。这样它实现了地址隔离，同时程序不需要重定位，不需要关心物理地址的变化（因为只需要按照虚拟空间的内存分配来编写程序）。没有解决内存使用效率不高的问题。分段对内存区域的映射还是按照程序为单位，如果内存不足，依然会以整个程序为单位进行换入换出，造成大量磁盘访问操作从而严重影响速度。</p>
+<p>分页（Paging）：分页的就是把地址空间人为地等分成固定的页，以页为单位进行数据的存取和交换。通过一个叫MMU（Memory Management Unit）的部件来实现页映射。</p>
+<p>线程，轻量级进程。程序执行流的最小单元。</p>
+<p>一个进程包含多个线程，每个线程由线程ID、当前指令指针（PC）、寄存器集合和堆栈组成，各个线程之间共享程序的内存空间和进程级的资源，同时又互不干扰的并发执行。</p>
+<p>多线程比多进程更自由；相对于多进程，多线程在数据共享方面效率高很多。</p>
+<p>在线程调度中，线程至少有三种状态：</p>
+<ul>
+<li>运行 Running，此时线程正在执行</li>
+<li>就绪 Ready，此时线程可以立刻运行，但 CPU 已经被占用</li>
+<li>等待 Waiting，此时线程正在等待某一事件（通常是 I/O 或同步），无法执行</li>
+</ul>
+<p>线程调度：优先级调度，轮转法。</p>
+<ul>
+<li>I/O 密集型线程：频繁等待。</li>
+<li>计算密集型线程：很少等待。</li>
+</ul>
+<p>IO 密集型更容易得到优先级提升。</p>
+<p>Linux 将所有执行实体（无论是进程还是线程）都称为任务（Task），不同任务可以选择共享内存空间。实际意义上，多个共享内存空间的任务组成了一个进程，这里面每个任务也就是这个进程里的线程。</p>
+<p>Linux 中通过 fork 复制当前进程。</p>
+<p>线程安全，保证共享数据在多线程并发时的一致性。</p>
+<p>原子操作，单指令，线程安全，但只适用于简单的场景。</p>
+<p>同步与锁。</p>
+<p>同步，就是一个线程还没访问完一个数据，其他线程不能再对该数据进行访问，从本质上讲，保证了对数据的访问是原子化的。</p>
+<p>锁是一种常见的同步机制，每个线程在访问数据前先 acquire 锁，访问结束后 release 锁；在锁已经被占用的时候试图获取锁时，线程会等待，直到锁被释放。</p>
+<p>二元信号量（Binary Semaphore），只有两种状态：占用和非占用。占用时其他线程无法获取锁，直到被释放转为非占用。非占用时第一个线程自然可以获取锁。</p>
+<p>如果资源能够允许多个线程并发访问，那就是多元信号量（Semaphore）。显然二元信号量是特殊情况。一个初始值为N的信号量允许N个线程并发访问：</p>
+<div class="hlcode"><pre><span></span><span class="o">--</span><span class="nv">semaphore</span><span class="c1">;</span>
+<span class="k">if</span> <span class="ss">(</span><span class="nv">semaphore</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="ss">)</span> {
+  <span class="nv">current</span> <span class="nv">thread</span> <span class="nv">waiting</span><span class="c1">;</span>
+} <span class="k">else</span> {
+  继续执行，访问完资源后，释放信号量
+  <span class="o">++</span><span class="nv">semaphore</span><span class="c1">;</span>
+  <span class="k">if</span> <span class="ss">(</span><span class="nv">semaphore</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="ss">)</span> {
+    唤醒一个等待中的线程
+  }
+}
+</pre></div>
+
+
+<p>互斥锁（Mutex）：类似二元信号量，区别在于其要求哪个线程获取了 mutex，哪个线程就要负责释放它。</p>
+<p>读写锁（Read-Write Lock）：对于读次数 &gt;&gt; 写次数的情况适用。</p>
+<p>条件变量（Condition Variable）：实现事件通知机制。一个条件变量可以被多个线程等待。当某个事件发生时，条件变量被唤醒，可以通知其他线程恢复执行。</p>
+<p>多线程模型（线程的实际并发执行是由操作系统完成的）：</p>
+<ul>
+<li>一对一</li>
+<li>多对一</li>
+<li>多对多</li>
+</ul>
+<p>（这里的 X 对 X 指的是 User Thread 和 Kernel Thread 的对应，注意这里的 Kernel Thread 不是 linux 内核里的 kernel_thread）</p>
+<hr />
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-11-27 01:34:32</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
