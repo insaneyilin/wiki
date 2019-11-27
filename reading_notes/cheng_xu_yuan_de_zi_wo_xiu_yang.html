@@ -61,6 +61,8 @@
 <p>基本功永不过时。</p>
 <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ch1">ch1 温故而知新</a></li>
+<li><a href="#ch2">ch2 编译和链接</a></li>
+<li><a href="#ch3">ch3 目标文件里有什么</a></li>
 </ul>
 </div>
 <hr />
@@ -141,12 +143,59 @@
 </ul>
 <p>（这里的 X 对 X 指的是 User Thread 和 Kernel Thread 的对应，注意这里的 Kernel Thread 不是 linux 内核里的 kernel_thread）</p>
 <hr />
+<h2 id="ch2">ch2 编译和链接</h2>
+<p>IDE 往往提供的 Build （构建）功能，实际包括编译和链接。</p>
+<ul>
+<li>预处理：展开预编译指令，比如"#include", "#define"等</li>
+<li>编译：包括词法分析、语法分析、语义分析，优化后生成汇编代码文件</li>
+<li>汇编：将汇编代码转变成机器指令</li>
+<li>链接：将目标文件链接起来生成最终的可执行文件</li>
+</ul>
+<p>预编译，生成 .i 文件</p>
+<div class="hlcode"><pre><span></span><span class="n">gcc</span> <span class="o">-</span><span class="n">E</span> <span class="n">hello</span><span class="p">.</span><span class="k">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">hello</span><span class="p">.</span><span class="n">i</span>
+</pre></div>
+
+
+<p>编译：</p>
+<div class="hlcode"><pre><span></span><span class="n">gcc</span> <span class="o">-</span><span class="n">S</span> <span class="n">hello</span><span class="p">.</span><span class="n">i</span> <span class="o">-</span><span class="n">o</span> <span class="n">hello</span><span class="p">.</span><span class="n">S</span>
+</pre></div>
+
+
+<p>现代版本的 GCC 把预编译和编译合并成一个步骤，使用 <code>cc1</code> 程序完成：</p>
+<div class="hlcode"><pre><span></span><span class="n">cc1</span> <span class="n">hello</span><span class="p">.</span><span class="k">c</span>
+</pre></div>
+
+
+<p>gcc 这个命令是各种后台程序的包装（cc1, 汇编器 as，链接器 ld）。</p>
+<p>汇编：</p>
+<div class="hlcode"><pre><span></span><span class="n">gcc</span> <span class="o">-</span><span class="k">c</span> <span class="n">hello</span><span class="p">.</span><span class="k">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">hello</span><span class="p">.</span><span class="n">o</span>
+</pre></div>
+
+
+<p>链接：</p>
+<div class="hlcode"><pre><span></span><span class="n">ld</span> <span class="o">-</span><span class="k">static</span> <span class="n">crt1</span><span class="p">.</span><span class="n">o</span> <span class="n">crti</span><span class="p">.</span><span class="n">o</span> <span class="p">......</span>
+</pre></div>
+
+
+<p>实际链接了一大堆东西。</p>
+<p>人们把每个源代码模块独立地编译，然后按照须要将它们"组装"起来，这个组装模块的过程就是链接（Linking）。</p>
+<p>编译器是什么？一个将高级语言翻译成机器语言的工具。</p>
+<p>链接器的年龄比编译器长。</p>
+<p>链接过程主要包括了地址和空间分配（Address and Storage Allocation）、符号决议（Symbol Resolution）和重定位（Relocation）等这些步骤。</p>
+<p>符号决议有时候也被叫做符号绑定（Symbol Binding）、名称绑定（Name Binding）、名称决议（Name Resolution），甚至还有叫做地址绑定（Address Binding）、指令绑定（Instruction Binding）的，大体上它们的意思都一样，但从细节角度来区分，它们之间还是存在一定区别的，比如"决议"更倾向于静态链接，而"绑定"更倾向于动态链接，即它们所使用的范围不一样。在静态链接，我们将统一称为符号决议。</p>
+<p>重定位（Relocation）：重新计算各个目标的地址的过程。</p>
+<p>若引用其他文件中的变量，在将该文件编译成目标文件时，先将该变量目标地址置为0，等待链接再将该地址进行修正。这个地址修正的过程也被叫做重定位（Relocation），每个要被修正的地方叫一个重定位入口（Relocation Entry）。重定位所做的就是给程序中每个这样的绝对地址引用的位置"打补丁"，使它们指向正确的地址。</p>
+<p>符号(Symbol)这个概念随着汇编语言的普及迅速被使用，它用来表示一个地址，这个地址可能是一段子程序(后来发展成函数)的起始地址，也可以是一个变量的起始地址。</p>
+<p>模块之间如何组合的问题可以归结为模块之间如何 <strong>通信</strong> 的问题。通信方式：函数调用，变量访问，都需要知道相应的地址。模块间通过符号引用来实现通信，也就是要找到对应的地址。</p>
+<h2 id="ch3">ch3 目标文件里有什么</h2>
+<p>目标文件（<em>.o 或 </em>.obj），从结构上来说，它就是编译后的 <strong>可执行文件格式</strong> ，只是还没有经过链接，其中 <strong>可能有些符号地址还没有被调整</strong> 。</p>
+<p>可执行文件格式，Windows 下 PE(Portable Executable)和 Linux 下的 ELF(Executable Linkable Format)。</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-27 01:34:32</p>
+        <p>Site Generated 2019-11-28 02:14:10</p>
       </span>
     </div>
 
