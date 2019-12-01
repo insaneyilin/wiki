@@ -64,6 +64,7 @@
 <li><a href="#ch2">ch2 编译和链接</a></li>
 <li><a href="#ch3">ch3 目标文件里有什么</a></li>
 <li><a href="#ch4">ch4 静态链接</a></li>
+<li><a href="#ch5-windows-pecoff">ch5 Windows PE/COFF</a></li>
 </ul>
 </div>
 <hr />
@@ -279,12 +280,20 @@
 <p>一个静态库文件（.a）是由许多.o文件合并而来的，linux下使用 <code>ar -t xx.a</code> 可以查看 .a 文件中包含的 .o 文件。</p>
 <p>链接过程控制，有链接控制脚本。</p>
 <p>BFD（Binary File Descriptor libary）库：是基于所有硬件平台（不同的处理器和目标文件格式）的一个抽象层，基于BFD可以不用关心具体的硬件格式，而进行统一操作，因为BFD中已经包含了这些CPU和可执行文件的格式信息。BFD 本身是 binutils 项目的一个子项目。</p>
+<hr />
+<h2 id="ch5-windows-pecoff">ch5 Windows PE/COFF</h2>
+<p>windows上的目标文件为COFF格式，而可执行文件是PE格式，PE又是COFF格式衍生出来的， 所以将这类文件统称为PE/COFF格式</p>
+<p>64位的Windows中对PE文件格式做了一点小小的修改，叫做PE32+格式，只是将32位的字段换成了64位而已。</p>
+<p>由于 PE 文件在装载的时候被直接映射到进程的虚拟空间中运行，它是进程的虚拟空间的映象，所以PE可执行文件很多时候被称为映象文件（Image File）。</p>
+<p>COFF 文件的符号表几乎跟 ELF 文件的符号表一样，主要就是符号名、符号类型、所在的位置。</p>
+<p>PE/COFF 文件与 ELF 文件非常相似，它们都是基于段的结构的二进制文件格式。</p>
+<hr />
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-11-30 03:05:19</p>
+        <p>Site Generated 2019-12-01 19:33:51</p>
       </span>
     </div>
 
