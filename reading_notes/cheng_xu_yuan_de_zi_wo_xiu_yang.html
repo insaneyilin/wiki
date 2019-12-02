@@ -65,6 +65,7 @@
 <li><a href="#ch3">ch3 目标文件里有什么</a></li>
 <li><a href="#ch4">ch4 静态链接</a></li>
 <li><a href="#ch5-windows-pecoff">ch5 Windows PE/COFF</a></li>
+<li><a href="#ch6">ch6 可执行文件的装载与进程</a></li>
 </ul>
 </div>
 <hr />
@@ -288,12 +289,49 @@
 <p>COFF 文件的符号表几乎跟 ELF 文件的符号表一样，主要就是符号名、符号类型、所在的位置。</p>
 <p>PE/COFF 文件与 ELF 文件非常相似，它们都是基于段的结构的二进制文件格式。</p>
 <hr />
+<h2 id="ch6">ch6 可执行文件的装载与进程</h2>
+<p>关于程序和进程的比喻：程序就是菜谱，是一个静态概念， 进程就是菜，是一个动态概念。</p>
+<p>程序的寻址空间由CPU的位数决定，所以32位下的程序寻址空间是2^32位，即4GB， 64位下是17179869184 GB, 32位下C语言指针的长度是4字节，64位系统下长度是8字节。</p>
+<p>对于一个32位的程序，寻址空间虽然是4GB，但是程序并不能全部使用，例如在Linux下，1GB是留给操作系统的，剩下的3GB给进程，且这3GB内存程序也不能完全使用，还有一部分给其他用途； 在Windows上，默认情况下2GB留给系统，2GB留给进程。</p>
+<p>64 位寻址空间在现在来看，几乎是无限的。 <strong>但历史总会嘲弄人，或许有一天我们会觉得 64 位的地址空间很小</strong> 。</p>
+<p>Linux 下的 Segmentation fault，多为进程访问了未经允许的地址。</p>
+<p>1995年Pentium Pro CPU使用 <strong>PAE</strong> (Physical Address Extension),将地址线扩充到了36位，所以理论上计算机可以寻址的空间变成了64G， 但是进程的寻址空间仍然是4G(32位系统下指针是4个字节)</p>
+<p>为了使应用程序能使用超过32位的内存，Windows上可以使用AWE(Address Window Extension)的方式, 在Linux上可以使用mmap(),但是这只是一种补救32地址线的方法, 在原来16位的DOS上也曾有过这样的做法。</p>
+<p>程序执行时所需要的指令和数据必须在内存中才能够正常运行，最简单的办法就是将程序运行时所需要的指令和数据全部装入内存中，这就是最简单的静态装入的办法。</p>
+<p>程序运行时是有 <strong>局部性原理</strong> 的，我们可以将程序最常用的部分驻留在内存中。这就是动态装载的基本思想。</p>
+<p>为了提高内存的使用效率，采用动态装入的办法，动态装入由两种方式，第一种是 <strong>覆盖装入</strong> ，即每次将要使用的模块装入内存，不使用的调出，这样，调用的程序可以共享同一块内存区域，使用之前先要将程序的所有调用关系组织成一个树状结构。但是这种方式需要保证两点, (1) 调用路径上的模块都应该存在，(2) 不能存在跨树调用。第二种是 <strong>页映射</strong> 的方式，即将内存和文件存在的磁盘空间都划分成一个一个的页(通常是4KB),在程序使用的时候将相应的页调入，决定页面替换的算法由先进先出(FIFO)和最近最长使用算法等。</p>
+<p>页映射是虚拟存储机制的一部分，随着虚拟存储的发明而诞生。</p>
+<p>现在大部分操作系统采用的是页映射的方法进行程序装载。页映射并不是一下把程序的所有数据和指令都装入内存，而是将内存和所有磁盘中的数据和指令按照”页（Page）”为单位划分成若干个页， <strong>以后所有的装载和操作的单位就是页</strong> 。目前一般的页大小为4K=4096字节。装载管理器负责控制程序的装载问题，当运行到的某条指令不在内存的时候，会将该指令所在的页装载到内存中的一个地方，然后继续程序的运行。如果内存中已经没有位置，装载管理器会根据一定的算法放弃某个正在使用的页，并用新的页来替代，然后程序可以继续运行。</p>
+<p>页映射的好处：充分利用了程序的局部性原理。</p>
+<p>从操作系统的角度来看，一个进程最关键的特征是它有独立的虚拟地址空间，这使得它有别于其他进程。</p>
+<p>进程的建立过程：</p>
+<ul>
+<li>创建虚拟地址空间，也就是分配一个页目录。</li>
+<li>读取可执行文件头，建立虚拟地址空间和可执行文件的对应关系（可执行文件被装载时其实就是被映射的虚拟空间，所以也被称为映像文件）</li>
+<li>将CPU指令寄存器设置成可执行文件的入口(也就是可执行文件代码段的其实地址)</li>
+</ul>
+<p>ELF文件的链接视图和执行视图，链接视图是按照 Section 分配，执行视图又是 Segment ，Segment 是将相同属性(只读,可读写，可读可执行)的 Section 作为一个 Segment 。 一般在链接的时候说"段"指的就是Section，在装载的时候说"段"指的是Segment</p>
+<p>ELF可执行文件和动态链接文件都有一个结构叫 <strong>程序头表</strong> ，保存着程序被装载时候的Segment信息，而静态目标文件没有这个程序头表,因为目标文件不需要被装载。</p>
+<p>操作系统会通过给进程空间划分出一个个的 <strong>VMA</strong> (Virtual Memory Area) 来管理进程的虚拟空间， <strong>基本原则是将相同权限属性，有相同映像文件的映射成一个VMA</strong> ，一般包含四个区域：代码VMA，数据VMA，堆VMA，栈VMA，栈通常也叫堆栈。</p>
+<p>一个进程在刚开始运行的时候，操作系统会预先把系统的 <strong>环境变量</strong> 和 <strong>命令行参数</strong> 传递到进程的堆栈（栈）中，在main函数开始执行的时候，main函数的两个参数 <code>args</code> 和 <code>argv[]</code> 两个参数就是从这里传递进来的，分别表示命令参数的数量和指向命令行传入参数的指针数组。</p>
+<p>Linux 下 ELF 文件的装载过程：bash 进程调用 fork 创建一个新的进程，新的进程调用 execve() 调用执行指定的 ELF 文件，原先的 bash 进程继续返回等待刚才启动的新进程结束，然后继续等待用户输入命令。进入 execve() 系统调用之后，Linux 内核就开始真正的装载工作。</p>
+<div class="hlcode"><pre><span></span><span class="n">fork</span><span class="p">()</span> <span class="o">-&gt;</span>
+<span class="n">execve</span><span class="p">()</span> <span class="o">-&gt;</span>
+<span class="n">sys_execve</span><span class="p">()</span> <span class="cm">/*系统调用，用于参数检查和复制*/</span> <span class="o">-&gt;</span>
+<span class="n">do_execve</span><span class="p">()</span><span class="cm">/*读取文件头部的128字节，决定执行程序，如果第一行是#！则会解析这之后的字符串，以确定解释器的路径，例如#！/usr/bin/python*/</span> <span class="o">-&gt;</span>
+<span class="n">load_elf_binary</span><span class="p">()</span> <span class="o">-&gt;</span>
+<span class="n">do_execve</span><span class="p">()</span> <span class="o">-&gt;</span>
+<span class="n">sys_execve</span><span class="p">()</span><span class="cm">/*从内核态返回用户态*/</span>
+</pre></div>
+
+
+<hr />
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-01 19:33:51</p>
+        <p>Site Generated 2019-12-03 00:35:45</p>
       </span>
     </div>
 
