@@ -67,6 +67,7 @@
 <li><a href="#ch5-windows-pecoff">ch5 Windows PE/COFF</a></li>
 <li><a href="#ch6">ch6 可执行文件的装载与进程</a></li>
 <li><a href="#ch7">ch7 动态链接</a></li>
+<li><a href="#ch8-linux">ch8 Linux 共享库的组织</a></li>
 </ul>
 </div>
 <hr />
@@ -369,12 +370,69 @@
 <p>dlsym 函数是运行时装载的核心部分，我们通过这个函数找到所需要的符号。</p>
 <p>每次调用dlopen, dlsym, dlclose之后都可以调用dlerror()来判断上一次调用是否成功。</p>
 <p>dlclose() 与dlopen作用相反，关闭打开的句柄，卸载已加载的某个模块。系统会维持一个加载引用计数器，每次使用dlopen加载某个模块时，相应的计数器加1，每次使用dlclose卸载某个模块时，相应的计数器减1。只有当计数器值减到0时，模块才被真正地卸载掉。</p>
+<hr />
+<h2 id="ch8-linux">ch8 Linux 共享库的组织</h2>
+<p>护一个共享库的兼容性非常困难，因为此处的兼容性是指“ABI”兼容性。C++ 的 ABI 兼容性非常差。</p>
+<p>Linux 下有一套规则来命名系统中的每一个共享库，它规定共享库的文件名规则为：</p>
+<div class="hlcode"><pre><span></span><span class="n">libname</span><span class="p">.</span><span class="n">so</span><span class="p">.</span><span class="n">x</span><span class="p">.</span><span class="n">y</span><span class="p">.</span><span class="n">z</span>
+</pre></div>
+
+
+<p>其中x是主版本号，表示库的重大升级，不同主版本号的库之间不兼容，对于主版本升级的库，原有的应用程序必须重新编译；或者保留旧版的共享库。</p>
+<p>y是次版本号，表示库的增量升级，即增加一些新的接口符号，且保持原本的符号不变。高的次版本号的库向后兼容低的次版本号的库。</p>
+<p>z是发布版本号，表示库的一些错误的修正、性能的改进等，并不添加任何新的接口，也不对接口进行修改。相同主版本号、次版本号的共享库，不同的发布版本号之间完全兼容。</p>
+<p>Linux 采用 <strong>SO-NAME</strong> 机制来记录共享库的依赖关系。所谓依赖关系是指共享库的文件名去掉次版本号与发布版本号，仅保留主版本号。在linux系统中系统会为每个共享库在它所在的目录创建一个跟“SO-NAME”相同的并且指向它的软链接，这个软链接的目的在于总是指向主版本号相同而次版本号与发布版本号最新的共享库。如此一来就产生了两个方面的优势:</p>
+<ol>
+<li>对于所有依赖于它的程序，仅需要记录这一SO-NAME即可，而不需要保留编译时所使用的共享库，如此一来就节省了大量的磁盘空间。</li>
+<li>当共享库升级时，就可以直接将新版的共享库替换掉旧版，同时修改软链接SO-NAME即可。</li>
+</ol>
+<p>对于形如 <code>libXXX.so.2.6.1</code> 的库，在链接时我们可以使用 <code>-lXXX</code> 来指定。</p>
+<p>Linux 中存在一个 <code>ldconfig</code> 的程序。ldconfig 的用途：主要是在默认搜寻目录( <code>/lib</code> 和 <code>/usr/lib</code> )以及动态库配置文件 <code>/etc/ld.so.conf</code> 内所列的目录下， <strong>搜索出可共享的动态链接库</strong> (<code>lib*.so*</code>)，进而创建出动态装入程序(<code>ld.so</code>)所需的连接和缓存文件，缓存文件默认为 <code>/etc/ld.so.cache</code> ，此文件保存已排好序的动态链接库名字列表。如果安装了新的共享库，<code>ldconfig</code> 会为其创建相应的软链接。</p>
+<p>SO-NAME 没有解决 <strong>次版本号交会问题</strong> 。 Linux 下的 Glibc 支持一种叫 <strong>基于符号的版本机制</strong> ，但没有被广泛应用。</p>
+<p>Linux 遵循FHS（File Hierarchy Standard）标准对共享库进行存放，主要位于以下三个位置：</p>
+<ul>
+<li><code>/lib</code>，这个位置主要存放系统最关键和基础的共享库，比如动态链接器、c语言运行库、数学库等，这些库主要是那些<code>/bin</code>和<code>/sbin</code> 下程序所要用到的库，还有系统启动时需要的库。</li>
+<li><code>/usr/lib</code>，这个目录下主要保存的是一些非系统运行时所需要的关键性的共享库，主要是一些开发时用到的共享库，这些共享库一半不会被用户程序或shell脚本直接用到。比如<code>objdump</code>这个工具就是在这个目录下。</li>
+<li><code>/usr/local/lib</code>，这个目录用来放置一些跟操作系统本身并不十分相关的库，主要是一些第三方的应用程序的库。与这些库相对于的可执行程序就放置在<code>/usr/local/bin</code>下。</li>
+</ul>
+<p>程序在链接的时候首先从 <code>ld.so.cache</code> 中查找，然后再到 <code>ld.so.conf</code> 的路径里边去找。</p>
+<p>改变共享库查找路径最简单的方法是使用 <code>LD_LIBRARY_PATH</code> 环境变量，这个环境变量中包含的路径相当于链接时GCC的 <code>-L</code> 参数。</p>
+<p>动态链接器的查找顺序：</p>
+<ul>
+<li>由 <code>LD_LIBRARY_PATH</code> 指定的路径；</li>
+<li>由 <code>/etc/ld.so.cache</code> 指定的路径；</li>
+<li>默认共享库目录，先 <code>/usr/lib</code> ，再 <code>/lib</code></li>
+</ul>
+<p><code>LD_PRELOAD</code> 这一环境变量可以指定预先装载的一些共享库甚或是目标文件。这一环境变量指定的文件比 <code>LD_LIBRARY_PATH</code>  所指定的文件还要优先，同时无论程序是否依赖于他们，该环境变量所指定的共享库或目标文件都会被装载。</p>
+<p>正常情况下应该避免使用 LD_LIBRARY_PATH 和 LD_PRELOAD。</p>
+<p>共享库的创建：最关键的是使用 gcc 的两个参数 <code>-shared</code> 和 <code>-fPIC</code>。还有一个常用编译选项是 <code>-Wl</code> ，这个参数可以将指定的参数传递给链接器。书中给出的一个例子是“-Wl，-soname，-my_soname”用于指定输出共享库的SO-NAME。</p>
+<p>在开发过程中，你可能要测试新的共享库，但是又不希望影响现有的程序正常运行，可以用 <code>LD_LIBRARY_PATH</code> 指定共享库的查找路径。还有一种方法是使用链接器的 <code>-rpath</code> 选项(或者GCC的 <code>-Wl,-rpath</code> )，这种方法可以指定链接产生的目标程序的共享库查找路径。</p>
+<p>清除符号信息：正常情况下编译出来的共享库或可执行文件里面带有符号信息和调试信息，这些信息在调试时非常有用，但是对于最终发布的版本来说，这些符号信息用处并不大，并且使得文件尺寸变大。我们可以使用一个叫 <code>strip</code> 的工具清除掉共享库或可执行文件的所有符号和调试信息:</p>
+<div class="hlcode"><pre><span></span><span class="n">strip</span> <span class="n">libfoo</span><span class="p">.</span><span class="n">so</span>
+</pre></div>
+
+
+<p>共享库的安装：最简单的办法就是将共享库复制到某个标准的共享库目录，如 <code>/lib</code> 、 <code>/usr/lib</code> 等，然后运行 <code>ldconfig</code> 即可。不过上述方法往往需要系统的root权限，如果没有，则无法往 <code>/lib</code> 、<code>/usr/lib</code> 等目录添加文件，也无法运行 <code>ldconfig</code> 程序。也可以通过建立相应的SO-NAME软链接方法，并告诉编译器和程序如何查找该共享库等，以便于编译器和程序都能够正常运行。建立SO-NAME的办法也是使用 <code>ldconfig</code> ，只不过需要指定共享库所在的目录(<code>ldconfig -n shared_lib_dir</code>)。在编译程序时，也需要指定共享库的位置，GCC提供了两个参数 <code>-L</code> 和 <code>-l</code> ，分别用于指定共享库搜索目录和共享库。也可以使用 <code>-rpath</code> 参数。</p>
+<p>共享库构造和析构函数：如果希望共享库在被装载时能够进行一些初始化工作，比如打开文件、网络连接等，使得共享库里面的函数接口能够正常工作。GCC提供了一种共享库的构造函数，只要在函数声明时加上 <code>__attribute__((constructor))</code> 的属性，即指定该函数为共享库构造函数，拥有这种属性的函数会在共享库加载时被执行，即在程序的main函数之前执行。如果我们使用dlopen()打开共享库，共享库构造函数会在dlopen()返回之前执行。与共享库构造函数相对应的是析构函数，我们可以使用在函数声明时加上 <code>__attribute__((destructor))</code> 的属性，这种函数会在main()函数执行完毕之后执行(或者是程序调用exit()时执行)。如果共享库是在运行时加载的，那么我们使用dlclose()来卸载共享库时，析构函数将会在dlclose()返回之前执行。值得注意的是，如果我们使用了这种析构或构造函数，那么必须使用系统默认的标准运行库和启动文件，即不可以使用GCC的 <code>-nostartfiles</code> 或 <code>-nostdlib</code> 这两个参数。因为这些构造和析构函数是在系统默认的标准运行库或启动文件里面被运行的，如果没有这些辅助构造，它们可能不会被运行。可以指定某个构造或者析构函数的优先级：</p>
+<div class="hlcode"><pre><span></span><span class="kt">void</span> <span class="nf">__attribute__</span><span class="p">((</span><span class="n">constructor</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span> <span class="n">init_func1</span><span class="p">();</span>
+<span class="kt">void</span> <span class="nf">__attribute__</span><span class="p">((</span><span class="n">constructor</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span> <span class="n">init_func1</span><span class="p">();</span>
+</pre></div>
+
+
+<p>优先级数字越小的函数越先执行。先构造的后析构。</p>
+<p>注意这种语法是 GCC 提供的，其他编译器可能没实现。</p>
+<p>共享库脚本：前面所提到的共享库都是动态链接的ELF共享对象文件(.so)，事实上，共享库还可以是符合一定格式的链接脚本文件。通过这种脚本文件，我们可以把几个现有的共享库通过一定的方式组合起来，从用户的角度看就是一个新的共享库，比如我们可以把 C 运行库和数学库组合成一个新的库 <code>libfoo.so</code>：</p>
+<div class="hlcode"><pre><span></span><span class="k">GROUP</span><span class="p">(</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libc</span><span class="p">.</span><span class="n">so</span><span class="p">.</span><span class="mi">6</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libm</span><span class="p">.</span><span class="n">so</span><span class="p">.</span><span class="mi">2</span> <span class="p">)</span>
+</pre></div>
+
+
+<hr />
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-04 01:20:31</p>
+        <p>Site Generated 2019-12-05 01:27:19</p>
       </span>
     </div>
 
