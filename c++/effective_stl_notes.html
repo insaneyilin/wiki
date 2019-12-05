@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Effective STL notes - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#c++">c++</a>&nbsp;&#187;&nbsp;Effective STL notes
+    <span class="updated">Page Updated&nbsp;
+      2019-12-05 23:23
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Effective STL notes</div>
+
+  <p>Scott Meyers 的 &lt; Effective STL &gt;，有些东西在 Modern C++ 里已经过时。</p>
+<div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#1">1. 慎重选择容器类型</a></li>
+<li><a href="#2">2. 不要试图编写独立于容器类型的代码</a></li>
+<li><a href="#3">3. 确保容器中的对象拷贝正确而高效</a></li>
+<li><a href="#4-empty-size-0">4. 调用 empty() 而不是检查 size() 是否为0</a></li>
+<li><a href="#5">5. 区间成员函数优先于与之对应的单元素成员函数</a></li>
+<li><a href="#6-c">6. 当心C++编译器烦人的分析机制</a></li>
+<li><a href="#7-newdelete">7. 如果容器中包含了通过new操作创建的指针，切记在容器对象析构前将指针delete掉</a></li>
+<li><a href="#8-auto_ptr">8. 切勿创建包含auto_ptr的容器对象</a></li>
+<li><a href="#9">9. 慎重选择删除元素的方法</a></li>
+<li><a href="#10-allocator">10. 了解 allocator 的约定和限制</a></li>
+<li><a href="#11-allocator">11. 理解自定义 allocator 的合理用法</a></li>
+<li><a href="#12-stl">12. 切勿对STL容器的线程安全性有不切实际的依赖</a></li>
+<li><a href="#13-vectorstring">13. vector和string优先于动态分配的数组</a></li>
+<li><a href="#14-reserve">14. 使用reserve来避免不必要的重新分配</a></li>
+<li><a href="#15-string">15. 注意string实现的多样性</a></li>
+<li><a href="#16-vectorstringapi">16. 了解如何把vector和string数据传给旧的API</a></li>
+<li><a href="#17-swap">17. 使用 swap技巧 除去多余的容量</a></li>
+<li><a href="#18-vectorbool">18. 避免使用 vector&lt;bool&gt;</a></li>
+<li><a href="#19-equalityequivalence">19. 理解相等(equality)和等价(equivalence)的区别</a></li>
+<li><a href="#20">20. 为包含指针的关联容器指定比较类型</a></li>
+<li><a href="#21-false">21. 总是让比较函数在等值情况下返回 false</a></li>
+<li><a href="#22-setmultiset">22. 切勿直接修改set或multiset中的键</a></li>
+<li><a href="#23-vector">23. 考虑用排序的vector替代关联容器</a></li>
+<li><a href="#24-mapoperator-mapinsert">24. 当效率至关重要时，请在 map::operator[] 与 map::insert 之间谨慎做出选择</a></li>
+<li><a href="#25">25. 熟悉非标准的哈希容器</a></li>
+<li><a href="#26-iteratorconst_iteratorreverse_iteratorconst_reverse_iterator">26. iterator优先于const_iterator、reverse_iterator以及const_reverse_iterator</a></li>
+<li><a href="#27-distanceadvanceconst_iteratoriterator">27. 使用distance和advance将容器的const_iterator转换成iterator</a></li>
+<li><a href="#28-reverse_iteratorbaseiterator">28. 正确理解由reverse_iterator的base()成员函数所产生的iterator的用法</a></li>
+<li><a href="#29-istreambuf_iterator">29. 对于逐个字符的输入请考虑使用istreambuf_iterator</a></li>
+<li><a href="#30">30. 确保目标区间足够大</a></li>
+<li><a href="#31">31. 了解各种与排序有关的选择</a></li>
+</ul>
+</div>
+<hr />
+<h2 id="1">1. 慎重选择容器类型</h2>
+<p>标准STL序列容器：vector、string、deque、list、forward_list(C++11)、array(C++11)。</p>
+<p>标准STL关联容器：set、multiset、map、multimap、unordered_set(C++11)、unordered_multiset(C++11)、unordered_map(C++11)、unordered_multimap(C++11)。</p>
+<p>标准的非STL容器，包括：<code>bitset(include &lt;bitset&gt;)</code>、<code>valarray(include &lt;valarray&gt;)</code>。其它STL容器：<code>stack(include &lt;stack&gt;)</code>、<code>queue(include &lt;queue&gt;)</code>和 <code>priority_queue(include &lt;queue&gt;)</code>。</p>
+<p>要考虑应用特点选择容器，比如，当大部分插入和删除操作发生在序列的头部和尾部时， deque是应该考虑使用的数据结构。</p>
+<p>STL容器的一种分类方法：连续内存容器(contiguous memory container)和基于节点的容器(node-based container)。</p>
+<p>选择容器需要考虑：</p>
+<ul>
+<li>是否关心容器中的元素是如何排序</li>
+<li>是否有频繁的插入、删除、查找</li>
+<li>希望使用哪种迭代器</li>
+<li>容器中数据的布局是否需要和C兼容？如果需要兼容，就只能选择vector</li>
+</ul>
+<h2 id="2">2. 不要试图编写独立于容器类型的代码</h2>
+<p>STL 设计的一个重要思想是泛化(generalization)。数组被泛化为”以其包含的对象的类型为参数”的容器，函数被泛化为”以其使用的迭代器的类型为参数”的算法，指针被泛化为”以其指向的对象的类型为参数”的迭代器。</p>
+<p>但不应该滥用泛化，比如对于关联容器和序列容器，编写泛化的查找函数几乎没有意义。可以把容器隐藏到一个类中，并尽量减少那些通过类接口(而使外部)可见的、与容器相关的信息。</p>
+<h2 id="3">3. 确保容器中的对象拷贝正确而高效</h2>
+<p>当(通过如insert或push_back之类的操作)向容器中加入对象时，存入容器的是你所指定的对象的拷贝。当(通过如front或back之类的操作)从容器中取出一个对象时，你所得到的是容器中所保存的对象的拷贝。进去的是拷贝，出来的也是拷贝(copy in, copy out)。这就是STL的工作方式。</p>
+<p>使拷贝动作高效、正确，并防止剥离问题发生的一个简单办法是 <strong>使容器包含指针而不是对象</strong> 。</p>
+<h2 id="4-empty-size-0">4. 调用 <code>empty()</code> 而不是检查 <code>size()</code> 是否为0</h2>
+<p>size() 不一定是常数时间。</p>
+<h2 id="5">5. 区间成员函数优先于与之对应的单元素成员函数</h2>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">v1</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">v2</span><span class="p">;</span>
+<span class="c1">// ...</span>
+<span class="n">v1</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">v2</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v2</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>  <span class="c1">// 区间函数</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">v2</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v2</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">v1</span><span class="p">));</span>  <span class="c1">// 效率不如 assign()</span>
+
+<span class="c1">// 效率最差的是一个一个 push_back() ...</span>
+</pre></div>
+
+
+<p>区间函数能更清楚地表达意图。</p>
+<h2 id="6-c">6. 当心C++编译器烦人的分析机制</h2>
+<p>C++是较为底层的面相对象语言，在底层的语法规则分析中，有很多隐藏的分析机制。</p>
+<p>使用临时命名迭代器来分步完成需求。虽然这样做与标准STL使用有点违背了，但是为了没有二义性和提高代码可读性和方便维护是比较提倡的。</p>
+<h2 id="7-newdelete">7. 如果容器中包含了通过new操作创建的指针，切记在容器对象析构前将指针delete掉</h2>
+<h2 id="8-auto_ptr">8. 切勿创建包含auto_ptr的容器对象</h2>
+<h2 id="9">9. 慎重选择删除元素的方法</h2>
+<p>要删除容器中有特定值的所有对象：如果容器是 <code>vector</code>, <code>string</code> 或 <code>deque</code> ，则使用 <code>erase-remove</code> 惯用法；如果容器是 <code>list</code>，则使用 <code>list::remove</code> ；如果容器是一个标准关联容器，则使用它的 <code>erase</code> 成员函数。</p>
+<p>要删除容器中满足特定判别式(条件)的所有对象：如果容器是 <code>vector</code>, <code>string</code> 或 <code>deque</code>，则使用 <code>erase-remove_if</code> 习惯用法；如果容器是 <code>list</code> ，则使用 <code>list::remove_if</code> ；如果容器是一个标准关联容器，则使用 <code>remove_copy_if</code> 和 <code>swap</code> ，或者写一个循环来遍历容器中的元素，记住当把迭代器传给 <code>erase</code> 时，要对它进行后缀递增。</p>
+<p>要在循环内做某些(除了删除对象之外的)操作：如果容器是一个标准序列容器，则写一个循环来遍历容器中的元素，记住每次调用 <code>erase</code> 时，要 <strong>用它的返回值更新迭代器</strong> ；如果容器是一个标准关联容器，则写一个循环来遍历容器中的元素，记住当把迭代器传给 <code>erase</code> 时，要对迭代器做后缀递增。</p>
+<h2 id="10-allocator">10. 了解 allocator 的约定和限制</h2>
+<p>使用 allocator 可以将内存分配、对象构造分离开。</p>
+<p>allocator类将new的内存分配、对象构造，视作两个独立的过程，并由独立的函数负责。</p>
+<p>参考 <a href="https://blog.csdn.net/qingdujun/article/details/84727714">动态内存管理allocator类C++ STL标准模板库vector实现</a>。</p>
+<h2 id="11-allocator">11. 理解自定义 allocator 的合理用法</h2>
+<h2 id="12-stl">12. 切勿对STL容器的线程安全性有不切实际的依赖</h2>
+<h2 id="13-vectorstring">13. vector和string优先于动态分配的数组</h2>
+<p>很多 <code>string</code> 实现在背后使用了引用计数技术，这种策略可以消除不必要的内存分配和不必要的字符拷贝，从而可以提供很多应用程序的效率。如果你在多线程环境下使用了引用计数的string，那么注意一下因支持线程安全而导致的性能问题。</p>
+<h2 id="14-reserve">14. 使用reserve来避免不必要的重新分配</h2>
+<p>对于vector和string，增长过程是这样来实现的：每当需要更多空间时，就调用与realloc类似的操作。这一类似于realloc的操作分为四部分：</p>
+<ol>
+<li>分配一块大小为当前容量的某个倍数的新内存。在大多数实现中，vector和string的容量每次以2的倍数增长，即，每当容器需要扩张时，它们的容量即加倍。</li>
+<li>把容器的所有元素从旧的内存拷贝到新的内存中。</li>
+<li>析构掉就内存中的对象。</li>
+<li>释放旧内存。</li>
+</ol>
+<p><code>reserve</code> 能使你 <strong>把重新分配的次数减少到最低限度</strong> ，从而避免了重新分配和指针/迭代器/引用失效带来的开销。避免重新分配的关键在于，尽早地使用reserve，把容器的容量设为足够大的值， <strong>最好是在容器刚被构造出来之后就使用reserve</strong> 。</p>
+<h2 id="15-string">15. 注意string实现的多样性</h2>
+<ol>
+<li>string的值可能会被引用计数，也可能不会。很多实现在默认情况下会使用引用计数，但它们通常提供了关闭默认选择的方法，往往是通过预处理宏来做到这一点。</li>
+<li>string对象大小的范围可以是一个char*指针大小的1倍到7倍。</li>
+<li>创建一个新的字符串值可能需要零次、一次或两次动态分配内存。</li>
+<li>string对象可能共享，也可能不共享其大小和容量信息。</li>
+<li>string可能支持，也可能不支持针对单个对象的分配子。</li>
+<li>不同的实现对字符内存的最小分配单位有不同的策略。</li>
+</ol>
+<h2 id="16-vectorstringapi">16. 了解如何把vector和string数据传给旧的API</h2>
+<div class="hlcode"><pre><span></span><span class="kt">void</span> <span class="nf">foo</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">arr</span><span class="p">);</span>
+
+<span class="c1">// ...</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v1</span><span class="p">;</span>
+<span class="n">foo</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="n">foo</span><span class="p">(</span><span class="n">v1</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>  <span class="c1">// c++ 11</span>
+</pre></div>
+
+
+<h2 id="17-swap">17. 使用 <strong>swap技巧</strong> 除去多余的容量</h2>
+<p>对vector或string进行shrink-to-fit操作时，考虑”swap”技巧。C++11中增加了 <code>shrink_to_fit</code> 成员函数。</p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v1</span><span class="p">;</span>
+<span class="n">v1</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// </span>
+<span class="c1">// ... 增加 v1 大小，然后删除它的大部分元素</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v1</span><span class="p">).</span><span class="n">swap</span><span class="p">(</span><span class="n">v1</span><span class="p">);</span>  <span class="c1">// swap 技巧</span>
+                                <span class="c1">// vector的拷贝构造函数只为所拷贝的元素分配所需要的内存</span>
+
+<span class="n">v1</span><span class="p">.</span><span class="n">shrink_to_fit</span><span class="p">();</span>  <span class="c1">// c++ 11</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">().</span><span class="n">swap</span><span class="p">(</span><span class="n">v1</span><span class="p">);</span>  <span class="c1">// 清除 v1 并将其容量设为最小</span>
+</pre></div>
+
+
+<h2 id="18-vectorbool">18. 避免使用 <code>vector&lt;bool&gt;</code></h2>
+<ul>
+<li><code>vector&lt;bool&gt;</code> 不是标准容器</li>
+<li><code>vector&lt;bool&gt;</code> 并不是以单个元素为 <code>bool</code> 来存储的。</li>
+</ul>
+<p><code>vector&lt;bool&gt;</code> 是一个假的容器，它并不真的存储 <code>bool</code> ，相反，为了节省空间，它存储的是 <code>bool</code> 的紧凑表示。</p>
+<blockquote>
+<p><code>vector&lt;bool&gt;</code> 是一个奇葩的存在，它的 <code>[]</code> 返回的不是 <code>bool</code> ，是一个表示单独 <code>bool</code> 引用的 <code>proxy class</code> ，于是你得到是这个引用（而你平常使用 <code>bool</code> 没事，是因为完成了一个隐式转换），而你用 <code>auto</code> 的话，想要得到意想中的类型，需要使用 <code>static_cast&lt;bool&gt;</code> ，再给 <code>auto</code> 。而这也不是特例，其适用于含有 <code>proxy class</code> 的 <code>class</code> 。</p>
+</blockquote>
+<p>也不是完全不能用 <code>vector&lt;bool&gt;</code>，注意上面的坑就好。（把 <code>vector&lt;bool&gt;</code> 作为 mask 数组来用完全没问题）</p>
+<p><code>bitset</code> 其实是可以看做是一个 <code>bool</code> 类型的数组，只不过 <code>bitset</code> 的一个元素只占 1 bit 的空间，而 <code>bool</code> 里面则是占 1 byte。</p>
+<p>使用 <code>bitset</code> 可以轻松存10^8个数字并查询，而 <code>bool arr[10]</code> 这样的 bool 数组空间是它的八倍。</p>
+<p>bitset 的缺点是它的大小是模板参数确定的，必须提前设定，而 <code>vector&lt;bool&gt;</code> 可以运行时调整。</p>
+<h2 id="19-equalityequivalence">19. 理解相等(equality)和等价(equivalence)的区别</h2>
+<p>等价是以“在已排序的区间中对象值的相对顺序”为基础的。</p>
+<p>对于关联容器(set multiset map multimap)应该优先选用自己的成员函数而不是与之对应的算法，这样才能保证都是使用的是用于插入的排序函数来进行的相应处理，保证结果的一致性。</p>
+<p>在一般情形下，一个关联容器的比较函数并不是operator &lt;， 甚至也不是less，它是用户定义的判别式(predicate)。<br />
+每个标准关联容器都通过key_compare成员函数是排序判别式可被外部使用。</p>
+<p>一个例子，我们可以自定义一个 key_compare 实现大小写 key 等价。</p>
+<h2 id="20">20. 为包含指针的关联容器指定比较类型</h2>
+<p>如果关联容器的 key 类型为指针，记住自定义比较类型（否则会按地址排序，这大部分情况不是我们需要的）</p>
+<h2 id="21-false">21. 总是让比较函数在等值情况下返回 false</h2>
+<p>比较函数的返回值表明的是按照该函数定义的排列顺序，一个值是否在另一个之前。相等的值从来不会有前后顺序关系，所以，对于相等的值，比较函数应当始终返回false。</p>
+<p>这个地方有个经典的 (<code>std::sort</code> core dump 问题)[https://www.jianshu.com/p/c5c9e32618db] ，标准库算法里面很多都要求满足 (Strict_weak_orderings)[https://en.wikipedia.org/wiki/Weak_ordering#Strict_weak_orderings] ，使用时需要格外注意，避免翻车。</p>
+<h2 id="22-setmultiset">22. 切勿直接修改set或multiset中的键</h2>
+<p>像所有的标准关联容器一样，set和multiset按照一定的顺序来存放自己的元素，而这些容器的正确行为也是建立在其元素保持有序的基础之上的。如果你把关联容器中的一个元素的值改变了(比如把10改为1000)，那么，新的值可能不在正确的位置上，这将会打破容器的有序性。</p>
+<h2 id="23-vector">23. 考虑用排序的vector替代关联容器</h2>
+<p>标准关联容器通常被实现为平衡的二叉查找树。在排序的vector中存储数据可能比在标准关联容器中存储同样的数据要耗费更少的内存，而考虑到页错误的因素，通过二分搜索法来查找一个排序的vector可能比查找一个标准关联容器要更快一些。</p>
+<p>注意，如果一个 vector 经常被修改，那使用排序的 vector 来查找不合适。</p>
+<h2 id="24-mapoperator-mapinsert">24. 当效率至关重要时，请在 <code>map::operator[]</code> 与 <code>map::insert</code> 之间谨慎做出选择</h2>
+<p>结论，插入新元素时，用 <code>insert()</code>，访问已有元素再考虑用 <code>operator[]</code>。</p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">m</span><span class="p">;</span>
+<span class="n">m</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;hello&quot;</span><span class="p">));</span>
+</pre></div>
+
+
+<h2 id="25">25. 熟悉非标准的哈希容器</h2>
+<p>std::map对应的数据结构是红黑树。红黑树是一种近似于平衡的二叉查找树，里面的数据是有序的。在红黑树上做查找、插入、删除操作的时间复杂度为O(logN)。而std::unordered_map对应哈希表，哈希表的特点就是查找效率高，时间复杂度为常数级别O(1)， 而额外空间复杂度则要高出许多。所以对于需要高效率查询的情况，使用std::unordered_map容器，但是std::unordered_map对于迭代器遍历效率并不高。而如果对内存大小比较敏感或者数据存储要求有序的话，则可以用std::map容器。</p>
+<h2 id="26-iteratorconst_iteratorreverse_iteratorconst_reverse_iterator">26. iterator优先于const_iterator、reverse_iterator以及const_reverse_iterator</h2>
+<p>STL中的所有标准容器都提供了4中迭代器类型。对容器类container<T>而言，iterator类型的功效相当于T<em>，而const_iterator则相当于const T</em>。</p>
+<h2 id="27-distanceadvanceconst_iteratoriterator">27. 使用distance和advance将容器的const_iterator转换成iterator</h2>
+<p>std::distance用以取得两个迭代器(它们指向同一个容器)之间的距离；std::advance则用于将一个迭代器移动指定的距离。</p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+<span class="k">auto</span> <span class="n">citer</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">cbegin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">4</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">advance</span><span class="p">(</span><span class="n">iter</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">const_iterator</span><span class="o">&gt;</span><span class="p">(</span><span class="n">iter</span><span class="p">,</span> <span class="n">citer</span><span class="p">));</span>
+</pre></div>
+
+
+<h2 id="28-reverse_iteratorbaseiterator">28. 正确理解由reverse_iterator的base()成员函数所产生的iterator的用法</h2>
+<p>注意反向迭代器的删除操作：</p>
+<div class="hlcode"><pre><span></span><span class="o">//</span> <span class="err">插入，先转为正向迭代器</span>
+<span class="nt">std</span><span class="p">::</span><span class="nd">vector</span><span class="o">&lt;</span><span class="nt">int</span><span class="o">&gt;</span><span class="p">::</span><span class="nd">iterator</span> <span class="nt">i</span><span class="o">(</span><span class="nt">ri</span><span class="p">.</span><span class="nc">base</span><span class="o">());</span>
+<span class="nt">v</span><span class="p">.</span><span class="nc">insert</span><span class="o">(</span><span class="nt">i</span><span class="o">,</span> <span class="nt">100</span><span class="o">);</span>
+
+<span class="o">//</span> <span class="err">注意删除需要在</span><span class="nt">ri</span><span class="p">.</span><span class="nc">base</span><span class="o">()</span><span class="err">前面的位置上执行</span>
+<span class="nt">v</span><span class="p">.</span><span class="nc">erase</span><span class="o">((++</span><span class="nt">ri</span><span class="o">)</span><span class="p">.</span><span class="nc">base</span><span class="o">());</span>
+</pre></div>
+
+
+<h2 id="29-istreambuf_iterator">29. 对于逐个字符的输入请考虑使用istreambuf_iterator</h2>
+<h2 id="30">30. 确保目标区间足够大</h2>
+<p>无论何时，如果所使用的算法需要指定一个目标区间，那么必须确保目标区间足够大，或者确保它会随着算法的运行而增大。 <strong>要在算法执行过程中增大目标区间，请使用插入型迭代器</strong> ，比如 <code>ostream_iterator</code> 或者由 <code>back_inserter</code> 、 <code>front_inserter</code> 和 <code>inserter</code> 返回的迭代器。</p>
+<h2 id="31">31. 了解各种与排序有关的选择</h2>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/c++/cxx11_multi_thread_and_async.html">C++11 多线程与异步调用</a></li>
+    
+    <li><a href="/wiki/c++/eigen_notes.html">Eigen C++ Library cheatsheet</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-06 02:43:33</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
