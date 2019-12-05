@@ -68,6 +68,8 @@
 <li><a href="#ch6">ch6 可执行文件的装载与进程</a></li>
 <li><a href="#ch7">ch7 动态链接</a></li>
 <li><a href="#ch8-linux">ch8 Linux 共享库的组织</a></li>
+<li><a href="#ch9-windows">ch9 Windows下的动态链接</a></li>
+<li><a href="#ch10">ch10 内存</a></li>
 </ul>
 </div>
 <hr />
@@ -427,12 +429,34 @@
 
 
 <hr />
+<h2 id="ch9-windows">ch9 Windows下的动态链接</h2>
+<p>DLL和EXE文件实际上是一个概念，都是PE格式的二进制文件，不同的是在PE文件头部将两者区分。</p>
+<p>一个DLL在不同的进程中拥有不同的私有数据版本，DLL的代码不是地址无关的。</p>
+<p>一个PE文件被装载时，其进程地址空间的起始地址就是基地址，任何一个PE文件都有一个优点装载的基地址，即Image Base。</p>
+<p>Windows可以将DLL的数据段设为共享，这就意味着一个DLL中有两个数据段,一个进程间共享,另一个私有。</p>
+<p>我们使用 <code>__declspec(dllexport)</code> 表示该符号是从本DLL导出的符号。<code>__declspec(dllimport)</code> 表示该符号是从别的DLL导入的符号。</p>
+<p>DLL支持显式运行时链接，Windows提供了3个API为：</p>
+<ul>
+<li>LoadLibrary，这个函数用来装载一个DLL到进程的地址空间，它的功能跟dlopen类似。</li>
+<li>GetProcAddress, 用来查找某个符号的地址，与dlsym类似</li>
+<li>FreeLibrary， 用来卸载某个已加载的模块，与dlclose类似</li>
+</ul>
+<p>C++ 与动态链接，C++ 编写共享库会有很多问题，微软提出了 COM(Component object model)，主要为了解决程序开发中遇到的兼容性问题。</p>
+<p>DLL hell，早期 windows 缺少有效的DLL版本控制机制。</p>
+<hr />
+<h2 id="ch10">ch10 内存</h2>
+<p>程序的环境由三部分组成：</p>
+<ul>
+<li>内存</li>
+<li>运行库</li>
+<li>系统调用</li>
+</ul>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-05 01:27:19</p>
+        <p>Site Generated 2019-12-06 00:44:58</p>
       </span>
     </div>
 
