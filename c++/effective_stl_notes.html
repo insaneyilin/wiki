@@ -47,8 +47,7 @@
 
 <div class="page_title">Effective STL notes</div>
 
-  <p>Scott Meyers 的 &lt; Effective STL &gt;，有些东西在 Modern C++ 里已经过时。</p>
-<div class="toc"><span class="toctitle">Table of Contents</span><ul>
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#1">1. 慎重选择容器类型</a></li>
 <li><a href="#2">2. 不要试图编写独立于容器类型的代码</a></li>
 <li><a href="#3">3. 确保容器中的对象拷贝正确而高效</a></li>
@@ -80,8 +79,28 @@
 <li><a href="#29-istreambuf_iterator">29. 对于逐个字符的输入请考虑使用istreambuf_iterator</a></li>
 <li><a href="#30">30. 确保目标区间足够大</a></li>
 <li><a href="#31">31. 了解各种与排序有关的选择</a></li>
+<li><a href="#32-removeerase">32. 如果确实需要删除元素，则需要在remove这一类算法之后调用erase</a></li>
+<li><a href="#33-remove">33. 对包含指针的容器使用remove这一类算法时要特别小心</a></li>
+<li><a href="#34">34. 了解哪些算法要求使用排序的区间作为参数</a></li>
+<li><a href="#35-mismatchlexicographical_compare">35. 通过mismatch或lexicographical_compare实现简单的忽略大小写的字符串比较</a></li>
+<li><a href="#36-copy_if">36. 理解copy_if算法的正确实现</a></li>
+<li><a href="#37-accumulatefor_each">37. 使用accumulate或者for_each进行区间统计</a></li>
+<li><a href="#38-functor">38. 遵循按值传递的原则来设计仿函数(functor)类</a></li>
+<li><a href="#39">39. 确保判别式是”纯函数”</a></li>
+<li><a href="#40-functor-adaptable">40. 若一个类是 functor，则应使它 adaptable</a></li>
+<li><a href="#41-ptr_funmen_funmem_fun_ref">41. 理解ptr_fun、men_fun和mem_fun_ref的来由</a></li>
+<li><a href="#42-lessoperator">42. 确保less<T>与operator&lt;具有相同的语义</a></li>
+<li><a href="#43">43. 算法调用优先于手写的循环</a></li>
+<li><a href="#44">44. 容器的成员函数优先于同名的算法</a></li>
+<li><a href="#45-countfindbinary_searchlower_boundupper_boundequal_range">45. 正确区分count、find、binary_search、lower_bound、upper_bound和equal_range</a></li>
+<li><a href="#46-functor-stl">46. 考虑使用 functor 而不是函数作为STL算法的参数</a></li>
+<li><a href="#47-write-only">47. 避免产生“直写型”(write-only)的代码</a></li>
+<li><a href="#48-include">48. 总是包含(#include)正确的头文件</a></li>
+<li><a href="#49-stl">49. 学会分析与STL相关的编译器诊断信息</a></li>
+<li><a href="#50-stlweb">50. 熟悉与STL相关的Web站点</a></li>
 </ul>
 </div>
+<p>Scott Meyers 的 &lt; Effective STL &gt;，有些东西在 Modern C++ 里已经过时。</p>
 <hr />
 <h2 id="1">1. 慎重选择容器类型</h2>
 <p>标准STL序列容器：vector、string、deque、list、forward_list(C++11)、array(C++11)。</p>
@@ -200,7 +219,7 @@
 <p>如果关联容器的 key 类型为指针，记住自定义比较类型（否则会按地址排序，这大部分情况不是我们需要的）</p>
 <h2 id="21-false">21. 总是让比较函数在等值情况下返回 false</h2>
 <p>比较函数的返回值表明的是按照该函数定义的排列顺序，一个值是否在另一个之前。相等的值从来不会有前后顺序关系，所以，对于相等的值，比较函数应当始终返回false。</p>
-<p>这个地方有个经典的 (<code>std::sort</code> core dump 问题)[https://www.jianshu.com/p/c5c9e32618db] ，标准库算法里面很多都要求满足 (Strict_weak_orderings)[https://en.wikipedia.org/wiki/Weak_ordering#Strict_weak_orderings] ，使用时需要格外注意，避免翻车。</p>
+<p>这个地方有个经典的 <a href="https://www.jianshu.com/p/c5c9e32618db"><code>std::sort</code> core dump 问题</a> ，标准库算法里面很多都要求满足 <a href="https://en.wikipedia.org/wiki/Weak_ordering#Strict_weak_orderings">Strict_weak_orderings</a> ，使用时需要格外注意，避免翻车。</p>
 <h2 id="22-setmultiset">22. 切勿直接修改set或multiset中的键</h2>
 <p>像所有的标准关联容器一样，set和multiset按照一定的顺序来存放自己的元素，而这些容器的正确行为也是建立在其元素保持有序的基础之上的。如果你把关联容器中的一个元素的值改变了(比如把10改为1000)，那么，新的值可能不在正确的位置上，这将会打破容器的有序性。</p>
 <h2 id="23-vector">23. 考虑用排序的vector替代关联容器</h2>
@@ -242,6 +261,79 @@
 <h2 id="30">30. 确保目标区间足够大</h2>
 <p>无论何时，如果所使用的算法需要指定一个目标区间，那么必须确保目标区间足够大，或者确保它会随着算法的运行而增大。 <strong>要在算法执行过程中增大目标区间，请使用插入型迭代器</strong> ，比如 <code>ostream_iterator</code> 或者由 <code>back_inserter</code> 、 <code>front_inserter</code> 和 <code>inserter</code> 返回的迭代器。</p>
 <h2 id="31">31. 了解各种与排序有关的选择</h2>
+<p>稳定排序：保证排序前 2 个相等的数在序列中的位置顺序和排序后的位置顺序相同。</p>
+<ul>
+<li><code>std::sort</code>：对给定区间所有元素进行排序。</li>
+<li><code>std::stable_sort</code>：对给定区间所有元素进行稳定排序。</li>
+<li><code>std::partial_sort</code>：对给定区间元素进行部分排序。</li>
+<li><code>std::nth_element</code>: 用于排序一个区间，它使得位置n上的元素正好是全排序情况下的第n个元素。当 <code>nth_element</code> 返回的时候，所有按全排序规则(即sort的结果)排在位置n之前的元素也都被排在位置n之前，而所有按全排序规则排在位置n之后的元素则都被排在位置n之后。</li>
+<li><code>std::partition</code>: 对序列重排，使得满足条件的元素位于容器最前面。</li>
+<li><code>std::stable_partiton</code>: 稳定版本 partition</li>
+</ul>
+<h2 id="32-removeerase">32. 如果确实需要删除元素，则需要在remove这一类算法之后调用erase</h2>
+<p><code>std::list</code> 的 <code>remove</code> 成员函数是STL中唯一一个名为remove并且确实删除了容器中元素的函数。</p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">remove</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">99</span><span class="p">),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span> <span class="c1">// 真正删除所有值等于99的元素</span>
+</pre></div>
+
+
+<p><code>std::remove</code> 并不是唯一一个适用于这种情形的算法，其它还有两个属于”remove类”的算法：<code>remove_if</code> 和 <code>unique</code>。</p>
+<h2 id="33-remove">33. 对包含指针的容器使用remove这一类算法时要特别小心</h2>
+<h2 id="34">34. 了解哪些算法要求使用排序的区间作为参数</h2>
+<p>一些算法要求事先排序。</p>
+<p>要求排序区间的STL算法：</p>
+<ul>
+<li>binary_search</li>
+<li>lower_bound</li>
+<li>upper_bound</li>
+<li>equal_range</li>
+<li>set_union</li>
+<li>set_intersection</li>
+<li>set_difference</li>
+<li>set_symmetric_difference</li>
+<li>merge</li>
+<li>inplace_merge</li>
+<li>includes</li>
+</ul>
+<h2 id="35-mismatchlexicographical_compare">35. 通过mismatch或lexicographical_compare实现简单的忽略大小写的字符串比较</h2>
+<p>mismatch算法是比较两个序列，找出首个不匹配元素的位置。</p>
+<p>std::lexicographical_compare是strcmp的一个泛化版本。不过，strcmp只能与字符数组一起工作，而lexicographical_compare则可以与任何类型的值的区间一起工作。而且，strcmp总是通过比较两个字符来判断它们的关系相等、小于还是大于，而lexicographical_compare则可以接受一个判别式，由该判别式来决定两个值是否满足一个用户自定义的准则。</p>
+<p>strcmp通常是被优化过的，它们在字符串的处理上一般要比通用算法mismatch和lexicographical_compare快。</p>
+<h2 id="36-copy_if">36. 理解copy_if算法的正确实现</h2>
+<p>C++11 增加了 copy_if。</p>
+<h2 id="37-accumulatefor_each">37. 使用accumulate或者for_each进行区间统计</h2>
+<h2 id="38-functor">38. 遵循按值传递的原则来设计仿函数(functor)类</h2>
+<p>STL函数对象是函数指针的一种抽象和建模形式，所以，按照惯例，在STL中，函数对象在函数之间来回传递的时候也是按值传递(即被拷贝)的。标准库中一个最好的证明是for_each算法，它需要一个函数对象作为参数，同时其返回值也是一个函数对象，而且都是按值传递的。</p>
+<p>首先，你的函数对象必须尽可能地小，否则拷贝的开销会非常昂贵；其次，函数对象必须是单态的(不是多态的)，也就是说，它们不得使用虚函数。这是因为，如果参数的类型是基类类型，而实参是派生类对象，那么在传递过程中会产生剥离问题(slicing problem)：在对象拷贝过程中，派生部分可能会被去掉，而仅保留了基类部分。</p>
+<h2 id="39">39. 确保判别式是”纯函数”</h2>
+<p>确保判别式是纯函数可以防止一些副作用。</p>
+<p>一个判别式(predicate)是一个返回值为bool类型(或者可以隐式地转换为bool类型)的函数。在STL中，判别式有着广泛的用途。标准关联容器的比较函数就是判别式；对于像find_if以及各种与排序有关的算法，判别式往往也被作为参数来传递。</p>
+<p>一个纯函数(pure function)是指返回值仅仅依赖于其参数的函数。在C++中，纯函数所能访问的数据应该仅局限参数以及常量(在函数生命期内不会被改变，自然地，这样的常量数据应该被声明为const)。如果一个纯函数需要访问那些可能在两次调用之间发生变化的数据，那么用相同的参数在不同的时刻调用该函数就有可能会得到不同的结果，这将与纯函数的定义相矛盾。</p>
+<h2 id="40-functor-adaptable">40. 若一个类是 functor，则应使它 adaptable</h2>
+<p>functor adaptor，包括bind、negate、compose以及对一般函数或成员函数的修饰。其价值体现在，通过它们之间的绑定、组合和修饰能力，几乎可以无限制地创造出各种可能的表达式，搭配 STL 算法进行使用。</p>
+<p>C++11 直接提供了更强大的 <code>std::bind</code>，过去的 <code>bind1st</code> 、 <code>bind2nd</code> 已经不推荐使用。</p>
+<h2 id="41-ptr_funmen_funmem_fun_ref">41. 理解ptr_fun、men_fun和mem_fun_ref的来由</h2>
+<ul>
+<li>std::ptr_fun：将函数指针转换为函数对象。</li>
+<li>std::mem_fun：将成员函数转换为函数对象(指针版本)。</li>
+<li>std::mem_fun_ref：将成员函数转换为函数对象(引用版本)。</li>
+</ul>
+<p>C++11中已不再推荐使用ptr_fun、mem_fun、mem_fun_ref等相关函数。</p>
+<h2 id="42-lessoperator">42. 确保less<T>与operator&lt;具有相同的语义</h2>
+<h2 id="43">43. 算法调用优先于手写的循环</h2>
+<h2 id="44">44. 容器的成员函数优先于同名的算法</h2>
+<p>比如，关联容器提供了count、find、lower_bound、upper_bound和equal_range，而list则提供了remove、remove_if、unique、sort、merge和reverse。</p>
+<p>有两个理由：第一，成员函数往往速度快；第二，成员函数通常与容器(特别是关联容器)结合得更加紧密，这是算法所不能比的。</p>
+<h2 id="45-countfindbinary_searchlower_boundupper_boundequal_range">45. 正确区分count、find、binary_search、lower_bound、upper_bound和equal_range</h2>
+<p>都是查找相关的，要考虑容器区间元素是否已排序。</p>
+<h2 id="46-functor-stl">46. 考虑使用 functor 而不是函数作为STL算法的参数</h2>
+<h2 id="47-write-only">47. 避免产生“直写型”(write-only)的代码</h2>
+<p>考虑可读性。</p>
+<h2 id="48-include">48. 总是包含(#include)正确的头文件</h2>
+<h2 id="49-stl">49. 学会分析与STL相关的编译器诊断信息</h2>
+<h2 id="50-stlweb">50. 熟悉与STL相关的Web站点</h2>
+<p>http://www.cplusplus.com/reference/</p>
+<p>https://en.cppreference.com/w/cpp</p>
   <div class="relation">
     <h2>Related</h2>
     <ul>
@@ -257,7 +349,7 @@
       <span>
         <p>Copyright © 2019 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-06 02:43:33</p>
+        <p>Site Generated 2019-12-06 09:23:38</p>
       </span>
     </div>
 
