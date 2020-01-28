@@ -55,7 +55,7 @@
 <li><a href="#implicit-conversions">单参数的构造函数，要小心隐式转换（implicit conversions）</a></li>
 <li><a href="#const">尽可能使用 const</a></li>
 <li><a href="#_2">关于函数返回值的选择</a></li>
-<li><a href="#_3">对于基本类型，没必要用常引用</a></li>
+<li><a href="#_3">对于基本类型，没必要用常引用参数</a></li>
 <li><a href="#_4">尽可能使用智能指针</a></li>
 <li><a href="#c-style">尽量少用 C-style 数组</a></li>
 <li><a href="#override-final">合理利用 override 和 final 关键字</a></li>
@@ -97,8 +97,8 @@
 <li>局部变量，临时变量，必须 return by value.</li>
 <li>对于成员变量，使用指针和引用/常引用可以减少性能开销</li>
 </ul>
-<h2 id="_3">对于基本类型，没必要用常引用</h2>
-<p>基本类型，直接传值能更好地利用编译器优化。</p>
+<h2 id="_3">对于基本类型，没必要用常引用参数</h2>
+<p>基本类型，函数参数直接传值能更好地利用编译器优化。</p>
 <h2 id="_4">尽可能使用智能指针</h2>
 <p>C++11 之后尽量避免用 raw pointer 直接获取/释放内存。</p>
 <h2 id="c-style">尽量少用 C-style 数组</h2>
@@ -215,6 +215,7 @@
 <h2 id="_12">参考</h2>
 <p><a href="https://lefticus.gitbooks.io/cpp-best-practices">C++ Best Practices</a></p>
 <p><a href="http://www.cs.cmu.edu/~gilpin/c%2B%2B/performance.html">C++ Performance Tips</a></p>
+<p>https://zhuanlan.zhihu.com/p/102419965</p>
   <div class="relation">
     <h2>Related</h2>
     <ul>
@@ -232,7 +233,7 @@
       <span>
         <p>Copyright © 2020 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-24 16:52:13</p>
+        <p>Site Generated 2020-01-28 17:43:36</p>
       </span>
     </div>
 
