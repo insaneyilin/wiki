@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>C++ Standard IO tips - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#c++">c++</a>&nbsp;&#187;&nbsp;C++ Standard IO tips
+    <span class="updated">Page Updated&nbsp;
+      2020-02-03 15:21
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">C++ Standard IO tips</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">头文件</a></li>
+<li><a href="#stdgetline">std::getline</a></li>
+<li><a href="#_2">输出格式控制</a></li>
+<li><a href="#_3">参考</a></li>
+</ul>
+</div>
+<hr />
+<h2 id="_1">头文件</h2>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;  // 标准 IO</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;   // IO 格式控制等</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;   // 文件 IO </span><span class="cp"></span>
+</pre></div>
+
+
+<p>默认情况下，回车、tab 和空格会被 <code>cin</code> 忽略。</p>
+<h2 id="stdgetline">std::getline</h2>
+<p><code>std::getline()</code> 可以用于获取一行输入。</p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span>
+</pre></div>
+
+
+<p><code>std::getline()</code> 的第三个参数可以指定一个停止字符，用来输入下面这种有分隔符格式的文件比较有用：</p>
+<div class="hlcode"><pre><span></span><span class="n">John</span><span class="o">|</span><span class="n">male</span><span class="o">|</span><span class="mi">25</span><span class="o">|</span><span class="n">programmer</span>
+<span class="n">Jane</span><span class="o">|</span><span class="n">female</span><span class="o">|</span><span class="mi">37</span><span class="o">|</span><span class="n">teacher</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">ifs</span><span class="p">(</span><span class="s">&quot;input.txt&quot;</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">gender</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">age</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">job</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">ifs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="sc">&#39;|&#39;</span><span class="p">).</span><span class="n">eof</span><span class="p">())</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">inf</span><span class="p">,</span> <span class="n">gender</span><span class="p">,</span> <span class="sc">&#39;|&#39;</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">inf</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="sc">&#39;|&#39;</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">inf</span><span class="p">,</span> <span class="n">job</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="_2">输出格式控制</h2>
+<div class="hlcode"><pre><span></span><span class="c1">// 输出前先进行设置</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ios</span><span class="o">::</span><span class="n">fixed</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ios</span><span class="o">::</span><span class="n">floatfield</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ios</span><span class="o">::</span><span class="n">showpoint</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">.</span><span class="n">precision</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="c1">// 设置输出宽度</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="c1">//output:  &quot;4&quot;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="c1">//output:  &quot; 4&quot;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="c1">//output:  &quot;0004&quot;</span>
+</pre></div>
+
+
+<h2 id="_3">参考</h2>
+<p>http://www.augustcouncil.com/~tgibson/tutorial/iotips.html</p>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/c++/cxx11_multi_thread_and_async.html">C++11 多线程与异步调用</a></li>
+    
+    <li><a href="/wiki/c++/cxx_practical_tips.html">C++ Practical Tips</a></li>
+    
+    <li><a href="/wiki/c++/cxx_type_casting.html">C++ 类型转换</a></li>
+    
+    <li><a href="/wiki/c++/effective_stl_notes.html">Effective STL notes</a></li>
+    
+    <li><a href="/wiki/c++/eigen_notes.html">Eigen C++ Library cheatsheet</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-02-06 14:40:45</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

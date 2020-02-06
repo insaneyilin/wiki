@@ -446,7 +446,7 @@
 
 
 <h2 id="condition-variable">使用 Condition variable 处理事件响应</h2>
-<p>假设要实现一个简单的消费者生产者模型，一个线程往队列中放入数据，一个线程往队列中取数据，取数据前需要判断一下队列中确实有数据，由于这个队列是线程间共享的，所以，需要使用互斥锁进行保护，一个线程在往队列添加数据的时候，另一个线程不能取，反之亦然。</p>
+<p>假设要实现一个简单的消费者生产者模型，一个线程往队列中放入数据，一个线程从队列中取数据，取数据前需要判断一下队列中确实有数据，由于这个队列是线程间共享的，所以，需要使用互斥锁进行保护，一个线程在往队列添加数据的时候，另一个线程不能取，反之亦然。</p>
 <p><code>mutex</code> 可以完成这个任务，但是却存在着性能问题。消费者每次都要等待锁释放。如果生产者处理开销较大，那么会有不必要的等待开销。</p>
 <p>更合适的模型是，生产者往队列中添加完数据后，立刻通知消费者干活，如何实现这种“通知”的机制？C++11 提供了 Condition variable 来帮我们实现多线程之间的 signal 机制。</p>
 <div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
@@ -809,7 +809,11 @@ First argument in <code>std::async</code> is launch policy, it control the async
     <h2>Related</h2>
     <ul>
     
+    <li><a href="/wiki/c++/cxx_std_io_tips.html">C++ Standard IO tips</a></li>
+    
     <li><a href="/wiki/c++/cxx_practical_tips.html">C++ Practical Tips</a></li>
+    
+    <li><a href="/wiki/c++/cxx_type_casting.html">C++ 类型转换</a></li>
     
     <li><a href="/wiki/c++/effective_stl_notes.html">Effective STL notes</a></li>
     
@@ -822,7 +826,7 @@ First argument in <code>std::async</code> is launch policy, it control the async
       <span>
         <p>Copyright © 2020 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-02-05 16:31:43</p>
+        <p>Site Generated 2020-02-06 14:40:45</p>
       </span>
     </div>
 
