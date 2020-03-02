@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Python 错误处理与测试 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#python">python</a>&nbsp;&#187;&nbsp;Python 错误处理与测试
+    <span class="updated">Page Updated&nbsp;
+      2019-11-12 16:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Python 错误处理与测试</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">异常处理</a></li>
+<li><a href="#logging">logging</a></li>
+<li><a href="#pdb">pdb</a></li>
+<li><a href="#_2">单元测试</a></li>
+<li><a href="#_3">文档测试</a></li>
+</ul>
+</div>
+<hr />
+<h2 id="_1">异常处理</h2>
+<p>使用 <code>try ... except ... finally</code> 来处理异常。</p>
+<div class="hlcode"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">0</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ZeroDivisionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;except: &#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;finally&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>try 代码块的代码如果执行出错，则后续代码不会运行，而是跳转到错误处理代码，即 except 代码块，执行完except后，如果有finally语句块，则执行finally语句块。</p>
+<p>如果发生了不同类型的错误，应该由不同的except语句块处理，可以有多个except来捕获不同类型的错误。</p>
+<p>Python的错误其实也是class，所有的错误类型都继承自BaseException，所以在使用except时需要注意的是，它不但捕获该类型的错误，还把其子类也捕获了。</p>
+<p>如果错误没有被捕获，它就会一直往上抛，最后被Python解释器捕获，打印一个错误信息，然后程序退出。</p>
+<p>既然错误是 class ，我们也可以自己定义，用raise语句抛出一个错误的实例：</p>
+<div class="hlcode"><pre><span></span><span class="c1"># err_raise.py</span>
+<span class="k">class</span> <span class="nc">FooError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">FooError</span><span class="p">(</span><span class="s1">&#39;invalid value: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">s</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">10</span> <span class="o">/</span> <span class="n">n</span>
+
+<span class="n">foo</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>捕获错误目的只是记录一下，便于后续追踪；如果当前函数不知道应该怎么处理该错误，可以直接用 raise 语句继续往上抛，让顶层调用者去处理。</p>
+<h2 id="logging">logging</h2>
+<p>如果调试时只使用 print ，那么代码会慢慢变得很乱，可以使用 logging 模块。</p>
+<div class="hlcode"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># 设置日志级别</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;n = </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="mi">10</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+</pre></div>
+
+
+<h2 id="pdb">pdb</h2>
+<p>类似于 gdb，pdb 是 Python 的调试工具。</p>
+<div class="hlcode"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pdb</span> <span class="n">err</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+
+
+<h2 id="_2">单元测试</h2>
+<p>Python 自带一个 <code>unittest</code> 模块。</p>
+<div class="hlcode"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="k">class</span> <span class="nc">MyTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s1">&#39;a&#39;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+
+<p>可以在单元测试中编写两个特殊的 <code>setUp()</code> 和 <code>tearDown()</code> 方法。这两个方法会分别在每调用一个测试方法的前后分别被执行。帮助我们减少测试开始前后的重复的准备工作（比如连接、关闭数据库）。</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">MyTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;setUp...&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;tearDown...&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h2 id="_3">文档测试</h2>
+<p>自动测试写在注释文档中的代码，可以利用 Python 中的 <code>doctest</code> 模块：</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">MyAdd</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Test docttest</span>
+
+<span class="sd">    &gt;&gt;&gt; my_add = MyAdd()</span>
+<span class="sd">    &gt;&gt;&gt; my_add.add(1, 2)</span>
+<span class="sd">    3</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sum</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>  <span class="c1"># wrong</span>
+        <span class="k">assert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sum</span> <span class="o">==</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum</span>
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+
+<p>上面的 add 实现错了，直接运行， doctest 会给出错误提示：</p>
+<div class="hlcode"><pre><span></span><span class="n">Failed</span> <span class="n">example</span><span class="p">:</span>
+    <span class="n">my_add</span><span class="p">.</span><span class="k">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">Exception</span> <span class="n">raised</span><span class="p">:</span>
+    <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="k">call</span> <span class="k">last</span><span class="p">):</span>
+      <span class="n">File</span> <span class="ss">&quot;/Users/yilin/anaconda/envs/py27/lib/python2.7/doctest.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1315</span><span class="p">,</span> <span class="k">in</span> <span class="n">__run</span>
+        <span class="n">compileflags</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">in</span> <span class="n">test</span><span class="p">.</span><span class="n">globs</span>
+      <span class="n">File</span> <span class="ss">&quot;&lt;doctest __main__.MyAdd[1]&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="k">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+        <span class="n">my_add</span><span class="p">.</span><span class="k">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="n">File</span> <span class="ss">&quot;tmp.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">14</span><span class="p">,</span> <span class="k">in</span> <span class="k">add</span>
+        <span class="n">assert</span><span class="p">(</span><span class="k">self</span><span class="p">.</span><span class="k">sum</span> <span class="o">==</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">AssertionError</span>
+<span class="o">**********************************************************************</span>
+<span class="mi">1</span> <span class="n">items</span> <span class="n">had</span> <span class="n">failures</span><span class="p">:</span>
+   <span class="mi">1</span> <span class="k">of</span>   <span class="mi">2</span> <span class="k">in</span> <span class="n">__main__</span><span class="p">.</span><span class="n">MyAdd</span>
+<span class="o">***</span><span class="n">Test</span> <span class="n">Failed</span><span class="o">***</span> <span class="mi">1</span> <span class="n">failures</span><span class="p">.</span>
+</pre></div>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/tools/anaconda_python_notes.html">Anaconda notes</a></li>
+    
+    <li><a href="/wiki/python/python_oop.html">Python 面向对象编程</a></li>
+    
+    <li><a href="/wiki/python/python_database.html">Python 数据库访问</a></li>
+    
+    <li><a href="/wiki/python/python_network_programming.html">Python 网络编程</a></li>
+    
+    <li><a href="/wiki/python/python_basics_notes.html">Python Basics Notes</a></li>
+    
+    <li><a href="/wiki/python/python_re.html">Python 正则表达式</a></li>
+    
+    <li><a href="/wiki/python/python_email.html">Python 收发电子邮件</a></li>
+    
+    <li><a href="/wiki/python/python_web_development.html">Python Web 开发</a></li>
+    
+    <li><a href="/wiki/python/python_modules.html">Python 中的模块</a></li>
+    
+    <li><a href="/wiki/python/python_fp_notes.html">Python 函数式编程</a></li>
+    
+    <li><a href="/wiki/python/python_process_thread_and_async_io.html">Python 进程、线程与异步IO</a></li>
+    
+    <li><a href="/wiki/python/python_IO.html">Python IO 编程</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-03-02 08:21:37</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

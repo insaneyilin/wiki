@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>CSS notes - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#web_development">web_development</a>&nbsp;&#187;&nbsp;CSS notes
+    <span class="updated">Page Updated&nbsp;
+      2019-11-20 23:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">CSS notes</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#css">CSS 介绍</a><ul>
+<li><a href="#_1">行内样式表</a></li>
+<li><a href="#_2">内部样式表</a></li>
+<li><a href="#_3">外部样式表</a></li>
+</ul>
+</li>
+<li><a href="#css_1">基本的CSS语法</a></li>
+<li><a href="#_4">背景样式</a></li>
+<li><a href="#_5">文本样式</a><ul>
+<li><a href="#_6">段落样式</a></li>
+<li><a href="#_7">字体</a></li>
+<li><a href="#_8">特殊效果</a></li>
+</ul>
+</li>
+<li><a href="#_9">列表和表格</a></li>
+<li><a href="#css_2">CSS 定位</a></li>
+<li><a href="#css_3">CSS 选择器</a></li>
+<li><a href="#_10">参考</a></li>
+</ul>
+</div>
+<hr />
+<h2 id="css">CSS 介绍</h2>
+<p>CSS = 层叠样式表</p>
+<p>Cascading Style Sheets</p>
+<p>HTML表达结构，CSS表达样式</p>
+<p>样式和内容/结构是分离的</p>
+<p>CSS 在 HTML 中的使用有三种方法：</p>
+<ul>
+<li>行内样式表（style属性）</li>
+<li>内部样式表（style元素），放在头部</li>
+<li>外部样式表（引用一个样式表文件）</li>
+</ul>
+<h3 id="_1">行内样式表</h3>
+<div class="hlcode"><pre><span></span><span class="o">&lt;!</span><span class="nt">DOCTYPE</span> <span class="nt">html</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nt">html</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">head</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nt">title</span><span class="o">&gt;</span><span class="err">例子</span><span class="o">&lt;/</span><span class="nt">title</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nt">meta</span> <span class="nt">charset</span> <span class="o">=</span> <span class="nt">utf-8</span><span class="o">&gt;</span>
+     <span class="o">&lt;/</span><span class="nt">head</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">body</span> <span class="nt">style</span><span class="o">=</span><span class="s2">&quot;background-color: #FF0000;&quot;</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span><span class="err">这个页面是红色的</span><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
+     <span class="o">&lt;/</span><span class="nt">body</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nt">html</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<h3 id="_2">内部样式表</h3>
+<div class="hlcode"><pre><span></span><span class="o">&lt;!</span><span class="nt">DOCTYPE</span> <span class="nt">html</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nt">html</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">head</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nt">title</span><span class="o">&gt;</span><span class="err">例子</span><span class="o">&lt;/</span><span class="nt">title</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nt">meta</span> <span class="nt">charset</span> <span class="o">=</span> <span class="nt">utf-8</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nt">style</span> <span class="nt">type</span><span class="o">=</span><span class="s2">&quot;text/css&quot;</span><span class="o">&gt;</span>
+               <span class="nt">body</span> <span class="p">{</span><span class="k">background-color</span><span class="p">:</span> <span class="mh">#FF0000</span><span class="p">;}</span>
+          <span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span>
+     <span class="o">&lt;/</span><span class="nt">head</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">body</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span><span class="err">这个页面是红色的</span><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
+     <span class="o">&lt;/</span><span class="nt">body</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nt">html</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<h3 id="_3">外部样式表</h3>
+<p>外部样式表就是一个扩展名为css的文本文件。跟其他文件一样，你可以把样式表文件放在Web服务器上或者本地硬盘上。</p>
+<p>例如，比方说你的样式表文件名为style.css，它通常被存放于名为style的目录中。</p>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="nt">html</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">head</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nt">title</span><span class="o">&gt;</span><span class="err">我的文档</span><span class="o">&lt;/</span><span class="nt">title</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nt">link</span> <span class="nt">rel</span><span class="o">=</span><span class="s2">&quot;stylesheet&quot;</span> <span class="nt">type</span><span class="o">=</span><span class="s2">&quot;text/css&quot;</span> <span class="nt">href</span><span class="o">=</span><span class="s2">&quot;style/style.css&quot;</span> <span class="o">/&gt;</span>
+     <span class="o">&lt;/</span><span class="nt">head</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="nt">body</span><span class="o">&gt;</span>
+     <span class="o">...</span>
+</pre></div>
+
+
+<p>这种方法的优越之处在于：<strong>多个HTML文档可以同时引用一个样式表</strong>。换句话说，可以用一个CSS文件来控制多个HTML文档的布局。</p>
+<h2 id="css_1">基本的CSS语法</h2>
+<p>比方说，我们要用红色作为网页的背景色：</p>
+<p>用HTML的话，我们可以这样：</p>
+<div class="hlcode"><pre><span></span>     <span class="p">&lt;</span><span class="nt">body</span> <span class="na">bgcolor</span><span class="o">=</span><span class="s">&quot;#FF0000&quot;</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<p>用CSS的话，我们可以这样获得同样的效果：</p>
+<div class="hlcode"><pre><span></span>     <span class="nt">body</span> <span class="p">{</span><span class="k">background-color</span><span class="p">:</span> <span class="mh">#FF0000</span><span class="p">;}</span>
+</pre></div>
+
+
+<p>你会注意到，HTML和CSS的代码颇有几分相似。</p>
+<hr />
+<h2 id="_4">背景样式</h2>
+<p>可以是整个页面，某个段落，或者某一个小片段</p>
+<div class="hlcode"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+     <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>例子<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset </span><span class="o">=</span> <span class="s">utf-8</span><span class="p">&gt;</span>
+
+     <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+     <span class="p">&lt;</span><span class="nt">body</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;background-color:rgba(0,255,0,1);&quot;</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">p</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;background-color:rgba(255,0,0,0.5);&quot;</span><span class="p">&gt;</span>
+          另一个段落
+          <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+          我的第一个HTML页面
+          <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+     <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<p>背景效果：a. 颜色, b. 图像</p>
+<p>颜色可以用英文和十六进制两种表示方式 <code>&lt;p body style="background-color:#ff0000"&gt;</code>；</p>
+<p>图片设置为背景： <code>&lt;style="background-image:url(XXX.jpg)"&gt;</code>。</p>
+<p>若图片尺寸较小，不能占满整个页面可设置重复属性，比如下面的几种方式：</p>
+<p>不重复：<code>&lt;style="background-image:url(XXX.jpg)；background-repeat:no-repeat&gt;"</code></p>
+<p>只横向、纵向重复：<code>&lt;style="background-image:url(XXX.jpg)；background-repeat:repeat-x/y&gt;"</code></p>
+<p>设置图片位置：<code>&lt;style="background-image:url(XXX.jpg)；background-position：XXX&gt;"</code></p>
+<p>背景滚动：<code>&lt;style="background-image:url(XXX.jpg)；background-attachment:scroll&gt;"</code></p>
+<p>背景固定：<code>&lt;style="background-image:url(XXX.jpg)；background-attachment:fixed&gt;"</code></p>
+<p>设置背景颜色透明度（html5 新增）：<p style="background-color:rgba(255,0,0,0.5)"></p>
+<p>背景简略写法：<code>&lt;p style="background:一系列值"&gt;</code>，一系列值的顺序为：color、image、repeat、attachment、position</p>
+<hr />
+<h2 id="_5">文本样式</h2>
+<h3 id="_6">段落样式</h3>
+<div class="hlcode"><pre><span></span><span class="nt">text-indent</span><span class="o">:</span> <span class="nt">2em</span><span class="o">;</span> <span class="c">/* em为当前字体宽度 */</span>
+<span class="nt">padding</span><span class="o">:</span><span class="err">长度单位</span><span class="o">;</span>
+<span class="nt">word-spacing</span> <span class="o">:</span> <span class="err">长度单位</span> <span class="nt">---</span> <span class="err">针对英文</span><span class="o">,</span><span class="err">空格距离</span>
+<span class="nt">letter-spacing</span> <span class="o">:</span> <span class="err">长度单位</span> <span class="nt">---</span> <span class="err">字符之间的距离</span>
+<span class="nt">text-transform</span> <span class="o">:</span> <span class="nt">uppercase</span>  <span class="nt">---</span> <span class="err">全部英文变为大写</span>
+<span class="nt">text-tansform</span> <span class="o">:</span> <span class="nt">lowercase</span>  <span class="nt">---</span> <span class="err">全部英文变味小写</span>
+<span class="nt">text-tansform</span> <span class="o">:</span> <span class="nt">capitalize</span> <span class="nt">---</span> <span class="err">首字母大写</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">p</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;text-indent: 2em;text-transform : uppercase&quot;</span><span class="p">&gt;</span>
+Hello, World
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<h3 id="_7">字体</h3>
+<p>字体系列，字体大类：font-family</p>
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">p</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;text-indent: 2em;font-family:fantasy;&quot;</span><span class="p">&gt;</span>
+Hello, World
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="n">serif</span>
+<span class="n">sans</span><span class="o">-</span><span class="n">serif</span>    <span class="err">没有多余的装饰线条</span>
+<span class="n">monospace</span>    <span class="err">等宽的字体</span>
+<span class="n">cursive</span>    <span class="err">手写的字体</span>
+<span class="n">fantasy</span>    <span class="err">无法归类的，心型的</span>
+</pre></div>
+
+
+<p>font-style：</p>
+<div class="hlcode"><pre><span></span><span class="n">italic</span>    <span class="err">厂家做的好的倾斜</span>
+<span class="n">obique</span>    <span class="err">浏览器计算产生的斜体。</span>
+</pre></div>
+
+
+<p><code>font-variant:small-caps;</code>: 小的大写字母。</p>
+<p>字体加粗：</p>
+<div class="hlcode"><pre><span></span><span class="nt">font-weight</span><span class="p">:</span><span class="nd">normal</span><span class="o">;</span>
+<span class="nt">font-weight</span><span class="p">:</span><span class="nd">bold</span><span class="o">;</span>
+<span class="nt">font-weight</span><span class="p">:</span><span class="nd">900</span><span class="o">;</span>
+</pre></div>
+
+
+<p>字体大小：</p>
+<div class="hlcode"><pre><span></span><span class="n">font</span><span class="o">-</span><span class="k">size</span><span class="p">:</span><span class="mi">2</span><span class="n">em</span><span class="err">；</span><span class="o">//</span> <span class="mi">1</span><span class="n">em</span><span class="err">是正常字体大小；</span><span class="mi">10</span><span class="n">px</span> <span class="err">这种字体宽度单位是像素点</span>
+<span class="o">//</span> <span class="err">最好用</span><span class="n">EM</span><span class="err">，不是每个浏览器都支持绝对值的。</span>
+</pre></div>
+
+
+<h3 id="_8">特殊效果</h3>
+<p>阴影效果：</p>
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">p</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;text-indent: 2em;text-shadow: 3px 5px 5px rgb(0,255,255)&quot;</span><span class="p">&gt;</span>
+Hello, World
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<p>轮廓效果：</p>
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">p</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;text-indent: 2em;outline-color: red;outline-style: solid;&quot;</span><span class="p">&gt;</span>
+Hello, World
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<hr />
+<h2 id="_9">列表和表格</h2>
+<p>列表样式：</p>
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">ul</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;list-style-type: square;&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>apple<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>banana<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<p>表格样式：</p>
+<div class="hlcode"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">&gt;</span> 
+<span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>表格边框样式<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="c">/* 表格属性, 表示表格的两边框合并为一条 */</span>
+<span class="nt">table</span> <span class="p">{</span>
+    <span class="k">border-collapse</span><span class="p">:</span> <span class="kc">collapse</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* 设置边框属性 */</span>
+<span class="nt">table</span><span class="o">,</span> <span class="nt">td</span><span class="o">,</span> <span class="nt">th</span> <span class="p">{</span>
+    <span class="k">border</span><span class="p">:</span> <span class="mi">1</span><span class="kt">px</span> <span class="kc">solid</span> <span class="kc">black</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Firstname<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">th</span><span class="p">&gt;</span>Lastname<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Peter<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Griffin<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Lois<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>Griffin<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;&lt;</span><span class="nt">b</span><span class="p">&gt;</span>注意：<span class="p">&lt;/</span><span class="nt">b</span><span class="p">&gt;</span> 如果没有指定 !DOCTYPE  border-collapse 属性在 IE8 及更早 IE 版本中是不起作用的。<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<hr />
+<h2 id="css_2">CSS 定位</h2>
+<p>CSS 有两个最重要的基本属性，前端开发必须掌握：display 和 position。</p>
+<p>display属性指定网页的布局。</p>
+<p>position属性用来指定一个元素在网页上的位置（浏览器如何计算网页元素的位置）。</p>
+<p><code>static</code> 是position属性的默认值。如果省略position属性，浏览器就认为该元素是static定位。浏览器会按照源码的顺序，决定每个元素的位置。</p>
+<p><code>relative</code>、<code>absolute</code>、<code>fixed</code> 这三个属性值有一个共同点，都是相对于某个基点的定位，不同之处仅仅在于基点不同。</p>
+<p><code>sticky</code>跟前面四个属性值都不一样，它会产生动态效果，很像relative和fixed的结合：一些时候是relative定位（定位基点是自身默认位置），另一些时候自动变成fixed定位（定位基点是视口）。因此，它能够形成"动态固定"的效果。比如，网页的搜索工具栏，初始加载时在自己的默认位置（relative定位）。</p>
+<hr />
+<h2 id="css_3">CSS 选择器</h2>
+<p>“选择器”指明了<code>{}</code>中的“样式”的作用对象，也就是“样式”作用于网页中的哪些元素</p>
+<ol>
+<li>通用元素选择器 <code>*</code>: 所有的标签都变色</li>
+<li>标签选择器：匹配所有使用<code>p</code>标签的样式 <code>p{color:red}</code></li>
+<li>id 选择器：匹配指定的标签  <code>#p2{color:red}</code></li>
+<li>class 类选择器：选择指定类，<code>.c1{color:red}</code></li>
+</ol>
+<hr />
+<h2 id="_10">参考</h2>
+<p>http://www.ruanyifeng.com/blog/2019/11/css-position.html</p>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/web_development/html_notes.html">HTML notes</a></li>
+    
+    <li><a href="/wiki/web_development/javascript_notes.html">JavaScript notes</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-03-02 08:21:37</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>程序流程图 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#tools">tools</a>&nbsp;&#187;&nbsp;程序流程图
+    <span class="updated">Page Updated&nbsp;
+      2019-07-09 00:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">程序流程图</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">什么是程序流程图</a></li>
+<li><a href="#_2">常用流程图图形符号</a><ul>
+<li><a href="#_3">起止框</a></li>
+<li><a href="#_4">处理框</a></li>
+<li><a href="#_5">判断框</a></li>
+<li><a href="#_6">输入输出框</a></li>
+</ul>
+</li>
+<li><a href="#_7">流程图设计要求</a></li>
+<li><a href="#_8">常见流程图结构</a><ul>
+<li><a href="#if">if 语句</a></li>
+<li><a href="#while">while 循环语句</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h3 id="_1">什么是程序流程图</h3>
+<ul>
+<li>以简单的图形符号来表达问题解决步骤的示意图，亦称为框图。</li>
+<li>流程图是问题求解的最基本、最重要的程序分析技术。</li>
+<li>程序设计时先画出流程图，往往可以事半功倍。</li>
+</ul>
+<hr />
+<h3 id="_2">常用流程图图形符号</h3>
+<p>使用 <a href="https://mermaidjs.github.io/">Mermaid</a> 进行绘制。</p>
+<p>下面各种框的图形只是个人喜好，实际使用根据需要调整。</p>
+<h4 id="_3">起止框</h4>
+<p>标准流程的开始、结束。</p>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;mermaid&quot;</span><span class="nt">&gt;</span>
+graph LR
+  a(START)
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+
+<div class="mermaid">
+graph LR
+  a(START)
+</div>
+
+<h4 id="_4">处理框</h4>
+<p>算法、程序要执行的处理操作。</p>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="n">div</span><span class="w"> </span><span class="k">class</span><span class="o">=</span><span class="ss">&quot;mermaid&quot;</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">graph</span><span class="w"> </span><span class="n">LR</span><span class="w"></span>
+<span class="w">  </span><span class="n">a</span><span class="o">[</span><span class="n">PROCESS</span><span class="o">]</span><span class="w"></span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span><span class="w"></span>
+</pre></div>
+
+
+<div class="mermaid">
+graph LR
+  a[PROCESS]
+</div>
+
+<h4 id="_5">判断框</h4>
+<p>判断条件是否成立。</p>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="nv">div</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;</span><span class="s">mermaid</span><span class="s2">&quot;</span><span class="o">&gt;</span>
+<span class="nv">graph</span> <span class="nv">LR</span>
+  <span class="nv">a</span>{<span class="k">if</span> <span class="nv">a</span> <span class="o">&gt;</span> <span class="nv">b</span>}
+<span class="o">&lt;/</span><span class="nv">div</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<div class="mermaid">
+graph LR
+  a{if a > b}
+</div>
+
+<h4 id="_6">输入输出框</h4>
+<p>表示数据的输入、输出。（一般用 平行四边形 ，Mermaid 里没找到）</p>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;mermaid&quot;</span><span class="nt">&gt;</span>
+graph LR
+  a&gt;INPUT]
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+
+<div class="mermaid">
+graph LR
+  a>INPUT]
+</div>
+
+<hr />
+<h3 id="_7">流程图设计要求</h3>
+<ol>
+<li>单入口、单出口</li>
+<li>无死语句（即永远不能被执行到的语句）</li>
+<li>无死循环（即程序永远不能停止）</li>
+</ol>
+<h3 id="_8">常见流程图结构</h3>
+<ul>
+<li>顺序结构</li>
+<li>选择结构（如 if 语句）</li>
+<li>循环结构（如 while 语句）</li>
+</ul>
+<h4 id="if">if 语句</h4>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="k">class</span><span class="o">=</span><span class="s">&quot;mermaid&quot;</span><span class="o">&gt;</span>
+<span class="n">graph</span> <span class="n">TB</span>
+  <span class="n">id1</span><span class="p">{</span><span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">}</span><span class="o">--</span><span class="n">True</span><span class="o">--&gt;</span><span class="n">id2</span><span class="p">[</span><span class="n">Process</span> <span class="n">A</span><span class="p">]</span>
+  <span class="n">id1</span><span class="o">--</span><span class="n">False</span><span class="o">--&gt;</span><span class="n">id3</span><span class="p">[</span><span class="n">Process</span> <span class="n">B</span><span class="p">]</span>
+  <span class="n">id2</span><span class="o">--&gt;</span><span class="n">id4</span><span class="p">[</span><span class="n">Process</span> <span class="n">C</span><span class="p">]</span>
+  <span class="n">id3</span><span class="o">--&gt;</span><span class="n">id4</span><span class="p">[</span><span class="n">Process</span> <span class="n">C</span><span class="p">]</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<div class="mermaid">
+graph TB
+  id1{if a > b}--True-->id2[Process A]
+  id1--False-->id3[Process B]
+  id2-->id4[Process C]
+  id3-->id4[Process C]
+</div>
+
+<h4 id="while">while 循环语句</h4>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="nv">div</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;</span><span class="s">mermaid</span><span class="s2">&quot;</span><span class="o">&gt;</span>
+<span class="nv">graph</span> <span class="nv">LR</span>
+  <span class="nv">id1</span><span class="ss">(</span><span class="nv">START</span><span class="ss">)</span><span class="o">--&gt;</span><span class="nv">id2</span><span class="o">&gt;</span><span class="nv">INPUT</span> <span class="nv">DATA</span>]
+  <span class="nv">id2</span><span class="o">--&gt;</span><span class="nv">id3</span>[<span class="nv">INIT</span>]
+  <span class="nv">id3</span><span class="o">--&gt;</span><span class="nv">id4</span>{<span class="k">while</span> ...}
+  <span class="nv">id4</span><span class="o">--</span><span class="nv">True</span><span class="o">--&gt;</span><span class="nv">id5</span>[<span class="nv">UPDATE</span>]
+  <span class="nv">id5</span><span class="o">--&gt;</span><span class="nv">id4</span>
+  <span class="nv">id4</span><span class="o">--</span><span class="nv">False</span><span class="o">--&gt;</span><span class="nv">id6</span>[<span class="nv">POSTPROCESS</span>]
+  <span class="nv">id6</span><span class="o">--&gt;</span><span class="nv">id7</span><span class="o">&gt;</span><span class="nv">OUTPUT</span> <span class="nv">DATA</span>]
+  <span class="nv">id7</span><span class="o">--&gt;</span><span class="nv">id8</span><span class="ss">(</span><span class="k">END</span><span class="ss">)</span>
+<span class="o">&lt;/</span><span class="nv">div</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<div class="mermaid">
+graph LR
+  id1(START)-->id2>INPUT DATA]
+  id2-->id3[INIT]
+  id3-->id4{while ...}
+  id4--True-->id5[UPDATE]
+  id5-->id4
+  id4--False-->id6[POSTPROCESS]
+  id6-->id7>OUTPUT DATA]
+  id7-->id8(END)
+</div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-03-02 08:21:37</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

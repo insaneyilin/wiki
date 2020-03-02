@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>TDD 与单元测试 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#miscellaneous">miscellaneous</a>&nbsp;&#187;&nbsp;TDD 与单元测试
+    <span class="updated">Page Updated&nbsp;
+      2019-07-26 01:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">TDD 与单元测试</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#tdd">什么是 TDD</a></li>
+<li><a href="#_1">什么是单元测试</a></li>
+<li><a href="#_2">为什么要写单测</a></li>
+<li><a href="#_3">怎么写单测</a><ul>
+<li><a href="#_4">单测四步走模板</a></li>
+<li><a href="#_5">单测技巧</a><ul>
+<li><a href="#private">如何测试 private 函数</a></li>
+<li><a href="#mock">Mock 技术</a><ul>
+<li><a href="#stub">Stub 技术</a></li>
+<li><a href="#_6">子类化重写</a></li>
+<li><a href="#hook">HOOK 技术</a></li>
+<li><a href="#gmock">GMock</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="tdd">什么是 TDD</h2>
+<p>TDD，测试驱动开发(Test Driven Development)，是一种敏捷开发模式，具体指：</p>
+<ul>
+<li>开发者先编写接口的 <strong>测试用例</strong></li>
+<li>然后再编写实现代码通过测试</li>
+<li>不断增加测试用例、<strong>重构</strong> 代码来改善设计，完成开发</li>
+</ul>
+<p>TDD 的优点：从测试角度来驱动，提升代码质量。</p>
+<p>No silver bullet. TDD 的缺点也很明显，时间成本增加，降低开发速度。</p>
+<h2 id="_1">什么是单元测试</h2>
+<p>软件工程中的测试：</p>
+<ul>
+<li>unit tests</li>
+<li>integration tests</li>
+<li>regression tests</li>
+<li>acceptance tests</li>
+<li>performance tests</li>
+</ul>
+<p>单元测试(unit test)是指程序员对代码中的 <strong>单元</strong> 进行正确性检验的测试。</p>
+<p>单元的定义可以是一个函数，一组函数，一个类等。</p>
+<p>单元测试虽然叫测试，但实际是开发者的行为。</p>
+<h2 id="_2">为什么要写单测</h2>
+<ul>
+<li>保证代码运行结果符合预期，更早发现问题</li>
+<li>可重复运行，减少修改代码后出 bug 的风险</li>
+<li>提高代码的可读性、可维护性，好的单测可以起到程序文档的作用，阅读代码顺序：单测 -&gt; 头文件 -&gt; 源文件</li>
+</ul>
+<p>在 TDD 中，我们可以通过单测来优化函数/类/模块的设计。</p>
+<h2 id="_3">怎么写单测</h2>
+<p>基本原则</p>
+<ul>
+<li>针对需求写，而不是针对代码写</li>
+<li>能够引导出更好的接口设计，以及模块化</li>
+<li>好的代码应该是易于测试的</li>
+</ul>
+<h3 id="_4">单测四步走模板</h3>
+<ul>
+<li>Setup，初始化，准备数据等</li>
+<li>Execute，调用要测试的方法、函数</li>
+<li>Verify，验证结果是否符合预期</li>
+<li>Teardown，重置状态</li>
+</ul>
+<div class="hlcode"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">MyTest</span><span class="p">,</span> <span class="n">test1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Setup</span>
+  <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">Init</span><span class="p">();</span>
+  <span class="n">SetDefaultParams</span><span class="p">();</span>
+
+  <span class="c1">// Execute</span>
+  <span class="n">state</span> <span class="o">=</span> <span class="n">GetState</span><span class="p">();</span>
+
+  <span class="c1">// Verify</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="c1">// Teardown</span>
+  <span class="n">ResetAllData</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>这里 <code>TEST_F</code> 是 GTest 中的宏，用于测试 Testsuite 类：当一批用例存在很大的相似性时，通过定义一个 Testsuite 类，其中实现公共的数据构造，清理数据的功能，如常见的 SetUp()和 TearDown()函数。</p>
+<p>如果需要构造复杂的输入，可以借助 DSL 。</p>
+<p>数据驱动：对于流程相同，只是数据不同的测试用例，我们可以把数据参数化，利用测试框架帮我们生成多个测试用例。</p>
+<h3 id="_5">单测技巧</h3>
+<h4 id="private">如何测试 private 函数</h4>
+<p>在 UT Makefile 中定义：</p>
+<div class="hlcode"><pre><span></span><span class="o">-</span><span class="n">Dprivate</span><span class="o">=</span><span class="k">public</span> <span class="o">-</span><span class="n">Dprotected</span><span class="o">=</span><span class="k">public</span>
+</pre></div>
+
+
+<h4 id="mock">Mock 技术</h4>
+<p>mocking 有假装、嘲讽的意思。</p>
+<p>mock 对象就是可以模拟其他对象行为的一种对象，它可以使单元测试易于编写。</p>
+<p>看这样一个例子：</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="kt">int</span> <span class="n">func1</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">func2</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+ <span class="k">protected</span><span class="o">:</span>
+  <span class="k">virtual</span> <span class="kt">int</span> <span class="n">func2</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>函数 <code>func1</code> 的返回值依赖于 <code>func2</code> 的实现，如果我们希望单测能够覆盖到 <code>func1</code> 的每一个分支，同时又不想关心 <code>func2</code> 的具体实现，应该怎么做呢？这种情况我们可以使用 mock 技术来 mock 掉 <code>func2</code> ，比如分别模拟 <code>func2</code> 返回值大于 0 、不大于 0 的情况。</p>
+<h5 id="stub">Stub 技术</h5>
+<p>针对与上下游之间的网络通信，数据发送/接收等功能做单测时，会用到 stub 技术。可以开发一个简单的桩程序 stub 来代替下游模块，并提供接口用来在 UT 用例中设置 stub 返 回的结果数据。但考虑该方法具有一定开发成本，使用起来不是很方便，加上，网络通信， 数据发送/接收等功能的测试更像是接口，联调类测试，放在单测中进行本身就不是很合适。 故一般不建议采用。</p>
+<h5 id="_6">子类化重写</h5>
+<p>利用虚函数特性进行 mock，缺点是被 mock 的函数必须是 virtual 函数。</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">MockA1</span> <span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
+ <span class="k">protected</span><span class="o">:</span>
+  <span class="k">virtual</span> <span class="kt">int</span> <span class="n">func2</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">TEST</span><span class="p">(</span><span class="n">test_func1</span><span class="p">,</span> <span class="n">func2_result_positive</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">MockA1</span> <span class="o">*</span><span class="n">a1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MockA1</span><span class="p">();</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">a1</span><span class="o">-&gt;</span><span class="n">func1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">delete</span> <span class="n">a1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h5 id="hook">HOOK 技术</h5>
+<p>HOOK 技术不要求被 mock 的函数是虚函数，其通过在运行中动态修改函数地址的方式，达到 mock 的效果。</p>
+<h5 id="gmock">GMock</h5>
+<p>Google 的 Mock 框架，本质上是基于虚函数重载进行的二次开发。其提供了很多封装好的 mock 宏接口。</p>
+<p>详细用法请参考 <a href="https://github.com/google/googletest/">Googletest</a>。</p>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-03-02 08:21:37</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
