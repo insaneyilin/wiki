@@ -1,0 +1,838 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>C++11 多线程与异步调用 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#c++">c++</a>&nbsp;&#187;&nbsp;C++11 多线程与异步调用
+    <span class="updated">Page Updated&nbsp;
+      2019-11-17 02:23
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">C++11 多线程与异步调用</div>
+
+  <p>参考：</p>
+<p>https://thispointer.com/category/multithreading/</p>
+<div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#c11">使用 C++11 线程</a></li>
+<li><a href="#join-detach">线程的 join 和 detach</a></li>
+<li><a href="#_1">传递参数给线程</a><ul>
+<li><a href="#_2">传递引用</a></li>
+<li><a href="#_3">传递成员函数</a></li>
+</ul>
+</li>
+<li><a href="#lock">使用 Lock 机制处理多线程数据共享</a><ul>
+<li><a href="#race-condition">Race condition</a></li>
+<li><a href="#lock_1">Lock 机制</a></li>
+</ul>
+</li>
+<li><a href="#condition-variable">使用 Condition variable 处理事件响应</a></li>
+<li><a href="#stdfuture-stdpromise">使用 std::future 和 std::promise 处理线程的返回值</a></li>
+<li><a href="#c11_1">C++11 异步调用</a><ul>
+<li><a href="#stdasync">std::async</a></li>
+<li><a href="#stdpackaged_task">std::packaged_task</a></li>
+</ul>
+</li>
+<li><a href="#stdfuture-stdpromise_1">使用 std::future 和 std::promise 实现终止线程功能</a></li>
+</ul>
+</div>
+<hr />
+<h2 id="c11">使用 C++11 线程</h2>
+<p><code>&lt;thread&gt;</code> 是 C++11 的线程库，构造函数可以传入 <code>function pointer</code> / <code>functor</code> / <code>lambda</code>：</p>
+<p>使用 <code>std::this_thread::get_id()</code> 可以获取当前线程的 ID 。</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">thread_func1</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">thread_id</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">get_id</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;thread_func1, id: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">thread_id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// thread 可以接受 function pointer/functor/lambda</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">thread_func1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t2</span><span class="p">([]()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">thread_id</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">get_id</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;thread func lambda, id: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">thread_id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">});</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main thread, id: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">get_id</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="n">t2</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="join-detach">线程的 join 和 detach</h2>
+<p><code>join()</code> 的含义就是等待线程完成工作，然后 <em>join</em> 回到当前线程。</p>
+<div class="hlcode"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">func_ptr</span><span class="p">);</span>
+
+  <span class="c1">// do something (main thread)</span>
+
+  <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>  <span class="c1">// wait thread t1 to finish its job</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>简单来说，<code>t1.join()</code> 就是等待 <code>t1</code> 线程完成，然后才会继续当前线程的操作。</p>
+<p>可以用 <code>std::this_thread::sleep_for()</code> 让线程等待一定时间：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;before start thread t1</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">([]()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">200</span><span class="p">)</span> <span class="p">{</span>
+      <span class="o">++</span><span class="n">i</span><span class="p">;</span>
+      <span class="c1">// sleep 10 ms per iteration</span>
+
+      <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>
+    <span class="p">}</span>   
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;t1 finished.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="p">});</span> 
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;do something in main thread.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;wait t1 to finish.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="c1">// 主线程什么都没做，但是由于调用了 t1.join()，需要等待 t1 线程完成任务</span>
+  <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;done.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>可以一次创建多个线程，用一个 <code>vector</code>保存，注意下面 <code>std::mem_fn</code> 的作用是将一个类的成员函数包装成一个参数为对象的函数：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;                                                                                                                                                                                         </span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">thread_func</span> <span class="o">=</span> <span class="p">[]()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;thread id: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">get_id</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">&gt;</span> <span class="n">thread_list</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">thread_list</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="n">thread_func</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;wait for all the worker thread to finish.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">for_each</span><span class="p">(</span><span class="n">thread_list</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">thread_list</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">mem_fn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">::</span><span class="n">join</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main thread finished.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><code>detach</code> 的作用是创建分离线程/后台线程/守护线程：</p>
+<blockquote>
+<p>Detached threads are also called daemon / Background threads.</p>
+</blockquote>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">func</span><span class="p">);</span>
+<span class="n">t1</span><span class="p">.</span><span class="n">detach</span><span class="p">();</span>  <span class="c1">// After calling detach(), std::thread object</span>
+              <span class="c1">// is no longer associated with the actual thread of execution.</span>
+</pre></div>
+
+
+<ul>
+<li>join是阻塞当前线程，并等待 thread object 对应的线程结束，当前线程继续执行</li>
+<li>detach 是将线程从当前线程分离出去，即不受阻塞，操作系统会将其独立对待</li>
+</ul>
+<p>使用 <code>detach()</code> 函数会让线程在后台运行，即说明 <strong>主线程不会等待子线程运行结束才结束</strong> 。</p>
+<p>通常称分离线程为守护线程(daemon threads), UNIX中守护线程是指，没有任何显式的用户接口，并在后台运行的线程。这种线程的特点就是长时间运行；线程的生命周期可能会从某一个应用起始到结束，可能会在后台监视文件系统，还有可能对缓存进行清理，亦或对数据结构进行优化。</p>
+<p>看一个例子：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">thread_func</span> <span class="o">=</span> <span class="p">[]()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;thread id: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">get_id</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>                     
+    <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">thread_func</span><span class="p">);</span>
+  <span class="n">t1</span><span class="p">.</span><span class="n">detach</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main thread finished.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// main thread finished.</span>
+<span class="c1">// thread id: 140529165158144</span>
+<span class="c1">// 可以看到主线程没有等待 t1 线程完成就结束了</span>
+</pre></div>
+
+
+<p>要注意，一旦调用 <code>join()</code> 或者 <code>detach()</code>，那么线程对象就不再与实际线程有关联了，要避免重复调用 <code>join()</code> / <code>detach()</code> 。</p>
+<p>可以用 <code>joinable()</code> 判断：</p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">func1</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">t1</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Detaching Thread.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">t1</span><span class="p">.</span><span class="n">detach</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t2</span><span class="p">(</span><span class="n">func2</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">t2</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Joining Thread.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">t2</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>还有一点要注意，不要忘记调用线程对象的  <code>join()</code> / <code>detach()</code> 而直接 return:</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">thread_func</span> <span class="o">=</span> <span class="p">[]()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;thread id: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">get_id</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">thread_func</span><span class="p">);</span>
+  <span class="c1">// Program will terminate as we have&#39;t called either join or detach with the std::thread object.</span>
+  <span class="c1">// Hence std::thread&#39;s object destructor will terminate the program</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main thread finished.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>可以使用 RAII(Resource Acquisition Is Initialization) 对 thread 进行封装：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">ThreadRAII</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">ThreadRAII</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="o">&amp;</span><span class="n">t</span><span class="p">)</span> <span class="o">:</span> <span class="n">t_</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="o">~</span><span class="n">ThreadRAII</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">t_</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">t_</span><span class="p">.</span><span class="n">detach</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+ <span class="k">private</span><span class="o">:</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">&amp;</span> <span class="n">t_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t</span><span class="p">([]()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;thread id: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">get_id</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">});</span>
+
+  <span class="n">ThreadRAII</span> <span class="n">wrapper_t</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>  <span class="c1">// If we comment this Line, then program will crash</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="_1">传递参数给线程</h2>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">thread_callback</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;x: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; str: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span> <span class="o">=</span> <span class="s">&quot;hello, world&quot;</span><span class="p">;</span>
+
+  <span class="c1">// directly pass params to std::thread&#39;s constructor</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">thread_callback</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span>
+  <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>注意，小心传递局部变量或者动态内存的地址和指针，不同线程难以保证指针是否有效。对于真正要共享的内容，要记得 <strong>加锁</strong> 。</p>
+<h3 id="_2">传递引用</h3>
+<p>默认传参给线程会拷贝一份参数的值到线程，即使声明了引用参数也无法改变外部变量，如何传递引用？可以用 <code>std::ref()</code>：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">thread_callback</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="o">&amp;</span><span class="n">y</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>  <span class="c1">// 强制转换为非 const</span>
+  <span class="o">++</span><span class="n">y</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;inside thread x: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main thread, before t1 starts, x: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">thread_callback</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+  <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main thread, after t1 joins, x: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm">main thread, before t1 starts, x: 9</span>
+<span class="cm">inside thread x: 10</span>
+<span class="cm">main thread, after t1 joins, x: 9</span>
+<span class="cm">*/</span>
+<span class="c1">// 可以看到，即使声明了引用参数，也没有改变 main thread 中 x 的值</span>
+</pre></div>
+
+
+<p>使用 <code>std::ref</code>：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">thread_callback</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="o">&amp;</span><span class="n">y</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>  <span class="c1">// 强制转换为非 const</span>
+  <span class="o">++</span><span class="n">y</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;inside thread x: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main thread, before t1 starts, x: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">thread_callback</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ref</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+  <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main thread, after t1 joins, x: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm">main thread, before t1 starts, x: 9</span>
+<span class="cm">inside thread x: 10</span>
+<span class="cm">main thread, after t1 joins, x: 10</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<h3 id="_3">传递成员函数</h3>
+<p>成员函数传递给线程，注意第一个函数参数要传实例的地址：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">say_hello</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;hello, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="o">&amp;</span><span class="n">A</span><span class="o">::</span><span class="n">say_hello</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="s">&quot;stranger&quot;</span><span class="p">);</span>
+  <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="lock">使用 Lock 机制处理多线程数据共享</h2>
+<h3 id="race-condition">Race condition</h3>
+<blockquote>
+<p>Race condition is a kind of a bug that occurs in multithreaded applications.</p>
+</blockquote>
+<p>多个线程并发地访问同一个地址时，如果不做一些特殊处理，可能会引发意想不到的结果。</p>
+<h3 id="lock_1">Lock 机制</h3>
+<p>解决 race condition 可以使用 Lock 机制。</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">Count</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="c1">// 多线程写操作，要加锁</span>
+  <span class="kt">void</span> <span class="n">add</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">mutex_for_x_</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>
+    <span class="o">++</span><span class="n">x_</span><span class="p">;</span>
+    <span class="n">mutex_for_x_</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="n">reduce</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">mutex_for_x_</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>
+    <span class="o">--</span><span class="n">x_</span><span class="p">;</span>
+    <span class="n">mutex_for_x_</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">int</span> <span class="n">get_count</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">x_</span><span class="p">;</span>
+  <span class="p">}</span>
+
+ <span class="k">private</span><span class="o">:</span>
+  <span class="kt">int</span> <span class="n">x_</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">mutex_for_x_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Count</span> <span class="n">count</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">&gt;</span> <span class="n">thread_list</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">thread_list</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Count</span><span class="o">::</span><span class="n">add</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">count</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">thread_list</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Count</span><span class="o">::</span><span class="n">reduce</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">count</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">for_each</span><span class="p">(</span><span class="n">thread_list</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">thread_list</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">mem_fn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">::</span><span class="n">join</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;final count: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">count</span><span class="p">.</span><span class="n">get_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>或者使用 <code>std::lock_guard</code>，实现了对 <code>mutex</code> 对象的 RAII：</p>
+<div class="hlcode"><pre><span></span>  <span class="kt">void</span> <span class="nf">add</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// lock_guard 对象出作用域会自动 unlock mutex</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock_guard</span><span class="p">(</span><span class="n">mutex_for_x_</span><span class="p">);</span>
+    <span class="o">++</span><span class="n">x_</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+
+
+<h2 id="condition-variable">使用 Condition variable 处理事件响应</h2>
+<p>假设要实现一个简单的消费者生产者模型，一个线程往队列中放入数据，一个线程从队列中取数据，取数据前需要判断一下队列中确实有数据，由于这个队列是线程间共享的，所以，需要使用互斥锁进行保护，一个线程在往队列添加数据的时候，另一个线程不能取，反之亦然。</p>
+<p><code>mutex</code> 可以完成这个任务，但是却存在着性能问题。消费者每次都要等待锁释放。如果生产者处理开销较大，那么会有不必要的等待开销。</p>
+<p>更合适的模型是，生产者往队列中添加完数据后，立刻通知消费者干活，如何实现这种“通知”的机制？C++11 提供了 Condition variable 来帮我们实现多线程之间的 signal 机制。</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;condition_variable&gt;</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">Application</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">Application</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+  <span class="o">~</span><span class="n">Application</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+
+  <span class="kt">void</span> <span class="nf">load_data</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;loading data...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">1000</span><span class="p">));</span>
+    <span class="c1">// lock the data</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span>
+    <span class="n">data_loaded_</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">cond_var_</span><span class="p">.</span><span class="n">notify_one</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="nf">main_proc</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main processing...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span>
+    <span class="c1">// Start waiting for the Condition Variable to get signaled</span>
+    <span class="c1">// wait() will internally release the lock and make the thread to block</span>
+    <span class="c1">// as soon as condition variable get signaled, resume the thread and</span>
+    <span class="c1">// again acquire the lock. Then check if condition is met or not</span>
+    <span class="c1">// if condition is met then continue else again go in wait.</span>
+    <span class="n">cond_var_</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">data_loaded_</span><span class="p">;</span>
+    <span class="p">});</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main processing done.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+ <span class="k">private</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">data_loaded_</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">mutex_</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">cond_var_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Application</span> <span class="n">app</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Application</span><span class="o">::</span><span class="n">load_data</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">app</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t2</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Application</span><span class="o">::</span><span class="n">main_proc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">app</span><span class="p">);</span>
+  <span class="n">t2</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>注意 <code>cond_var_.wait()</code> 要和 <code>std::unique_lock</code> 配合使用，不能用 <code>std::lock_guard</code>，因为 <code>wait()</code> 函数会先调用互斥锁的 <code>unlock()</code> 函数，然后再将自己睡眠，在被唤醒后，又会继续持有锁，保护后面的队列操作。而 <code>lock_guard</code> 没有 <code>lock</code> 和 <code>unlock</code> 接口，而 <code>unique_lock</code> 提供了。这就是必须使用 <code>unique_lock</code> 的原因。</p>
+<p>关于 <code>std::condition_variable</code> 的成员函数：</p>
+<ul>
+<li><code>wait()</code>：It makes the current thread to block until the condition variable get signaled or a spurious wake up happens.</li>
+<li><code>notify_one()</code>：If any threads are waiting on same conditional variable object then  notify_one unblocks one of the waiting threads.</li>
+<li><code>notify_all()</code>：If any threads are waiting on same conditional variable object then  notify_all unblocks all of the waiting threads.</li>
+</ul>
+<p>再看一个例子：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;deque&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;condition_variable&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">deque</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">q</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">mu</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">cond</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">function_1</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">locker</span><span class="p">(</span><span class="n">mu</span><span class="p">);</span>
+    <span class="n">q</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span><span class="n">count</span><span class="p">);</span>
+    <span class="n">locker</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>  <span class="c1">// 注意控制锁的粒度，q.push_front() 之后就不需要保护了，可以提前 unlock</span>
+    <span class="n">cond</span><span class="p">.</span><span class="n">notify_one</span><span class="p">();</span>  <span class="c1">// Notify one waiting thread, if there is one.</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+    <span class="o">--</span><span class="n">count</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">function_2</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">data</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span> <span class="n">data</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">locker</span><span class="p">(</span><span class="n">mu</span><span class="p">);</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">cond</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">locker</span><span class="p">);</span> <span class="c1">// Unlock mutex and wait to be notified</span>
+    <span class="p">}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
+    <span class="n">q</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+    <span class="n">locker</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;t2 got a value from t1: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">function_1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t2</span><span class="p">(</span><span class="n">function_2</span><span class="p">);</span>
+  <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="n">t2</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="stdfuture-stdpromise">使用 std::future 和 std::promise 处理线程的返回值</h2>
+<p>假设我们要写一个程序，从主线程创建一个线程来压缩一个文件夹，压缩完成后在主线程打印压缩文件名和大小，要求压缩线程返回压缩文件名和文件大小。</p>
+<p>第一种方式：通过共享指针实现，向压缩线程传入一个指针变量，利用 mutex，condition variable 完成。</p>
+<p>第二种方式：使用 std::future 和 std::promise。</p>
+<ul>
+<li><code>std::future</code> is a class template and its object <strong>stores the future value</strong> .</li>
+<li><code>std::promise</code> is also a class template and its object promises to <strong>set the value in future</strong> . Each <code>std::promise</code> object has an associated <code>std::future</code> object that will give the value once set by the <code>std::promise</code> object.</li>
+<li>A <code>std::promise</code> object shares data with its associated std::future object.</li>
+</ul>
+<p>如图所示：</p>
+<p><img alt="std::promise and std::future" src="/wiki/attach/images/cxx11_multi_thread_and_async/cxx11_promise_future.png" /></p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;future&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">init</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">promise</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">*</span> <span class="n">promise_obj</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Inside Thread&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">promise_obj</span><span class="o">-&gt;</span><span class="n">set_value</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">promise</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">promise_obj</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">future_obj</span> <span class="o">=</span> <span class="n">promise_obj</span><span class="p">.</span><span class="n">get_future</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">promise_obj</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">future_obj</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>  <span class="c1">// blocked on the std::future::get() function</span>
+  <span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="c11_1">C++11 异步调用</h2>
+<h3 id="stdasync">std::async</h3>
+<p>异步操作的主要目的是 <strong>让调用方法的主线程不需要同步等待调用函数，从而可以让主线程继续执行它下面的代码</strong> 。因此异步操作无须额外的线程负担，使用回调的方式进行处理。在设计良好的情况下，处理函数可以不必或者减少使用共享变量，减少了死锁的可能。当需要执行I/O操作时，使用异步操作比使用线程+同步I/O操作更合适。</p>
+<p>异步和多线程并不是一个同等关系， <strong>异步是目的，多线程是实现异步的一个手段</strong> 。实现异步可以采用多线程或交给另外的进程来处理。</p>
+<ul>
+<li><code>std::future</code> 可以从异步任务中获取结果，一般与 <code>std::async</code> 配合使用， <code>std::async</code> 用于创建异步任务，实际上就是创建一个线程执行相应任务。</li>
+<li><code>std::async</code> 就是异步编程的高级封装，封装了 <code>std::future</code> 的操作，基本上可以代替 <code>std::thread</code> 的所有事情</li>
+<li><code>std::async</code> 的操作，其实相当于封装了 <code>std::promise</code> 、 <code>std::packaged_task</code> 加上 <code>std::thread</code> 。</li>
+</ul>
+<blockquote>
+<p><code>std::async</code>： <code>std::async()</code> is a function template that accepts a callback(i.e. function or function object) as an argument and potentially executes them asynchronously.</p>
+</blockquote>
+<p><code>std::async</code> 的声明：</p>
+<div class="hlcode"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Fn</span><span class="p">,</span> <span class="n">class</span><span class="p">...</span> <span class="n">Args</span><span class="o">&gt;</span>
+<span class="n">future</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">result_of</span><span class="o">&lt;</span><span class="n">Fn</span><span class="p">(</span><span class="n">Args</span><span class="p">...)</span><span class="o">&gt;::</span><span class="n">type</span><span class="o">&gt;</span> <span class="n">async</span> <span class="p">(</span><span class="n">launch</span> <span class="n">policy</span><span class="p">,</span> <span class="n">Fn</span><span class="o">&amp;&amp;</span> <span class="n">fn</span><span class="p">,</span> <span class="n">Args</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">args</span><span class="p">);</span>
+</pre></div>
+
+
+<blockquote>
+<p><code>std::async</code> returns a <code>std::future&lt;T&gt;</code>, that stores the value returned by function object executed by <code>std::async()</code>. Arguments expected by function can be passed to <code>std::async()</code> as arguments after the function pointer argument.<br />
+First argument in <code>std::async</code> is launch policy, it control the asynchronous behaviour of <code>std::async</code> .</p>
+</blockquote>
+<ul>
+<li><code>std::launch::async</code> ，调用即创建线程，在另一个 thread 中执行任务</li>
+<li><code>std::launch::deferred</code> ，延迟加载方式创建线程，调用时不创建线程，直到调用 <code>future</code> 的 <code>get</code> 或者 <code>wait</code> 时才创建线程(lazy evaluation)</li>
+</ul>
+<p>看一个例子：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;future&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fetch_data_from_db</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">recvd_data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">seconds</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span>
+  <span class="k">return</span> <span class="s">&quot;DB_&quot;</span> <span class="o">+</span> <span class="n">recvd_data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fetch_data_from_file</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">recvd_data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">seconds</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span>
+  <span class="k">return</span> <span class="s">&quot;File_&quot;</span> <span class="o">+</span> <span class="n">recvd_data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">system_clock</span><span class="o">::</span><span class="n">time_point</span> <span class="n">start</span> <span class="o">=</span> <span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
+
+  <span class="c1">// 异步调用，std::launch::async 策略，会立即创建一个线程工作</span>
+  <span class="c1">// 如果改成 std::launch::deferred，那么这个例子就看不到使用异步加速的效果了</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">result_from_db</span> <span class="o">=</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span><span class="p">,</span> <span class="n">fetch_data_from_db</span><span class="p">,</span> <span class="s">&quot;Data&quot;</span><span class="p">);</span>
+
+  <span class="c1">// Fetch Data from File</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">file_data</span> <span class="o">=</span> <span class="n">fetch_data_from_file</span><span class="p">(</span><span class="s">&quot;Data&quot;</span><span class="p">);</span>
+
+  <span class="c1">// Fetch Data from DB</span>
+  <span class="c1">// Will block till data is available in future&lt;std::string&gt; object.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">db_data</span> <span class="o">=</span> <span class="n">result_from_db</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">end</span> <span class="o">=</span> <span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">duration_cast</span> <span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">).</span><span class="n">count</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Total Time Taken = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">diff</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; Seconds&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span> <span class="o">=</span> <span class="n">db_data</span> <span class="o">+</span> <span class="s">&quot; :: &quot;</span> <span class="o">+</span> <span class="n">file_data</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Data = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="stdpackaged_task">std::packaged_task</h3>
+<p><code>std::promise</code> 通过 <code>set_value</code> 可以使得与之关联的 <code>std::future</code> 获取数据。 <code>std::packaged_task</code> 则更为强大，它允许传入一个函数，并将函数计算的结果传递给 <code>std::future</code>。</p>
+<p><code>std::packaged_task&lt;&gt;</code> is a class template and represents a asynchronous task. It encapsulates:</p>
+<ul>
+<li>A callable entity i.e either function, lambda function or function object.</li>
+<li>A shared state that stores the value returned or thrown exception by associated callback.</li>
+</ul>
+<p>看一个例子：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;future&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">packaged_task</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">task</span><span class="p">(</span><span class="n">sum</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">future</span> <span class="o">=</span> <span class="n">task</span><span class="p">.</span><span class="n">get_future</span><span class="p">();</span>
+
+  <span class="c1">// std::promise 一样，std::packaged_task 支持 move，但不支持拷贝</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">task</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="c1">// 等待异步计算结果</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;1 + 2 =&gt; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">future</span><span class="p">.</span><span class="n">get</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2 id="stdfuture-stdpromise_1">使用 std::future 和 std::promise 实现终止线程功能</h2>
+<p>我们希望能显式控制一个进程的终止，该如何实现？前面提到过了 <code>std::promise</code> 和 <code>std::future</code>，只有当 promise 设置值的时候 future 才会真正获取值，那么可以把 promise::set_value 作为一个通知信号来使用，，检查 future 的状态就知道是不是要结束线程了。</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;future&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">thread_callback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">future_obj</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Thread Start&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="c1">// 利用 std::future::wait_for() 来控制循环是否终止</span>
+  <span class="c1">// 如果相应的 promise object 调用了 set_value()，那么结束循环</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">future_obj</span><span class="p">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">==</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">future_status</span><span class="o">::</span><span class="n">timeout</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Doing Some Work&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">1000</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Thread End&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Create a std::promise object</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">promise</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">exit_signal</span><span class="p">;</span>
+
+  <span class="c1">// Fetch std::future object associated with promise</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">future_obj</span> <span class="o">=</span> <span class="n">exit_signal</span><span class="p">.</span><span class="n">get_future</span><span class="p">();</span>
+
+  <span class="c1">// Starting Thread &amp; move the future object in lambda function by reference</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t</span><span class="p">(</span><span class="o">&amp;</span><span class="n">thread_callback</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">future_obj</span><span class="p">));</span>
+
+  <span class="c1">// Wait for 10 sec</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Asking Thread to Stop&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="c1">// Set the value in promise</span>
+  <span class="n">exit_signal</span><span class="p">.</span><span class="n">set_value</span><span class="p">();</span>
+
+  <span class="c1">// Wait for thread to join</span>
+  <span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Exiting Main Function&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>使用面向对象封装一个 Stoppable 类：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;future&gt;</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">Stoppable</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">Stoppable</span><span class="p">()</span> <span class="o">:</span> <span class="n">future_obj_</span><span class="p">(</span><span class="n">exit_signal_</span><span class="p">.</span><span class="n">get_future</span><span class="p">())</span> <span class="p">{}</span>
+  <span class="n">Stoppable</span><span class="p">(</span><span class="n">Stoppable</span> <span class="o">&amp;&amp;</span><span class="n">obj</span><span class="p">)</span> <span class="o">:</span> <span class="n">exit_signal_</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">exit_signal_</span><span class="p">)),</span>
+      <span class="n">future_obj_</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">future_obj_</span><span class="p">))</span> <span class="p">{}</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">Stoppable</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+
+  <span class="n">Stoppable</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Stoppable</span> <span class="o">&amp;&amp;</span><span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">exit_signal_</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">exit_signal_</span><span class="p">);</span>
+    <span class="n">future_obj_</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">future_obj_</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kt">void</span> <span class="nf">operator</span><span class="p">()()</span> <span class="p">{</span>
+    <span class="n">run</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">bool</span> <span class="nf">is_stop_requested</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">future_obj_</span><span class="p">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">==</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">future_status</span><span class="o">::</span><span class="n">timeout</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="nf">stop</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">exit_signal_</span><span class="p">.</span><span class="n">set_value</span><span class="p">();</span>
+  <span class="p">}</span>
+
+ <span class="k">private</span><span class="o">:</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">promise</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">exit_signal_</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">future_obj_</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">MyTask</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Stoppable</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Task Start&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">is_stop_requested</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Doing Some Work&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">1000</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Task End&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">MyTask</span> <span class="n">task</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t</span><span class="p">([</span><span class="o">&amp;</span><span class="p">]()</span> <span class="p">{</span>
+    <span class="n">task</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+  <span class="p">});</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Asking Task to Stop&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">task</span><span class="p">.</span><span class="n">stop</span><span class="p">();</span>
+  <span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Thread Joined&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Exiting Main Function&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/c++/cxx_std_io_tips.html">C++ Standard IO tips</a></li>
+    
+    <li><a href="/wiki/c++/cxx_practical_tips.html">C++ Practical Tips</a></li>
+    
+    <li><a href="/wiki/c++/cxx_type_casting.html">C++ 类型转换</a></li>
+    
+    <li><a href="/wiki/c++/effective_stl_notes.html">Effective STL notes</a></li>
+    
+    <li><a href="/wiki/c++/cxx_serialization.html">C++ 序列化</a></li>
+    
+    <li><a href="/wiki/c++/eigen_notes.html">Eigen C++ Library cheatsheet</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-05-23 02:01:15</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

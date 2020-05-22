@@ -1,0 +1,343 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>< Accelerated C++ > 读书笔记 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#reading_notes">reading_notes</a>&nbsp;&#187;&nbsp;< Accelerated C++ > 读书笔记
+    <span class="updated">Page Updated&nbsp;
+      2019-07-09 01:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">< Accelerated C++ > 读书笔记</div>
+
+  <p><a href="https://book.douban.com/subject/2280545/">Accelerated C++中文版</a></p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">size_type</span> <span class="n">num</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>  <span class="c1">// 用stl库给出的特定类型，不用纠结 int 还是 unsigned int</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">size_type</span> <span class="n">vec_size</span> <span class="o">=</span> <span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</pre></div>
+
+
+<p>学会组织计算和数据：</p>
+<ul>
+<li>计算模块化</li>
+<li>数据结构化</li>
+<li>计算和数据隔离</li>
+</ul>
+<p>容器，迭代器</p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+
+<span class="n">iter</span> <span class="o">=</span> <span class="n">vec</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">iter</span><span class="p">);</span>  <span class="c1">// 用迭代器实现删除容器中的元素，比索引更安全</span>
+</pre></div>
+
+
+<p>思考数据结构合理性，如果不需要 random access（不需要通过索引访问容器内元素），用 list 替代 vector 性能更高。</p>
+<p>多用标准库已有的实现：</p>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="n">cctype</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">isspace</span><span class="p">()</span>
+</pre></div>
+
+
+<p>迭代器，算法；很多容器有类似的操作（find、insert等），提取公共接口形成算法。</p>
+<p>STL利用公共接口提供一个算法集合：</p>
+<div class="hlcode"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ret</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">ret</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">str</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">str</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">ret</span><span class="p">));</span>
+</pre></div>
+
+
+<p>copy 泛型算法（generic，不属于特定容器）</p>
+<p>back_inserter 迭代器适配器（传入一个容器，返回一个迭代器）</p>
+<p>利用泛型算法和迭代器适配器实现 split：</p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">split</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">iter_t</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">ret</span><span class="p">;</span>
+  <span class="n">iter_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="c1">// 忽略前端空格</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="k">const</span> <span class="kt">char</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="o">!</span><span class="n">std</span><span class="o">::</span><span class="n">isspace</span><span class="p">(</span><span class="n">ch</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="c1">// 下一个单词结尾空格</span>
+    <span class="n">iter_t</span> <span class="n">j</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="k">const</span> <span class="kt">char</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">isspace</span><span class="p">(</span><span class="n">ch</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="c1">// 复制 [i, j)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>回文字符串判断：</p>
+<div class="hlcode"><pre><span></span><span class="kt">bool</span> <span class="nf">is_palindrome</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">equal</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">rbegin</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>map/reduce :</p>
+<div class="hlcode"><pre><span></span><span class="n">std</span><span class="p">::</span><span class="k">transform</span><span class="p">()</span> <span class="o">/</span> <span class="n">std</span><span class="p">::</span><span class="n">accumulate</span><span class="p">()</span>
+</pre></div>
+
+
+<p><strong>算法作用于容器的元素，而不是容器</strong></p>
+<p>顺序容器: vector, list 等</p>
+<p>关联容器：map 等</p>
+<hr />
+<h2 id="_1">泛型函数</h2>
+<p>模板函数，模板实例化</p>
+<p>数据结构独立性，<code>find(v.begin(), v.end(), x)</code> 对比 <code>v.find(x)</code> ，前者更通用</p>
+<p>用迭代器提高适应性：</p>
+<div class="hlcode"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">Out</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">split</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">,</span> <span class="n">Out</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">iter_t</span><span class="p">;</span>
+  <span class="n">iter_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="c1">// 忽略前端空格</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="k">const</span> <span class="kt">char</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="o">!</span><span class="n">std</span><span class="o">::</span><span class="n">isspace</span><span class="p">(</span><span class="n">ch</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="c1">// 下一个单词结尾空格</span>
+    <span class="n">iter_t</span> <span class="n">j</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="k">const</span> <span class="kt">char</span> <span class="o">&amp;</span><span class="n">ch</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">isspace</span><span class="p">(</span><span class="n">ch</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="c1">// 复制 [i, j)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">str</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="o">*</span><span class="n">out</span><span class="o">++</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">word_list</span><span class="p">;</span>
+<span class="n">split</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">word_list</span><span class="p">));</span>
+</pre></div>
+
+
+<p>三种内存分配方法：局部、静态、动态</p>
+<hr />
+<h2 id="allocator">allocator</h2>
+<p>ch11 完整的 Vec 类实现，其中 allocator 部分需要好好理解</p>
+<p>频繁使用 new delete 会增加资源开销</p>
+<p>allocator<T></p>
+<p>分配一块预备用来存储 T 类型对象的内存块</p>
+<hr />
+<h2 id="handle-class">Handle Class</h2>
+<p>handle class ，主程序中频繁使用基类、派生类指针，容易出错，通过一个类封装基类指针来隐藏内存分配、释放：</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Core</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">string</span> <span class="n">name</span><span class="p">();</span>
+  <span class="k">virtual</span> <span class="kt">double</span> <span class="nf">grade</span><span class="p">();</span>
+  <span class="c1">// ...</span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">Grad</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Core</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="k">virtual</span> <span class="kt">double</span> <span class="n">grade</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+  <span class="c1">// ...  </span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">Student_info</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">Student_info</span><span class="p">()</span> <span class="o">:</span> <span class="n">ptr_</span><span class="p">(</span><span class="k">nullptr</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="o">~</span><span class="n">Student_info</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">ptr_</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">read</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="s">&quot;U&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">ptr_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Core</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">ptr_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Grad</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">ptr_</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="kt">double</span> <span class="n">grade</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">ptr_</span><span class="o">-&gt;</span><span class="n">grade</span><span class="p">();</span>
+  <span class="p">}</span>
+ <span class="k">private</span><span class="o">:</span>
+  <span class="n">Core</span> <span class="o">*</span><span class="n">ptr_</span><span class="p">;</span>  <span class="c1">// 封装一个基类指针</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>使用 handle class 时需要注意 handle class 对象的拷贝，如何确定拷贝的是含有基类/子类实例的对象？</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Core</span> <span class="p">{</span>
+  <span class="k">friend</span> <span class="k">class</span> <span class="nc">Student_info</span><span class="p">;</span>
+ <span class="k">protected</span><span class="o">:</span>
+  <span class="k">virtual</span> <span class="n">Core</span><span class="o">*</span> <span class="n">clone</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">Core</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">Grad</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Core</span> <span class="p">{</span>
+ <span class="k">protected</span><span class="o">:</span>
+  <span class="n">Grad</span><span class="o">*</span> <span class="n">clone</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">Grad</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="n">Student_info</span><span class="o">::</span><span class="n">Student_info</span><span class="p">(</span><span class="k">const</span> <span class="n">Student_info</span><span class="o">&amp;</span> <span class="n">info</span><span class="p">)</span> <span class="o">:</span> <span class="n">ptr_</span><span class="p">(</span><span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">info</span><span class="p">.</span><span class="n">ptr_</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ptr_</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">ptr_</span><span class="o">-&gt;</span><span class="n">clone</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">Student_info</span><span class="o">&amp;</span> <span class="n">Student_info</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Student_info</span><span class="o">&amp;</span> <span class="n">info</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">info</span> <span class="o">!=</span> <span class="k">this</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">ptr_</span><span class="p">;</span>
+    <span class="n">ptr_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">info</span><span class="p">.</span><span class="n">ptr_</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">ptr_</span> <span class="o">=</span> <span class="n">info</span><span class="p">.</span><span class="n">ptr_</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>注意上面代码的巧妙之处，通过 protected 虚函数 clone 实现实例拷贝，声明 handle class 为友元</p>
+<p>通用的 handle class （智能指针雏形）：</p>
+<ul>
+<li>一个 Handle 对象是指向某个对象的值</li>
+<li>能够通过 handle 对象进行复制</li>
+<li>能够判断 handle 对象是否指向另一个对象</li>
+<li>能够触发多态行为</li>
+</ul>
+<div class="hlcode"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">Handle</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+   <span class="n">Handle</span><span class="p">()</span> <span class="o">:</span> <span class="n">p_</span><span class="p">(</span><span class="k">nullptr</span><span class="p">)</span> <span class="p">{}</span>
+   <span class="n">Handle</span><span class="p">(</span><span class="k">const</span> <span class="n">Handle</span> <span class="o">&amp;</span><span class="n">that</span><span class="p">)</span> <span class="o">:</span> <span class="n">p_</span><span class="p">(</span><span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">that</span><span class="p">.</span><span class="n">p_</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">p_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">that</span><span class="p">.</span><span class="n">p_</span><span class="p">));</span>  <span class="c1">// clone</span>
+     <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="n">Handle</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Handle</span><span class="o">&amp;</span><span class="p">);</span>
+   <span class="o">~</span><span class="n">Handle</span> <span class="p">{</span>
+     <span class="k">delete</span> <span class="n">p_</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="n">Handle</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="o">:</span> <span class="n">p_</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="p">{}</span>
+   <span class="k">operator</span> <span class="kt">bool</span><span class="p">()</span> <span class="p">{</span>
+     <span class="k">return</span> <span class="n">p_</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&amp;</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+   <span class="n">T</span><span class="o">*</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+ <span class="k">private</span><span class="o">:</span>
+   <span class="n">T</span> <span class="o">*</span><span class="n">p_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>上面的 handle 类总是会进行数据拷贝，可以使用引用计数来记录有多少个对象指向底层对象：</p>
+<div class="hlcode"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">RefHandle</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+   <span class="n">RefHandle</span><span class="p">()</span> <span class="o">:</span> <span class="n">ref_cnt_</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p_</span><span class="p">(</span><span class="k">nullptr</span><span class="p">)</span> <span class="p">{}</span>
+   <span class="n">RefHandle</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="o">:</span> <span class="n">ref_cnt_</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p_</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="p">{}</span>
+   <span class="n">RefHandle</span><span class="p">(</span><span class="k">const</span> <span class="n">RefHandle</span> <span class="o">&amp;</span><span class="n">h</span><span class="p">)</span> <span class="o">:</span> <span class="n">ref_cnt_</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="n">ref_cnt_</span><span class="p">),</span> <span class="n">p_</span><span class="p">(</span><span class="n">h</span><span class="p">.</span><span class="n">p_</span><span class="p">)</span> <span class="p">{</span>
+     <span class="o">++</span><span class="n">ref_cnt_</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="n">RefHandle</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">RefHandle</span> <span class="o">&amp;</span><span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+     <span class="o">++*</span><span class="n">h</span><span class="p">.</span><span class="n">ref_cnt_</span><span class="p">;</span>
+     <span class="o">--*</span><span class="k">this</span><span class="p">.</span><span class="n">ref_cnt_</span><span class="p">;</span>
+     <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">.</span><span class="n">ref_cnt_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">delete</span> <span class="n">ref_cnt_</span><span class="p">;</span>
+       <span class="k">delete</span> <span class="n">p_</span><span class="p">;</span>
+     <span class="p">}</span>
+     <span class="n">ref_cnt_</span> <span class="o">=</span> <span class="n">h</span><span class="p">.</span><span class="n">ref_cnt_</span><span class="p">;</span>
+     <span class="n">p_</span> <span class="o">=</span> <span class="n">h</span><span class="p">.</span><span class="n">p_</span><span class="p">;</span>
+     <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="o">~</span><span class="n">RefHandle</span><span class="p">()</span> <span class="p">{</span>
+     <span class="o">--*</span><span class="k">this</span><span class="p">.</span><span class="n">ref_cnt_</span><span class="p">;</span>
+     <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">.</span><span class="n">ref_cnt_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">delete</span> <span class="n">ref_cnt_</span><span class="p">;</span>
+       <span class="k">delete</span> <span class="n">p_</span><span class="p">;</span>
+     <span class="p">}</span>
+   <span class="p">}</span>
+ <span class="k">private</span><span class="o">:</span>
+   <span class="n">T</span> <span class="o">*</span><span class="n">p_</span><span class="p">;</span>
+   <span class="kt">size_t</span> <span class="o">*</span><span class="n">ref_cnt_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>可以增加一个 make_unique() 方法来取消共享数据：</p>
+<div class="hlcode"><pre><span></span><span class="kt">void</span> <span class="n">RefHandle</span><span class="o">::</span><span class="n">make_unique</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">ref_cnt_</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">--*</span><span class="n">ref_cnt_</span><span class="p">;</span>
+    <span class="n">ref_cnt_</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">size_t</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">p_</span> <span class="o">=</span> <span class="n">p_</span> <span class="o">?</span> <span class="k">new</span> <span class="n">T</span><span class="p">(</span><span class="o">*</span><span class="n">p_</span><span class="p">)</span> <span class="o">:</span> <span class="k">nullptr</span><span class="p">;</span>  <span class="c1">// clone</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>软件工程中的基本思想：所有问题都可以通过引入一个额外的间接层来解决：</p>
+<div class="hlcode"><pre><span></span><span class="n">tempate</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="n">T</span><span class="o">*</span> <span class="n">clone</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">clone</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// 模板特化</span>
+<span class="c1">// 对 Vec&lt;char&gt; 类型特化</span>
+<span class="k">template</span> <span class="o">&lt;&gt;</span>
+<span class="n">Vec</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;*</span> <span class="n">clone</span><span class="p">(</span><span class="k">const</span> <span class="n">Vec</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="n">Vec</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-05-23 02:01:15</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

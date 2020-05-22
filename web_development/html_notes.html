@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>HTML notes - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#web_development">web_development</a>&nbsp;&#187;&nbsp;HTML notes
+    <span class="updated">Page Updated&nbsp;
+      2019-11-20 23:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">HTML notes</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#html-hyper-text-markup-language">HTML: Hyper Text Markup Language</a></li>
+<li><a href="#html-css">HTML 与 CSS</a></li>
+<li><a href="#html">HTML 基本用法</a><ul>
+<li><a href="#_1">段落与标题</a></li>
+<li><a href="#_2">文字样式</a></li>
+<li><a href="#_3">列表</a></li>
+<li><a href="#_4">图片</a></li>
+<li><a href="#_5">链接</a></li>
+<li><a href="#_6">表格</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<hr />
+<h2 id="html-hyper-text-markup-language">HTML: Hyper Text Markup Language</h2>
+<p>不算是编程语言，属于标记语言。</p>
+<p>SGML，一种很强大但是很复杂的标记语言，比html要早。</p>
+<p>SGML 最为强大和古老，XML 是 SGML 的一个子集，HTML 最初也试图成为 SGML 的一个子集，但 HTML 4 以前并不严格符合 SGML 的标准。后来出现了 HTML4，XHTML （符合 XML 标准的 HTML），这两者都符合 SGML 的要求。</p>
+<p>到现如今，W3C 在制定 HTML5 标准时，希望摆脱 SGML 的一些无用的功能和声明，并延续 HTML4 的风格，而非严格的 XHTML 的风格。</p>
+<hr />
+<p>一个html的例子：</p>
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="c">&lt;!--这是一段注释。注释不会在浏览器中显示。--&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>这是一段普通的段落。<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>注释的写法如下：<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span> <span class="err">&amp;</span>lt!-- This is a comment. --<span class="err">&amp;</span>gt <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<h2 id="html-css">HTML 与 CSS</h2>
+<p>通过使用 HTML4.0，所有的格式化代码均可移出 HTML 文档，然后移入一个独立的样式表。</p>
+<p>HTML是用来表达内容、结构“是什么”；</p>
+<p>样式由样式表CSS负责。</p>
+<hr />
+<h2 id="html">HTML 基本用法</h2>
+<h3 id="_1">段落与标题</h3>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;p&gt;</span> <span class="nt">&lt;/p&gt;</span>                 段落，段落间空一行；
+<span class="nt">&lt;br/&gt;</span>                    断行，换行，没有结束符，可直接写成<span class="nt">&lt;br&gt;</span>；
+<span class="nt">&lt;h1&gt;</span> <span class="nt">&lt;/h1&gt;</span>               第一级标题，前后自动空一行，无需加<span class="nt">&lt;br&gt;</span>；
+<span class="nt">&lt;h2&gt;</span> <span class="nt">&lt;/h2&gt;</span>               第二级标题，共支持6级标题；
+<span class="nt">&lt;wbr&gt;</span> <span class="nt">&lt;/wbr&gt;</span>             英文单词可从中间断开，对中文没意义；
+<span class="nt">&lt;hgroup&gt;</span> <span class="nt">&lt;/hgroup&gt;</span>       告诉浏览器连续的二级标题，中间为h1，h2等
+</pre></div>
+
+
+<h3 id="_2">文字样式</h3>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;b&gt;</span>关键词<span class="nt">&lt;/b&gt;</span>，加粗(bold)
+<span class="nt">&lt;i&gt;</span>斜体字<span class="nt">&lt;/i&gt;</span>
+<span class="nt">&lt;tt&gt;</span>等宽的西方字体<span class="nt">&lt;tt&gt;</span>
+<span class="nt">&lt;small&gt;</span>字体变小<span class="nt">&lt;/small&gt;</span>
+<span class="nt">&lt;del&gt;</span>字一<span class="nt">&lt;/del&gt;&lt;ins&gt;</span>字二<span class="nt">&lt;/ins&gt;</span>，标记删除字一，用字二
+<span class="nt">&lt;s&gt;</span>告诉浏览器这些内容是不被提倡的<span class="nt">&lt;/s&gt;</span>
+<span class="nt">&lt;sup&gt;</span>上标<span class="nt">&lt;/sup&gt;</span>   <span class="nt">&lt;sub&gt;</span>下标<span class="nt">&lt;/sub&gt;</span>
+<span class="nt">&lt;mark&gt;</span>标亮字<span class="nt">&lt;/mark&gt;</span>
+// 文字样式一般都可以在css中实现
+
+<span class="nt">&lt;em&gt;</span>emphasize强调<span class="nt">&lt;/em&gt;</span>；
+<span class="nt">&lt;strong&gt;</span>着重<span class="nt">&lt;/strong&gt;</span>；
+<span class="nt">&lt;dfn&gt;</span>definition定义<span class="nt">&lt;/dfn&gt;</span>；
+<span class="nt">&lt;code&gt;</span>代码，告诉浏览器该部分为源代码(较短的)，对中文意义不大，对英文有用<span class="nt">&lt;/code&gt;</span>；
+<span class="nt">&lt;samp&gt;</span>sample例子代码<span class="nt">&lt;/samp&gt;</span>；
+<span class="nt">&lt;kbd&gt;</span>keyboard用户输入的<span class="nt">&lt;/kbd&gt;</span>；
+<span class="nt">&lt;var&gt;</span>variable变量<span class="nt">&lt;/var&gt;</span>；
+<span class="nt">&lt;cite&gt;</span>cite该部分为从别处引用<span class="nt">&lt;/cite&gt;</span>；
+
+<span class="nt">&lt;address&gt;&lt;/address&gt;</span>               地址标签
+<span class="nt">&lt;blockquote&gt;&lt;/blockquote&gt;</span>         缩进，可以嵌套
+<span class="nt">&lt;q&gt;&lt;/q&gt;</span>                           小引用
+<span class="nt">&lt;code&gt;&lt;/code&gt;</span>                     代码
+<span class="nt">&lt;pre&gt;&lt;/pre&gt;</span>                       预格式化
+</pre></div>
+
+
+<p>再次记住，html不是用于表述格式(样式)的，是用来描述结构的(“是什么”)。</p>
+<p>插入代码的例子：</p>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="nv">code</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nv">pre</span><span class="o">&gt;</span>
+<span class="nv">int</span> <span class="nv">main</span><span class="ss">()</span> {
+     <span class="nv">printf</span><span class="ss">(</span><span class="s2">&quot;</span><span class="s">hello</span><span class="se">\n</span><span class="s2">&quot;</span><span class="ss">)</span>
+     <span class="k">return</span> <span class="mi">0</span><span class="c1">;</span>
+}
+<span class="o">&lt;/</span><span class="nv">pre</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nv">code</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<p><code><br />
+<pre><br />
+int main() {<br />
+     printf("hello\n")<br />
+     return 0;<br />
+}<br />
+</pre><br />
+</code></p>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;hr&gt;</span>水平线（horizontal ruler）      // 不用加<span class="nt">&lt;/hr&gt;</span>
+<span class="nt">&lt;hr</span> <span class="na">width=</span><span class="s">50%</span><span class="nt">&gt;</span>         宽度50%
+<span class="nt">&lt;hr</span> <span class="na">width=</span><span class="s">50</span><span class="nt">&gt;</span>          宽度50
+<span class="nt">&lt;hr</span> <span class="na">width=</span><span class="s">50%</span> <span class="na">align=</span><span class="s">left</span> <span class="na">size=</span><span class="s">10</span><span class="nt">&gt;</span>     宽度50%
+</pre></div>
+
+
+<p>HTML5不需要属性的值加双引号了;</p>
+<p>现在的属性提倡用CSS来做。</p>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;bdo</span> <span class="na">dir=</span><span class="s">rtl</span><span class="nt">&gt;</span> 文字从右向左排<span class="nt">&lt;/bdo&gt;</span>；
+<span class="nt">&lt;bdo</span> <span class="na">dir=</span><span class="s">rtl</span><span class="nt">&gt;&lt;bdi&gt;</span>将颠倒的文字颠倒过来<span class="nt">&lt;/bdi&gt;&lt;/bdo&gt;</span>；
+
+<span class="ni">&amp;lt;</span> (注意有分号作为结束)小于号
+<span class="ni">&amp;gt;</span> 大于号
+<span class="ni">&amp;amp;</span> <span class="err">&amp;</span>符号
+<span class="ni">&amp;nbsp;</span> 空格(non-nbreakable space)
+// 还有很多特殊字符，用的时候自己去查。
+</pre></div>
+
+
+<h3 id="_3">列表</h3>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;ul&gt;&lt;/ul&gt;</span>  不排序的列表, unordered list
+<span class="nt">&lt;ol&gt;&lt;/ol&gt;</span>  排序的列表，会加数字
+<span class="nt">&lt;dl&gt;&lt;/dl&gt;</span>  类似于字典，其中可以用<span class="nt">&lt;dt&gt;&lt;/dt&gt;</span>和<span class="nt">&lt;dd&gt;&lt;/dd&gt;</span>添加词条、解释词条
+<span class="nt">&lt;li&gt;&lt;/li&gt;</span> list item
+
+<span class="nt">&lt;ul&gt;</span>
+     <span class="nt">&lt;li&gt;</span>红茶<span class="nt">&lt;/li&gt;</span>
+     <span class="nt">&lt;li&gt;</span>绿茶<span class="nt">&lt;/li&gt;</span>
+     <span class="nt">&lt;li&gt;</span>可乐<span class="nt">&lt;/li&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;ol</span> <span class="na">start =</span> <span class="s">2</span><span class="nt">&gt;</span>
+     <span class="nt">&lt;li&gt;</span>红茶<span class="nt">&lt;/li&gt;</span>
+     <span class="nt">&lt;li&gt;</span>绿茶<span class="nt">&lt;/li&gt;</span>
+     <span class="nt">&lt;li&gt;</span>可乐<span class="nt">&lt;/li&gt;</span>
+     <span class="nt">&lt;li&gt;</span>咖啡<span class="nt">&lt;/li&gt;</span>
+          <span class="nt">&lt;ul&gt;</span>
+               <span class="nt">&lt;li&gt;</span>加糖<span class="nt">&lt;/li&gt;</span>
+               <span class="nt">&lt;li&gt;</span>不加糖<span class="nt">&lt;/li&gt;</span>
+          <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/ol&gt;</span>
+<span class="nt">&lt;dl&gt;</span>
+     <span class="nt">&lt;dt&gt;</span>方糖<span class="nt">&lt;/dt&gt;</span>
+     <span class="nt">&lt;dd&gt;</span>方的糖，甜的<span class="nt">&lt;/dd&gt;</span>
+<span class="nt">&lt;/dl&gt;</span>
+</pre></div>
+
+
+<h3 id="_4">图片</h3>
+<div class="hlcode"><pre><span></span><span class="o">//</span> <span class="err">用</span><span class="n">img</span><span class="err">添加图片，对于</span><span class="n">html</span><span class="err">来说，图片是一个“字符”（排版角度）</span>
+<span class="o">&lt;</span><span class="n">img</span> <span class="n">src</span><span class="o">=</span><span class="ss">&quot;文件名/网站地址名图片&quot;</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span> <span class="n">heigt</span><span class="o">=</span><span class="mi">600</span> <span class="n">alt</span><span class="o">=</span><span class="ss">&quot;图片未正常显示时所显示的alternative文字&quot;</span> <span class="o">/&gt;</span>
+</pre></div>
+
+
+<h3 id="_5">链接</h3>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;iframe</span> <span class="na">src=</span><span class="s">&quot;http://news.163.com&quot;</span> <span class="na">width =</span> <span class="s">400</span><span class="nt">&gt;&lt;/iframe&gt;</span>
+// 用于把另外的页面插入进来
+
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://www.baidu.com&quot;</span><span class="nt">&gt;</span>链接名<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">&quot;here&quot;</span><span class="nt">&gt;</span>  // 为段落加标记
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#here&quot;</span><span class="nt">&gt;</span>here<span class="nt">&lt;/a&gt;</span>  // 点击后到达上面那个标记为here的段落
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;you.html#here&quot;</span><span class="nt">&gt;</span>here<span class="nt">&lt;/a&gt;</span>  // 点击后到达you.html中标记为here的段落
+
+// 在新窗口中打开超链接
+<span class="nt">&lt;a</span> <span class="na">href =</span><span class="s">&quot;http://news.163.com&quot;</span> <span class="na">target=</span><span class="s">_blank</span><span class="nt">&gt;&lt;/a&gt;</span>
+
+// usemap可以为图片中的某个区域添加超链接
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;&quot;</span>  <span class="na">usemap=</span><span class="s">&quot;#map&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;map</span> <span class="na">name=</span><span class="s">&quot;map&quot;</span><span class="nt">&gt;</span>.......
+</pre></div>
+
+
+<h3 id="_6">表格</h3>
+<div class="hlcode"><pre><span></span><span class="nt">&lt;table</span> <span class="na">border=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+     <span class="nt">&lt;caption&gt;</span>表格标题<span class="nt">&lt;/caption&gt;</span>
+     <span class="nt">&lt;tr&gt;</span>
+          <span class="nt">&lt;th&gt;</span>OS<span class="nt">&lt;/th&gt;</span>
+          <span class="nt">&lt;th&gt;</span>Chinese<span class="nt">&lt;/th&gt;</span>
+          <span class="nt">&lt;th&gt;</span>French<span class="nt">&lt;/th&gt;</span>
+     <span class="nt">&lt;/tr&gt;</span>
+     <span class="nt">&lt;tr&gt;</span>
+          <span class="nt">&lt;td&gt;</span>hehe<span class="nt">&lt;/td&gt;</span>
+          <span class="nt">&lt;td&gt;</span>yes<span class="nt">&lt;/td&gt;</span>
+          <span class="nt">&lt;td&gt;</span>no<span class="nt">&lt;/td&gt;</span>
+     <span class="nt">&lt;/tr&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
+
+th: 表头
+
+tr: table row
+
+td: 单元格
+
+colspan=&quot;3&quot;: 延展三格
+<span class="nt">&lt;tr</span> <span class="na">colspan=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;&lt;/tr&gt;</span>
+</pre></div>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/web_development/javascript_notes.html">JavaScript notes</a></li>
+    
+    <li><a href="/wiki/web_development/css_notes.html">CSS notes</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-05-23 02:01:15</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

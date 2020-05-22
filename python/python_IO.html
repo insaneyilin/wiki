@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Python IO 编程 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#python">python</a>&nbsp;&#187;&nbsp;Python IO 编程
+    <span class="updated">Page Updated&nbsp;
+      2019-11-12 18:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Python IO 编程</div>
+
+  <p>IO在计算机中指Input/Output，也就是输入和输出。由于程序和运行时数据是在内存中驻留，由CPU这个超快的计算核心来执行，涉及到数据交换的地方，通常是磁盘、网络等，就需要IO接口。</p>
+<p>IO编程中，Stream（流）是一个很重要的概念，可以把流想象成一个水管，数据就是水管里的水，但是只能单向流动。Input Stream就是数据从外面（磁盘、网络）流进内存，Output Stream就是数据从内存流到外面去。对于浏览网页来说，浏览器和新浪服务器之间至少需要建立两根水管，才可以既能发数据，又能收数据。</p>
+<p>由于CPU和内存的速度远远高于外设的速度，所以，在IO编程中，就存在速度严重不匹配的问题。举个例子来说，比如要把100M的数据写入磁盘，CPU输出100M的数据只需要0.01秒，可是磁盘要接收这100M数据可能需要10秒，怎么办呢？有两种办法：</p>
+<ul>
+<li>第一种是CPU等着，也就是程序暂停执行后续代码，等100M的数据在10秒后写入磁盘，再接着往下执行，这种模式称为同步IO；</li>
+<li>另一种方法是CPU不等待，只是告诉磁盘，“您老慢慢写，不着急，我接着干别的事去了”，于是，后续代码可以立刻接着执行，这种模式称为异步IO。</li>
+</ul>
+<p><strong>同步和异步的区别就在于是否等待IO执行的结果</strong> 。好比你去麦当劳点餐，你说“来个汉堡”，服务员告诉你，对不起，汉堡要现做，需要等5分钟，于是你站在收银台前面等了5分钟，拿到汉堡再去逛商场，这是同步IO。</p>
+<p>使用异步IO来编写程序性能会远远高于同步IO，但是异步IO的缺点是编程模型复杂(回调/轮询/...)。</p>
+<p>参考 <a href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017606916795776">廖雪峰Python教程</a>。</p>
+<div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">文件读写</a><ul>
+<li><a href="#file-like-object">file-like object</a></li>
+<li><a href="#_2">读二进制文件</a></li>
+<li><a href="#_3">写文件</a></li>
+</ul>
+</li>
+<li><a href="#stringio">StringIO</a></li>
+<li><a href="#bytesio">BytesIO</a></li>
+<li><a href="#_4">操作文件和目录</a></li>
+<li><a href="#_5">序列化</a><ul>
+<li><a href="#json">JSON</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<hr />
+<h2 id="_1">文件读写</h2>
+<div class="hlcode"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;111.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+<span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># 调用read()方法可以一次读取文件的全部内容，Python把内容读到内存，用一个str对象表示</span>
+
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># 关闭文件，释放内存</span>
+
+<span class="c1"># 推荐使用 with 语句</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/path/to/file&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</pre></div>
+
+
+<h3 id="file-like-object">file-like object</h3>
+<p>像open()函数返回的这种有个read()方法的对象，在Python中统称为file-like Object。除了file外，还可以是内存的字节流，网络流，自定义流等等。file-like Object不要求从特定类继承，只要写个read()方法就行。</p>
+<p><code>StringIO</code> 就是在内存中创建的file-like Object，常用作临时缓冲。</p>
+<h3 id="_2">读二进制文件</h3>
+<div class="hlcode"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/Users/michael/test.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>  <span class="c1"># rb 表示读取二进制文件</span>
+<span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="c1"># b&#39;\xff\xd8\xff\xe1\x00\x18Exif\x00\x00...&#39; # 十六进制表示的字节</span>
+</pre></div>
+
+
+<h3 id="_3">写文件</h3>
+<div class="hlcode"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/Users/michael/test.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Hello, world!&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/Users/michael/test.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Hello, world!&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<hr />
+<h2 id="stringio">StringIO</h2>
+<p><code>StringIO</code> 顾名思义就是在内存中读写 <code>str</code>。</p>
+<div class="hlcode"><pre><span></span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
+<span class="c1"># 5</span>
+<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="c1"># 1</span>
+<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;world!&#39;</span><span class="p">)</span>
+<span class="c1"># 6</span>
+<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>  <span class="c1"># 获取写入后的字符串</span>
+<span class="c1"># hello world!</span>
+</pre></div>
+
+
+<p>可以像读文件一样读取：</p>
+<div class="hlcode"><pre><span></span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="s1">&#39;Hello!</span><span class="se">\n</span><span class="s1">Hi!</span><span class="se">\n</span><span class="s1">Goodbye!&#39;</span><span class="p">)</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+<span class="c1"># Hello!</span>
+<span class="c1"># Hi!</span>
+<span class="c1"># Goodbye!</span>
+</pre></div>
+
+
+<h2 id="bytesio">BytesIO</h2>
+<p>如果要操作二进制数据，需要使用BytesIO。</p>
+<p>BytesIO实现了在内存中读写bytes，我们创建一个BytesIO，然后写入一些bytes：</p>
+<div class="hlcode"><pre><span></span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;中文&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="c1"># 6</span>
+<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+<span class="c1"># b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span>
+</pre></div>
+
+
+<p>和StringIO类似，可以用一个bytes初始化BytesIO，然后，像读文件一样读取：</p>
+<div class="hlcode"><pre><span></span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xe4\xb8\xad\xe6\x96\x87</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="c1"># b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span>
+</pre></div>
+
+
+<h2 id="_4">操作文件和目录</h2>
+<p><code>os</code> 模块提供了很多系统相关的功能</p>
+<div class="hlcode"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># 操作系统类型</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span>  <span class="c1"># 操作系统环境变量</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PATH&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>文件、目录相关操作：</p>
+<div class="hlcode"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>  <span class="c1"># 绝对路径</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/Users/michael&#39;</span><span class="p">,</span> <span class="s1">&#39;testdir&#39;</span><span class="p">)</span>  <span class="c1"># 拼接路径</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;/Users/michael/testdir&#39;</span><span class="p">)</span>  <span class="c1"># 创建目录</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;/Users/michael/testdir&#39;</span><span class="p">)</span>  <span class="c1"># 删除目录</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/Users/michael/testdir/file.txt&#39;</span><span class="p">)</span>  <span class="c1"># 拆分目录和文件名</span>
+<span class="c1"># (&#39;/Users/michael/testdir&#39;, &#39;file.txt&#39;)</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="s1">&#39;/path/to/file.txt&#39;</span><span class="p">)</span>  <span class="c1"># 拆分扩展名</span>
+<span class="c1"># (&#39;/path/to/file&#39;, &#39;.txt&#39;)</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;test.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;test.py&#39;</span><span class="p">)</span>  <span class="c1"># 重命名文件</span>
+
+<span class="c1"># os 中没有拷贝文件的函数，可以用 shutil.copyfile()</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="s1">&#39;test.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;test.py&#39;</span><span class="p">)</span>
+
+<span class="c1"># 列出当前目录下所有 .jpg 文件</span>
+<span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span>\
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;.jpg&quot;</span><span class="p">]</span>
+</pre></div>
+
+
+<h2 id="_5">序列化</h2>
+<p>我们把变量从内存中变成可存储或传输的过程称之为序列化，在Python中叫 <strong>pickling</strong> ，在其他语言中也被称之为 <strong>serialization</strong> ，marshalling，flattening等等，都是一个意思。</p>
+<p>序列化之后，就可以把序列化后的内容写入磁盘，或者通过网络传输到别的机器上。</p>
+<p>反过来，把变量内容从序列化的对象重新读到内存里称之为反序列化，即 <strong>unpickling</strong> 。</p>
+<p>Python提供了 <code>pickle</code> 模块来实现序列化。</p>
+<div class="hlcode"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="mi">88</span><span class="p">)</span>
+<span class="n">d_bytes</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+<span class="c1"># pickle.dumps()方法把任意对象序列化成一个bytes，</span>
+<span class="c1"># 然后就可以把这个bytes写入文件。</span>
+<span class="c1"># 或者用另一个方法pickle.dump()直接把对象序列化后写入一个file-like Object：</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;dump.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># 用 pickle.load() 读取</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;dump.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+
+<p>Pickle的问题和所有其他编程语言特有的序列化问题一样，就是 <strong>它只能用于Python</strong> ，并且可能不同版本的Python彼此都不兼容，因此，只能用Pickle保存那些不重要的数据，不能成功地反序列化也没关系。</p>
+<h3 id="json">JSON</h3>
+<p>最好使用标准格式进行序列化，便于跨平台、跨编程语言。</p>
+<p>JSON表示的对象就是标准的JavaScript语言的对象，JSON和Python内置的数据类型对应如下：</p>
+<div class="hlcode"><pre><span></span><span class="n">SON</span><span class="err">类型</span>        <span class="n">Python</span><span class="err">类型</span>
+<span class="err">{}</span>            <span class="n">dict</span>
+<span class="p">[]</span>            <span class="n">list</span>
+<span class="ss">&quot;string&quot;</span>      <span class="n">str</span>
+<span class="mi">1234</span><span class="p">.</span><span class="mi">56</span>       <span class="nb">int</span><span class="err">或</span><span class="nb">float</span>
+<span class="k">true</span><span class="o">/</span><span class="k">false</span>    <span class="k">True</span><span class="o">/</span><span class="k">False</span>
+<span class="k">null</span>          <span class="k">None</span>
+</pre></div>
+
+
+<p>Python内置的json模块提供了非常完善的Python对象到JSON格式的转换。</p>
+<div class="hlcode"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># python dict 转 json</span>
+<span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="mi">88</span><span class="p">)</span>
+<span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="c1"># &#39;{&quot;age&quot;: 20, &quot;score&quot;: 88, &quot;name&quot;: &quot;Bob&quot;}&#39;</span>
+
+<span class="c1"># json to python dict</span>
+<span class="n">json_str</span> <span class="o">=</span> <span class="s1">&#39;{&quot;age&quot;: 20, &quot;score&quot;: 88, &quot;name&quot;: &quot;Bob&quot;}&#39;</span>
+<span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+<span class="c1"># {&#39;age&#39;: 20, &#39;score&#39;: 88, &#39;name&#39;: &#39;Bob&#39;}</span>
+</pre></div>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/tools/anaconda_python_notes.html">Anaconda notes</a></li>
+    
+    <li><a href="/wiki/python/python_oop.html">Python 面向对象编程</a></li>
+    
+    <li><a href="/wiki/python/python_database.html">Python 数据库访问</a></li>
+    
+    <li><a href="/wiki/python/python_network_programming.html">Python 网络编程</a></li>
+    
+    <li><a href="/wiki/python/python_basics_notes.html">Python Basics Notes</a></li>
+    
+    <li><a href="/wiki/python/python_re.html">Python 正则表达式</a></li>
+    
+    <li><a href="/wiki/python/python_email.html">Python 收发电子邮件</a></li>
+    
+    <li><a href="/wiki/python/python_web_development.html">Python Web 开发</a></li>
+    
+    <li><a href="/wiki/python/python_modules.html">Python 中的模块</a></li>
+    
+    <li><a href="/wiki/python/python_debugging_and_tests.html">Python 错误处理与测试</a></li>
+    
+    <li><a href="/wiki/python/python_fp_notes.html">Python 函数式编程</a></li>
+    
+    <li><a href="/wiki/python/python_process_thread_and_async_io.html">Python 进程、线程与异步IO</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-05-23 02:01:15</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

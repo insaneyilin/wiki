@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>剑指offer笔记(6) - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#job_interviews">job_interviews</a>&nbsp;&#187;&nbsp;剑指offer笔记(6)
+    <span class="updated">Page Updated&nbsp;
+      2019-07-13 01:34
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">剑指offer笔记(6)</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#7">第 7 章 两个面试案例</a><ul>
+<li><a href="#1">案例1</a></li>
+<li><a href="#2">案例2</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p><a href="https://book.douban.com/subject/27008702/">《剑指Offer》</a> 读书笔记。</p>
+<h2 id="7">第 7 章 两个面试案例</h2>
+<h3 id="1">案例1</h3>
+<p>问下面代码的输出结果：</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">A</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">A</span><span class="p">()</span> <span class="o">:</span> <span class="n">n2</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">n1</span><span class="p">(</span><span class="n">n2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">{}</span>
+
+    <span class="kt">void</span> <span class="n">print</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;n1: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+            <span class="o">&lt;&lt;</span> <span class="s">&quot;n2: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">n1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">n2</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">A</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">print</span><span class="p">();</span>
+
+    <span class="n">system</span><span class="p">(</span><span class="s">&quot;pause&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="err">错误答案：</span><span class="n">n1</span> <span class="err">是</span> <span class="mi">2</span><span class="err">，</span><span class="n">n2</span> <span class="err">是</span> <span class="mi">1</span>
+<span class="err">正确答案：</span><span class="n">n1</span> <span class="err">是一个溢出的数，</span><span class="n">n2</span> <span class="err">是</span> <span class="mi">0</span>
+</pre></div>
+
+
+<p>C++ 不是按照初始化列表中的参数顺序初始化成员变量的，而是按照成员变量在类中的声明顺序。本例中，n1 在 n2 之前声明。</p>
+<p>编程题：实现 StrToInt。</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="n">Solution</span> {
+<span class="n">public:</span>
+    <span class="nb">int</span> <span class="n">StrToInt</span>(<span class="n">string</span> <span class="n">str</span>) {
+
+    }
+};
+</pre></div>
+
+
+<p>要考虑各种边界情况：字符串为空，不是数字，数字范围溢出等等。</p>
+<p>提问环节别问工资（尤其是技术面的时候），多问技术相关的内容。</p>
+<p>写代码之前考虑所有可能的测试用例。</p>
+<h3 id="2">案例2</h3>
+<p>介绍项目经历的时候，讲清楚自己负责完成的是哪些部分，遇到过什么困难，是如何解决困难的。</p>
+<p>编程题：输入两个树节点，求它们的最低公共祖先。</p>
+<p>对细节进行提问：</p>
+<ul>
+<li>是不是二叉树？是不是二叉排序树？</li>
+<li>如果只是普通的树？<ul>
+<li>树的节点是否有指向父节点的指针？</li>
+<li>如果有，转化为求两个链表的第一个公共节点</li>
+</ul>
+</li>
+<li>如果没有指向父节点的指针？</li>
+</ul>
+<div class="hlcode"><pre><span></span><span class="mi">1</span><span class="p">.</span> <span class="err">找从根节点到</span> <span class="n">node1</span> <span class="err">的路径，存储在一个数组中</span>
+<span class="mi">2</span><span class="p">.</span> <span class="err">找从根节点到</span> <span class="n">node2</span> <span class="err">的路径，存储在一个数组中</span>
+<span class="mi">3</span><span class="p">.</span> <span class="err">遍历两条路径，直到遇到一个不同的节点，则前面的那个为最低公共祖先</span>
+
+<span class="err">时间复杂度</span> <span class="n">O</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="err">，最坏时间复杂度</span> <span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="err">；空间复杂度和时间复杂度一样。</span>
+</pre></div>
+
+
+<p>提问环节</p>
+<ul>
+<li>项目相关，如具体工作内容、工作形式、沟通方式等</li>
+<li>团队情况</li>
+</ul>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/job_interviews/leetcode_solutions.html">LeetCode Solutions</a></li>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_2.html">剑指offer笔记(2)</a></li>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_3.html">剑指offer笔记(3)</a></li>
+    
+    <li><a href="/wiki/job_interviews/ctci_notes.html">< Cracking The Code Interview > notes</a></li>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_4.html">剑指offer笔记(4)</a></li>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_5.html">剑指offer笔记(5)</a></li>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_1.html">剑指offer笔记(1)</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-05-23 02:01:15</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

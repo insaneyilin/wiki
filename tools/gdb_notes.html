@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>GDB 调试 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#tools">tools</a>&nbsp;&#187;&nbsp;GDB 调试
+    <span class="updated">Page Updated&nbsp;
+      2019-07-22 00:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">GDB 调试</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#core">生成 core 文件</a></li>
+<li><a href="#gdb-core">使用 gdb 查看 core 文件堆栈信息</a></li>
+<li><a href="#core_1">多线程程序查看 core 文件错误信息</a></li>
+<li><a href="#_1">查看具体变量值</a></li>
+<li><a href="#_2">编译选项支持调试模式</a></li>
+<li><a href="#gdb">gdb 调试可执行程序</a></li>
+<li><a href="#gdb-python-core">gdb 调试 python 出 core</a></li>
+</ul>
+</div>
+<blockquote>
+<p>GDB（GNU Debugger）是 UNIX 及类 UNIX 系统下的强大调试工具，可以调试 C、C++ 等语言编写的程序。</p>
+</blockquote>
+<h3 id="core">生成 core 文件</h3>
+<div class="hlcode"><pre><span></span><span class="o">#</span> <span class="err">查看</span> <span class="n">core</span> <span class="err">文件大小限制</span>
+<span class="n">ulimit</span> <span class="o">-</span><span class="k">c</span>
+
+<span class="o">#</span> <span class="err">将</span> <span class="n">core</span> <span class="err">文件大小限制设为无限（不限制大小）</span>
+<span class="n">ulimit</span> <span class="o">-</span><span class="k">c</span> <span class="n">unlimited</span>
+</pre></div>
+
+
+<h3 id="gdb-core">使用 gdb 查看 core 文件堆栈信息</h3>
+<div class="hlcode"><pre><span></span><span class="n">gdb</span> <span class="o">&lt;</span><span class="n">bin</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">corefile</span><span class="o">&gt;</span>
+
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">bt</span>
+</pre></div>
+
+
+<p><code>bt</code> 会显示堆栈信息，一般能够直接定位到 coredump 的具体代码行。</p>
+<h3 id="core_1">多线程程序查看 core 文件错误信息</h3>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">bt</span>
+
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">info</span> <span class="n">threads</span>
+</pre></div>
+
+
+<p><code>info threads</code> 会列出各个线程信息，找到有 abort 的一行，前面是线程号：</p>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">thread</span> <span class="o">&lt;</span><span class="n">THREADNUMBER</span><span class="o">&gt;</span>
+
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">bt</span>
+</pre></div>
+
+
+<h3 id="_1">查看具体变量值</h3>
+<p>使用 <code>bt</code> 后，可以利用 <code>f</code> 和 <code>p</code> 查看具体某个栈帧中某个变量的值：</p>
+<div class="hlcode"><pre><span></span><span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">f</span> <span class="o">&lt;</span><span class="n">frame_num</span><span class="o">&gt;</span>
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">p</span> <span class="o">&lt;</span><span class="n">variable_name</span><span class="o">&gt;</span>
+</pre></div>
+
+
+<h3 id="_2">编译选项支持调试模式</h3>
+<p>编译时加上 <code>-g</code></p>
+<div class="hlcode"><pre><span></span><span class="n">gcc</span> <span class="o">-</span><span class="k">g</span> <span class="o">-</span><span class="n">o</span> <span class="n">main</span> <span class="n">main</span><span class="p">.</span><span class="k">c</span>
+</pre></div>
+
+
+<p>对于 CMake：</p>
+<div class="hlcode"><pre><span></span><span class="n">cmake</span> <span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Debug</span> <span class="o">&lt;</span><span class="n">src_dir_path</span><span class="o">&gt;</span>
+
+<span class="o">#</span> <span class="k">or</span>
+<span class="k">set</span><span class="p">(</span><span class="n">CMAKE_BUILD_TYPE</span> <span class="ss">&quot;Debug&quot;</span><span class="p">)</span>
+<span class="k">set</span><span class="p">(</span><span class="n">CMAKE_CXX_FLAGS_DEBUG</span> <span class="ss">&quot;$ENV{CXXFLAGS} -O0 -Wall -g -ggdb&quot;</span><span class="p">)</span>
+<span class="k">set</span><span class="p">(</span><span class="n">CMAKE_CXX_FLAGS_RELEASE</span> <span class="ss">&quot;$ENV{CXXFLAGS} -O3 -Wall&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<h3 id="gdb">gdb 调试可执行程序</h3>
+<div class="hlcode"><pre><span></span><span class="n">gdb</span> <span class="o">&lt;</span><span class="n">bin</span><span class="o">&gt;</span>
+
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">r</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="n">gdb</span> <span class="c1">--args &lt;bin&gt; [args...]</span>
+
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">r</span>
+</pre></div>
+
+
+<h3 id="gdb-python-core">gdb 调试 python 出 core</h3>
+<div class="hlcode"><pre><span></span><span class="n">gdb</span> <span class="n">python</span>
+
+<span class="p">(</span><span class="n">gdb</span><span class="p">)</span> <span class="n">r</span> <span class="n">gdb_test</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-05-23 02:01:15</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
