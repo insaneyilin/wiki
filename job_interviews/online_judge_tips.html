@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Online Judge 解题小技巧 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#job_interviews">job_interviews</a>&nbsp;&#187;&nbsp;Online Judge 解题小技巧
+    <span class="updated">Page Updated&nbsp;
+      2019-07-12 01:58
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Online Judge 解题小技巧</div>
+
+  <p>记录一些小 tips 。</p>
+<h2 id="_1">输入输出</h2>
+<p>输入数据，以 <code>EOF</code> 结束：</p>
+<div class="hlcode"><pre><span></span><span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>输入数据，以 0 结束：</p>
+<div class="hlcode"><pre><span></span><span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EOF</span> <span class="o">&amp;&amp;</span> <span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>输入数据，有多个 cases ，先输入 cases 数目：</p>
+<div class="hlcode"><pre><span></span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">num_cases</span><span class="p">);</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_cases</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">//...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>整行输入：</p>
+<div class="hlcode"><pre><span></span><span class="c1">// C语言风格</span>
+<span class="kt">char</span> <span class="n">buff</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+<span class="n">gets</span><span class="p">(</span><span class="n">buff</span><span class="p">);</span> <span class="c1">// 会接受空格、制表符(&#39;\t&#39;)以及回车键(&#39;\n&#39;)</span>
+
+<span class="c1">// C++ 风格</span>
+<span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+<span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span> <span class="c1">// 注意 getline() 不会接受换行符(&#39;\n&#39;)</span>
+</pre></div>
+
+
+<p>重定向输入输出：</p>
+<div class="hlcode"><pre><span></span><span class="cp">#define LOCAL</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#define INF 1000000000</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+<span class="cp">#ifdef LOCAL</span>
+  <span class="n">freopen</span><span class="p">(</span><span class="s">&quot;data.in&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">,</span> <span class="n">stdin</span><span class="p">);</span>   <span class="c1">//重定向输入</span>
+  <span class="n">freopen</span><span class="p">(</span><span class="s">&quot;data.out&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="p">);</span> <span class="c1">//重定向输出</span>
+<span class="cp">#endif</span>
+  <span class="cm">/* 之后的一切标准输入输出都会变为文件输入输出,</span>
+<span class="cm">  如scanf,printf实际是从文件输入输出,对cin与cout也适用 */</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="c1">// C++ 风格从文件中进行输入输出</span>
+<span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+
+<span class="cm">/* iftream 与 ofstream */</span>
+<span class="n">ifsream</span> <span class="nf">fin</span><span class="p">(</span><span class="s">&quot;data.in&quot;</span><span class="p">);</span>
+<span class="n">ofsream</span> <span class="nf">fout</span><span class="p">(</span><span class="s">&quot;data.out&quot;</span><span class="p">);</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-01 01:35:58</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

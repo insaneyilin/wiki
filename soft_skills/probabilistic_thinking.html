@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>学习用概率思维来思考 - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#soft_skills">soft_skills</a>&nbsp;&#187;&nbsp;学习用概率思维来思考
+    <span class="updated">Page Updated&nbsp;
+      2020-02-01 17:07
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">学习用概率思维来思考</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">概率思维</a></li>
+<li><a href="#_2">运用概率思维的具体例子</a></li>
+<li><a href="#_3">概率与频率</a><ul>
+<li><a href="#_4">频率学派视角</a></li>
+<li><a href="#_5">贝叶斯学派视角</a></li>
+</ul>
+</li>
+<li><a href="#_6">贝叶斯定理</a></li>
+<li><a href="#_7">贝叶斯定理的启示</a><ul>
+<li><a href="#_8">先行动起来</a></li>
+<li><a href="#_9">听别人的建议，但要有自己的主见</a></li>
+<li><a href="#_10">初始概率很重要</a></li>
+<li><a href="#_11">对出现的特殊情况要引起足够的重视</a></li>
+<li><a href="#_12">重视信息</a></li>
+</ul>
+</li>
+<li><a href="#_13">参考</a></li>
+</ul>
+</div>
+<hr />
+<blockquote>
+<p>人生中最重要的问题，在绝大多数情况下，真的就只是概率问题。 <br />
+  -- 皮埃尔-西蒙·拉普拉斯（1749-1827）</p>
+<p>数学不仅仅是计算，而是一种思考方式。<br />
+  -- 塔勒布</p>
+<p>真正的高手，就是把自己活成了贝叶斯定理。</p>
+</blockquote>
+<h2 id="_1">概率思维</h2>
+<p>越早了解概率思维，就能越早明白人生的不确定性。</p>
+<p>什么是起跑线？人人生来基因不同、智商不同、家境不同、机遇不同、性格不同。。。如此多不同何来「起跑线」之有？</p>
+<p>人生是不公平的，你拿到一手牌，尽你的可能去打好，但不管你的牌技多么高超，你都有可能输给手里牌更好的人。</p>
+<p>不停努力，不停修正努力方向，为的是提高“成功”的概率。</p>
+<p>概率思维的好处是让自己认识到我的决策不是“听天由命”，不是“碰运气”，而是这个决策在概率上来看有更大的可能性“成功”。还有就是认识到人生的随机性是无法消除的。</p>
+<p>什么是概率？用数值描述事件发生的可能性。</p>
+<p>概率思维的作用：持续对大概率事件下注，同时预防足以毁掉人生的小概率事件（风险）</p>
+<h2 id="_2">运用概率思维的具体例子</h2>
+<p>赌徒谬论：之前的赌局和现在的赌局是无关的，但赌徒往往认识不到。“下一把一定能赢回来。”</p>
+<p>大数定律：理解期望，如果统计数据足够大，那么事物出现的频率就会无限接近它的期望。</p>
+<p>运用概率思维进行投资：选长期投资标的（腾讯、阿里、谷歌、Facebook、苹果、亚马逊等公司的股票）</p>
+<p>如何预防风险：买重疾险；投资铁律：“永远不要押上全部”，投资比例 20% 已经接近是“押上全部”了（凯利判据）。</p>
+<h2 id="_3">概率与频率</h2>
+<h3 id="_4">频率学派视角</h3>
+<p>概率是事情本身的一个 <strong>固有属性</strong> ，是一个固定值，而频率是变化的，样本越大，频率越接近概率。根据大数定理，当样本无穷大时，频率收敛于概率。</p>
+<p>频率近似概率的局限性：多大的样本量算大？什么叫做“足够多”？</p>
+<h3 id="_5">贝叶斯学派视角</h3>
+<p>概率是个 <strong>主观值</strong> ，完全就是我们自己的判断，我可以先估计一个 <strong>初始概率</strong>  ，然后每次根据出现的新情况，掌握的新信息， <strong>对这个初始概率进行修正</strong> ，随着信息的增多，我就会慢慢逼近真实的概率。</p>
+<p>这个方法完美的解决了频率派的两个问题，我不用等样本累积到一定程度，先猜一个就 <strong>行动起来</strong> 了，因为我有修正大法，而且我也不关心是不是“足够多”， <strong>反正我一直在路上</strong> 。</p>
+<p>贝叶斯学派诞生两百多年来，一直倍受争议，甚至连co-founder拉普拉斯自己都放弃了，因为大家觉得 <strong>这个摸着石头过河的方法太扯了</strong> ，太不科学了。直到最近几十年，随着 <strong>计算机技术的进步</strong> 才大放异彩，现在的人工智能、图像识别、机器翻译等，背后无不采用了贝叶斯方法。</p>
+<h2 id="_6">贝叶斯定理</h2>
+<p><code>A</code> 是你要考察的 <strong>目标事件</strong> ， <code>P(A)</code> 是这个 <strong>目标事件的先验概率</strong>，又叫 <strong>初始概率</strong>，或者基础概率。<code>B</code> 是新出现的一个新事件。 <code>P(A|B)</code> 的意思是当 <code>B</code> 出现后 <code>A</code> 的概率，在这里就是我们需要的 <strong>后验概率</strong> 。<code>P(B|A)</code> 是当 <code>A</code> 出现时 <code>B</code> 的概率。</p>
+<p><code>P(B)</code> 是 <code>B</code> 出现的概率，在这里具体计算稍微复杂一些，指当 <code>A</code> 出现时 <code>B</code> 的概率和当 <code>A</code> 不出现时（用 <code>A_</code> 来表示）时 <code>B</code> 的概率的总和，用公式表达就是</p>
+<p><code>P(B) = P(B|A) * P(A) + P(B|A_) * P(A_)</code> （全概率公式）</p>
+<p>将 <code>P(B|A) / P(B)</code> 看作一个修正因子，则贝叶斯定理说的是：</p>
+<p>后验概率 = 先验概率 x 修正因子</p>
+<p>即：</p>
+<p><code>P(A|B) = P(A) * P(B|A) / P(B)</code>。</p>
+<p>举个例子。</p>
+<p>比如你新进入一家公司，你不确定这里MBA学历对员工升迁的作用，而这个对你的个人发展很重要，因为你要决定接下来是不是去读一个MBA学位。由于新来，压根没有样本，这时候你可以采用贝叶斯定理。</p>
+<p><code>P(A)</code> 是你根据过往经验事先估计的，MBA对升迁有多大好处？比如你先预估一个30%。这时候，出现了一个新信息 <code>B</code> ，小王升迁了，而且小王是MBA。那么，<code>P(B|A)</code> 是说当MBA管用时，小王升迁的概率，比如你现在的判断是80%。</p>
+<p>小王可能本身就有能力且业绩突出，就算没有MBA也可能会升迁啊，所以 <code>P(B|A_) = 50%</code> （发现了吗，这个公式自动的 <strong>帮助我们避免走极端</strong> ）。</p>
+<p>套入贝叶斯公式，<code>P(A|B) = 30% * 80% / (80% * 30% + 50% * 70%) = 41%</code>。从30%提高到了41%。那么当小王升迁这个新情况出现以后，你对MBA作用的概率判断从30%提高到了41%。</p>
+<p>但是，过了段时间，你发现同样是MBA的小李，熬了很多年也没有升迁，最后辞职了。现在你对小李因为MBA有效而升迁的概率判断降为20%了。套入公式，新的 <code>P(A|B) = 41% * 20% / (20%*41% + 50%*59%) = 22%</code> 。从刚才的41%跌了近一半。</p>
+<p>为什么要这么麻烦？</p>
+<p>拉普拉斯说过，所谓的概率就是把人们的常识用数学表达出来。也有人说，<strong>人脑就是采用贝叶斯方法来工作的</strong> 。</p>
+<blockquote>
+<p>但有些真相往往是反直觉的。</p>
+</blockquote>
+<p>这其实可以解释为什么我们说一叶知秋，为什么说当你家发现了一只蟑螂，那么你家里一定已经有很多蟑螂了。 <strong>罕见事件，可以对初始概率做出数量级的改变</strong> 。同时，这也解释了我们有时也不能反应过度，有人叛逃到国外了，我们难道需要彻底关闭海关吗？真的需要在墨西哥修建长城吗？</p>
+<h2 id="_7">贝叶斯定理的启示</h2>
+<p>人很难时时刻刻进行概率计算。但从贝叶斯定理我们可以获得一些思考、行动上的启发。</p>
+<h3 id="_8">先行动起来</h3>
+<p>大胆假设，小心求证。不断调整，快速迭代。这就是贝叶斯方法。</p>
+<p>当信息不完备时，对概率的判断没有把握时，当然可以选择以静制动，但是 <strong>不行动也是有代价的</strong> ，你可能会 <strong>错过时机</strong> ，你也没有机会进步。这个时候，贝叶斯方法给我们提供了一个很好的思路，先做一个预判，动起来，利用新的信息不断修正原来的预判。</p>
+<h3 id="_9">听别人的建议，但要有自己的主见</h3>
+<p>当我们没有把握时，我们很容易根据新信息调整看法。更大的挑战是，我们已经形成了一个看法，甚至有了成功经验时，当新情况出现后，我们能不能也去调整自己看法。那个黑盒子，我们摸索了一段时间，估计出了里面红球、黑球的概率，但是我们有没有想过，这个黑盒子里的球的比例会变化呢？</p>
+<p>有了新信息，我们要对原来的看法做多大程度的修正呢？</p>
+<p>这些，不可能有标准答案，但是明白了这个道理，有助于我们及时又谨慎的做出调整。</p>
+<h3 id="_10">初始概率很重要</h3>
+<p>初始概率越准确，我们就能越容易、越快速的得到真实的概率。疑邻盗斧，以貌取人，会让我们离真相越来越远。而 <strong>如何获得相对靠谱的初始概率，是个硬功夫</strong> ，它需要你的 <strong>经验</strong> 、 <strong>人脉</strong> 、 <strong>平时的深度思考</strong> ，有时甚至和 <strong>底层的价值观</strong> 、 <strong>思维方式</strong> 都有关。</p>
+<p>（所谓常识）</p>
+<p>丹尼尔.卡尼曼在他的《思考，快与慢》里，就特地强调了初始概率对贝叶斯方法的重要性。</p>
+<h3 id="_11">对出现的特殊情况要引起足够的重视</h3>
+<p>万分之一概率的事情，也有可能因为 <strong>特殊事件</strong> ，一下子变成了50%。所以，每当出现特殊的、罕见的情况时，我们要保持高度警惕，黑盒子里的球的比例是不是变化了？但同时我们也看到，如果检测精度不够高，即便出现了罕见事件，真实概率也可能不到10%。所以，具体要怎么采取行动，还需要进一步观察。</p>
+<h3 id="_12">重视信息</h3>
+<p>信息的收集，信息的质量，以及对信息的判断，是提高决策水平的最重要环节。</p>
+<p>只要有新信息，就可以修正，哪怕初始判断错了，新信息足够多，也能修正过来。但是 <strong>没有信息，就没有修正</strong> 。所以， <strong>在做决定之前，尽可能多的收集信息是必须的</strong> 。</p>
+<p>但是错误的信息、低质量的信息，会让你的修正偏离真相越来越远，你能不能区分 <strong>信息来源的可靠性</strong> 、能不能进行 <strong>交叉验证</strong> 、 <strong>逻辑推理</strong> ，就显得至关重要。</p>
+<hr />
+<h2 id="_13">参考</h2>
+<p>https://zhuanlan.zhihu.com/p/30354209</p>
+<p>https://zhuanlan.zhihu.com/p/111235315</p>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-01 01:35:58</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>Jupyter Notebook notes - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#tools">tools</a>&nbsp;&#187;&nbsp;Jupyter Notebook notes
+    <span class="updated">Page Updated&nbsp;
+      2019-10-31 00:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">Jupyter Notebook notes</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">基本用法</a></li>
+</ul>
+</div>
+<h2 id="_1">基本用法</h2>
+<p>Jupyter Notebook（又称IPython Notebook）是一个交互式的笔记本，使用浏览器作为界面，向后台的IPython服务器发送请求，并显示结果。在浏览器的界面中使用单元(Cell)保存各种信息。Cell有多种类型，经常使用的有表示格式化文本的Markdown单元，和表示代码的Code单元。</p>
+<p>启动 jupyter server 的命令：</p>
+<div class="hlcode"><pre><span></span><span class="n">jupyter</span> <span class="n">notebook</span>
+</pre></div>
+
+
+<p>默认的网页地址为 <code>http://localhost:8888/</code>。</p>
+<p>在远程服务器上启动 jupyter notebook：</p>
+<div class="hlcode"><pre><span></span><span class="n">jupyter</span> <span class="n">notebook</span> <span class="c1">--no-browser --port=8889</span>
+</pre></div>
+
+
+<p>笔记本文件格式为 <code>.ipynb</code>，实质是 <code>json</code> 文件。</p>
+<p>常用的 notebook cell：</p>
+<ul>
+<li>markdown cell</li>
+<li>code cell</li>
+</ul>
+<p>常用快捷键：</p>
+<ul>
+<li><code>ctrl+enter</code> ：运行当前 code cell</li>
+<li><code>alt+enter</code>：运行当前 code cell，并在下面再插入一个 code cell</li>
+<li><code>h</code>：帮助提示</li>
+<li><code>f</code>：搜索</li>
+</ul>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-01 01:35:58</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

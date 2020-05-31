@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>LaTeX memo - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#tools">tools</a>&nbsp;&#187;&nbsp;LaTeX memo
+    <span class="updated">Page Updated&nbsp;
+      2019-09-27 00:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">LaTeX memo</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#github-readme-latex">Github readme 或者网页中插入 LaTeX 公式图片</a></li>
+<li><a href="#_1">常用符号用法备忘</a></li>
+</ul>
+</div>
+<hr />
+<h2 id="github-readme-latex">Github readme 或者网页中插入 LaTeX 公式图片</h2>
+<p>借助下面这个网站：</p>
+<p>https://www.codecogs.com/latex/eqneditor.php</p>
+<p>写完公式直接复制 html 代码插入到 markdown 文件中即可：</p>
+<p><img src="https://latex.codecogs.com/gif.latex?e^{i\pi}&space;&plus;&space;1&space;=&space;0" title="e^{i\pi} + 1 = 0" /></p>
+<hr />
+<h2 id="_1">常用符号用法备忘</h2>
+<p>符号速查：<a href="http://ia.wikipedia.org/wiki/Wikipedia:LaTeX_symbols">Wikipedia_LaTeX_symbols</a></p>
+<p><a href="/wiki/attach/files/Wikipedia_LaTeX_symbols.pdf">PDF 文件</a></p>
+<p>连加：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="k">sum</span>
+</pre></div>
+
+
+<p>连乘：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">prod</span>
+</pre></div>
+
+
+<p>花体字母：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">cal</span><span class="err">{}，使用\</span><span class="n">cal</span><span class="err">有时会导致后面的字母全部变成花体，记得用{}将前面相应的项括起来</span>
+</pre></div>
+
+
+<p>数学公式中的花体字母：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">mathcal</span><span class="err">{}</span>
+</pre></div>
+
+
+<p>下标正下方：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="k">sum</span> <span class="err">\</span><span class="n">limits_</span><span class="err">{</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="err">}</span>
+</pre></div>
+
+
+<p>点乘：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">cdot</span>
+</pre></div>
+
+
+<p>运算符号：</p>
+<div class="hlcode"><pre><span></span><span class="err">乘号：\</span><span class="n">times</span><span class="p">,</span> <span class="err">除号：\</span><span class="n">div</span><span class="p">,</span> <span class="err">正负号：\</span><span class="n">pm</span>
+</pre></div>
+
+
+<p>角符号：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">angle</span>
+</pre></div>
+
+
+<p>无穷：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">infty</span>
+</pre></div>
+
+
+<p>任意：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">forall</span><span class="p">,</span>
+</pre></div>
+
+
+<p>存在：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="k">exists</span>
+</pre></div>
+
+
+<p>范数：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="o">|</span>
+</pre></div>
+
+
+<p>空格：</p>
+<div class="hlcode"><pre><span></span><span class="err">单独一个\是空格，\</span><span class="n">quad</span><span class="err">是一个</span><span class="n">m</span><span class="err">的宽度，\</span><span class="n">qquad</span><span class="err">是两个</span><span class="n">m</span><span class="err">的宽度</span>
+</pre></div>
+
+
+<p>大于等于号：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">geq</span><span class="p">,</span> <span class="err">\</span><span class="n">geqslant</span>
+</pre></div>
+
+
+<p>小于等于号：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">leq</span><span class="p">,</span> <span class="err">\</span><span class="n">leqslant</span>
+</pre></div>
+
+
+<p>约等于号：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">approx</span>
+</pre></div>
+
+
+<p>相似于：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">sim</span>
+</pre></div>
+
+
+<p>恒等号：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">equiv</span>
+</pre></div>
+
+
+<p>字母上方加横线（如均值）：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">bar</span><span class="err">{}</span>
+</pre></div>
+
+
+<p>上划线、下划线：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">overline</span><span class="err">{}</span><span class="p">,</span> <span class="err">\</span><span class="n">underline</span><span class="err">{}</span>
+</pre></div>
+
+
+<p>字母上方加波浪线：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">tilde</span><span class="err">{}</span>
+</pre></div>
+
+
+<p>字母上方加箭头（表示向量）：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">vec</span><span class="err">{}</span>
+</pre></div>
+
+
+<p>字母上方加点：</p>
+<div class="hlcode"><pre><span></span><span class="err">\</span><span class="n">dot</span><span class="err">{}</span>
+</pre></div>
+
+
+<p>黑体加斜体的公式</p>
+<div class="hlcode"><pre><span></span><span class="err">用\</span><span class="n">boldsymbol</span><span class="err">{}</span>
+</pre></div>
+
+
+<p>行列式与矩阵：</p>
+<div class="hlcode"><pre><span></span>\[
+\<span class="nv">left</span><span class="o">|</span> \<span class="nv">begin</span>{<span class="nv">array</span>}{<span class="nv">cccc</span>}
+<span class="mi">1</span> <span class="o">&amp;</span> <span class="mi">6</span> <span class="o">&amp;</span> <span class="mi">9</span> \\
+<span class="mi">7</span> <span class="o">&amp;</span> <span class="mi">90</span> <span class="o">&amp;</span> <span class="nv">f</span><span class="ss">(</span><span class="nv">x</span><span class="ss">)</span> \\
+<span class="mi">9</span> <span class="o">&amp;</span> \<span class="nv">psi</span><span class="ss">(</span><span class="nv">x</span><span class="ss">)</span> <span class="o">&amp;</span> <span class="nv">g</span><span class="ss">(</span><span class="nv">x</span><span class="ss">)</span>
+\<span class="k">end</span>{<span class="nv">array</span>} \<span class="nv">right</span><span class="o">|</span>
+\]
+
+其中 \<span class="nv">left</span><span class="o">|</span> 和  \<span class="nv">right</span><span class="o">|</span>  表示左右定界符。如果我们将<span class="o">|</span>换成 <span class="ss">(</span>  <span class="ss">)</span>或 [  ]，就得到了矩阵。
+在这里，行列式和矩阵都是中间对齐的，如果你想左对齐或右对齐，你将{<span class="nv">cccc</span>}换成{<span class="nv">llll</span>}<span class="ss">(</span>左对齐<span class="ss">)</span>或{<span class="nv">rrrr</span>}<span class="ss">(</span>右对齐<span class="ss">)</span>就行了。<span class="o">&amp;</span> 是对齐符号。<span class="nv">l</span><span class="o">=</span><span class="nv">left</span>  <span class="nv">c</span><span class="o">=</span><span class="nv">center</span>  <span class="nv">r</span><span class="o">=</span><span class="nv">right</span>
+</pre></div>
+
+
+<p><img src="https://latex.codecogs.com/gif.latex?\left|&space;\begin{array}{cccc}&space;1&space;&&space;6&space;&&space;9&space;\\&space;7&space;&&space;90&space;&&space;f(x)&space;\\&space;9&space;&&space;\psi(x)&space;&&space;g(x)&space;\end{array}&space;\right|" title="\left| \begin{array}{cccc} 1 & 6 & 9 \\ 7 & 90 & f(x) \\ 9 & \psi(x) & g(x) \end{array} \right|" /></p>
+<p>方程组与分段函数：</p>
+<p>方程组</p>
+<div class="hlcode"><pre><span></span>\[
+\<span class="nv">begin</span>{<span class="nv">cases</span>} 
+\ <span class="nv">u_</span>{<span class="nv">tt</span>}<span class="ss">(</span><span class="nv">x</span>,<span class="nv">t</span><span class="ss">)</span><span class="o">=</span> <span class="nv">b</span><span class="ss">(</span><span class="nv">t</span><span class="ss">)</span>\<span class="nv">triangle</span> <span class="nv">u</span><span class="ss">(</span><span class="nv">x</span>,<span class="nv">t</span><span class="o">-</span><span class="mi">4</span><span class="ss">)</span> <span class="o">&amp;</span> \\ 
+\ \<span class="nv">hspace</span>{<span class="mi">42</span><span class="nv">pt</span>}<span class="o">-</span> <span class="nv">q</span><span class="ss">(</span><span class="nv">x</span>,<span class="nv">t</span><span class="ss">)</span><span class="nv">f</span>[<span class="nv">u</span><span class="ss">(</span><span class="nv">x</span>,<span class="nv">t</span><span class="o">-</span><span class="mi">3</span><span class="ss">)</span>]<span class="o">+</span><span class="nv">te</span><span class="o">^</span>{<span class="o">-</span><span class="nv">t</span>}\<span class="nv">sin</span><span class="o">^</span><span class="mi">2</span> <span class="nv">x</span>,  <span class="o">&amp;</span>  <span class="nv">t</span> \<span class="nv">neq</span> <span class="nv">t_k</span><span class="c1">; \\ </span>
+\ <span class="nv">u</span><span class="ss">(</span><span class="nv">x</span>,<span class="nv">t_k</span><span class="o">^+</span><span class="ss">)</span> <span class="o">-</span> <span class="nv">u</span><span class="ss">(</span><span class="nv">x</span>,<span class="nv">t_k</span><span class="o">^-</span><span class="ss">)</span> <span class="o">=</span> <span class="nv">c_k</span> <span class="nv">u</span><span class="ss">(</span><span class="nv">x</span>,<span class="nv">t_k</span><span class="ss">)</span>, <span class="o">&amp;</span> <span class="nv">k</span><span class="o">=</span><span class="mi">1</span>,<span class="mi">2</span>,<span class="mi">3</span>\<span class="nv">ldots</span> <span class="c1">; \\ </span>
+\ <span class="nv">u_</span>{<span class="nv">t</span>}<span class="ss">(</span><span class="nv">x</span>,<span class="nv">t_k</span><span class="o">^+</span><span class="ss">)</span> <span class="o">-</span> <span class="nv">u_</span>{<span class="nv">t</span>}<span class="ss">(</span><span class="nv">x</span>,<span class="nv">t_k</span><span class="o">^-</span><span class="ss">)</span> <span class="o">=</span><span class="nv">c_k</span> <span class="nv">u_</span>{<span class="nv">t</span>}<span class="ss">(</span><span class="nv">x</span>,<span class="nv">t_k</span><span class="ss">)</span>, <span class="o">&amp;</span>  <span class="nv">k</span><span class="o">=</span><span class="mi">1</span>,<span class="mi">2</span>,<span class="mi">3</span>\<span class="nv">ldots</span> \ . 
+\<span class="k">end</span>{<span class="nv">cases</span>} 
+\]
+
+<span class="o">&amp;</span> 是对齐符号，\\是换行符号，\<span class="nv">hspace</span>{距离} 插入任意空格，\<span class="nv">neq</span>不等于号，注意命令与后面的拉开距离，\<span class="nv">ldots</span>是省略符号。
+</pre></div>
+
+
+<p><img src="https://latex.codecogs.com/gif.latex?\begin{cases}&space;\&space;u_{tt}(x,t)=&space;b(t)\triangle&space;u(x,t-4)&space;&&space;\\&space;\&space;\hspace{42pt}-&space;q(x,t)f[u(x,t-3)]&plus;te^{-t}\sin^2&space;x,&space;&&space;t&space;\neq&space;t_k;&space;\\&space;\&space;u(x,t_k^&plus;)&space;-&space;u(x,t_k^-)&space;=&space;c_k&space;u(x,t_k),&space;&&space;k=1,2,3\ldots&space;;&space;\\&space;\&space;u_{t}(x,t_k^&plus;)&space;-&space;u_{t}(x,t_k^-)&space;=c_k&space;u_{t}(x,t_k),&space;&&space;k=1,2,3\ldots&space;\&space;.&space;\end{cases}" title="\begin{cases} \ u_{tt}(x,t)= b(t)\triangle u(x,t-4) & \\ \ \hspace{42pt}- q(x,t)f[u(x,t-3)]+te^{-t}\sin^2 x, & t \neq t_k; \\ \ u(x,t_k^+) - u(x,t_k^-) = c_k u(x,t_k), & k=1,2,3\ldots ; \\ \ u_{t}(x,t_k^+) - u_{t}(x,t_k^-) =c_k u_{t}(x,t_k), & k=1,2,3\ldots \ . \end{cases}" /></p>
+<p>分段函数</p>
+<div class="hlcode"><pre><span></span>\[
+<span class="nv">q</span><span class="ss">(</span><span class="nv">x</span>, <span class="nv">t</span><span class="ss">)</span> <span class="o">=</span>
+\<span class="nv">begin</span>{<span class="nv">cases</span>}
+<span class="ss">(</span><span class="nv">t</span><span class="o">-</span><span class="nv">k</span><span class="o">+</span><span class="mi">1</span><span class="ss">)</span><span class="nv">x</span><span class="o">^</span><span class="mi">2</span>, \<span class="nv">quad</span> \ \ <span class="o">&amp;</span> <span class="nv">t</span> \<span class="nv">in</span> \<span class="nv">big</span><span class="ss">(</span> <span class="nv">k</span><span class="o">-</span><span class="mi">1</span>, <span class="nv">k</span> <span class="o">-</span> \<span class="nv">dfrac</span>{<span class="mi">1</span>}{<span class="mi">2</span>} \<span class="nv">big</span>], \\
+<span class="ss">(</span><span class="nv">k</span><span class="o">-</span><span class="nv">t</span><span class="ss">)</span><span class="nv">x</span><span class="o">^</span><span class="mi">2</span>, \<span class="nv">quad</span> \ \ <span class="o">&amp;</span> <span class="nv">t</span> \<span class="nv">in</span> \<span class="nv">big</span><span class="ss">(</span> <span class="nv">k</span> <span class="o">-</span> \<span class="nv">dfrac</span>{<span class="mi">1</span>}{<span class="mi">2</span>}, <span class="nv">k</span> \<span class="nv">big</span>],
+\<span class="k">end</span>{<span class="nv">cases</span>}
+\]
+
+\<span class="nv">quad</span>和\<span class="nv">qquad</span>用于插入固定长度的水平间距，\<span class="nv">quad</span>为插入当前字体尺寸大小的间距，\<span class="nv">qquad</span>是其两倍
+</pre></div>
+
+
+<p><img src="https://latex.codecogs.com/gif.latex?q(x,&space;t)&space;=&space;\begin{cases}&space;(t-k&plus;1)x^2,&space;\quad&space;\&space;\&space;&&space;t&space;\in&space;\big(&space;k-1,&space;k&space;-&space;\dfrac{1}{2}&space;\big],&space;\\&space;(k-t)x^2,&space;\quad&space;\&space;\&space;&&space;t&space;\in&space;\big(&space;k&space;-&space;\dfrac{1}{2},&space;k&space;\big],&space;\end{cases}" title="q(x, t) = \begin{cases} (t-k+1)x^2, \quad \ \ & t \in \big( k-1, k - \dfrac{1}{2} \big], \\ (k-t)x^2, \quad \ \ & t \in \big( k - \dfrac{1}{2}, k \big], \end{cases}" /></p>
+<p>公式换行与对齐</p>
+<div class="hlcode"><pre><span></span>\<span class="nv">begin</span>{<span class="nv">equation</span>}
+\<span class="nv">begin</span>{<span class="nv">aligned</span>}
+<span class="nv">X</span><span class="o">^</span>{<span class="o">*</span>}, <span class="nv">L</span><span class="o">^</span>{<span class="o">*</span>} <span class="o">&amp;=</span> <span class="nv">argmax_</span>{<span class="nv">X</span>,<span class="nv">L</span>} \ <span class="nv">p</span><span class="ss">(</span><span class="nv">X</span>, <span class="nv">L</span> <span class="o">|</span> <span class="nv">Z</span>, <span class="nv">B</span><span class="ss">)</span> \\
+<span class="o">&amp;=</span> <span class="nv">argmax_</span>{<span class="nv">X</span>, <span class="nv">L</span>} \ <span class="nv">p</span><span class="ss">(</span><span class="nv">x_1</span><span class="ss">)</span> \<span class="nv">prod_</span>{<span class="nv">i</span>, <span class="nv">k</span>}<span class="nv">p</span><span class="ss">(</span><span class="nv">x_i</span><span class="o">|</span><span class="nv">x_k</span>, <span class="nv">b_</span>{<span class="nv">ik</span>}<span class="ss">)</span> \<span class="nv">prod_</span>{<span class="nv">i</span>, <span class="nv">j</span>}<span class="nv">p</span><span class="ss">(</span><span class="nv">z_</span>{<span class="nv">ij</span>}<span class="o">|</span><span class="nv">x_i</span>, <span class="nv">l_</span>{<span class="nv">j</span>}<span class="ss">)</span>
+\<span class="k">end</span>{<span class="nv">aligned</span>}
+\<span class="k">end</span>{<span class="nv">equation</span>}
+</pre></div>
+
+
+<p><img src="https://latex.codecogs.com/gif.latex?\begin{aligned}&space;X^{*},&space;L^{*}&space;&=&space;argmax_{X,L}&space;\&space;p(X,&space;L&space;|&space;Z,&space;B)&space;\\&space;&=&space;argmax_{X,&space;L}&space;\&space;p(x_1)&space;\prod_{i,&space;k}p(x_i|x_k,&space;b_{ik})&space;\prod_{i,&space;j}p(z_{ij}|x_i,&space;l_{j})&space;\end{aligned}" title="\begin{aligned} X^{*}, L^{*} &= argmax_{X,L} \ p(X, L | Z, B) \\ &= argmax_{X, L} \ p(x_1) \prod_{i, k}p(x_i|x_k, b_{ik}) \prod_{i, j}p(z_{ij}|x_i, l_{j}) \end{aligned}" /></p>
+<p>一种简单的参考文献写法(不使用 bibtex )：</p>
+<div class="hlcode"><pre><span></span><span class="o">%</span> 引用参考文献
+\<span class="nv">cite</span>{<span class="nv">oxford1</span>}
+<span class="o">%</span> 放在源文件末尾，\<span class="k">end</span>{<span class="nv">document</span>} 之前
+\<span class="nv">begin</span>{<span class="nv">thebibliography</span>}{<span class="mi">99</span>}
+\<span class="nv">bibitem</span>{<span class="nv">oxford1</span>}<span class="nv">Real</span><span class="o">-</span><span class="nv">Time</span> <span class="mi">3</span><span class="nv">D</span> <span class="nv">Tracking</span> <span class="nv">and</span> <span class="nv">Reconstruction</span> <span class="nv">on</span> <span class="nv">Mobile</span> <span class="nv">Phones</span>
+\<span class="k">end</span>{<span class="nv">thebibliography</span>}
+</pre></div>
+
+
+<p>使用 listings 环境插入代码并高亮显示：</p>
+<div class="hlcode"><pre><span></span>\<span class="nv">usepackage</span>{<span class="nv">mdwlist</span>}
+\<span class="nv">begin</span>{<span class="nv">lstlisting</span>}[<span class="nv">language</span><span class="o">=</span>{[<span class="nv">ANSI</span>]<span class="nv">C</span>},<span class="nv">keywordstyle</span><span class="o">=</span>\<span class="nv">color</span>{<span class="nv">blue</span><span class="o">!</span><span class="mi">70</span>},
+<span class="nv">commentstyle</span><span class="o">=</span>\<span class="nv">color</span>{<span class="nv">red</span><span class="o">!</span><span class="mi">50</span><span class="o">!</span><span class="nv">green</span><span class="o">!</span><span class="mi">50</span><span class="o">!</span><span class="nv">blue</span><span class="o">!</span><span class="mi">50</span>},<span class="nv">frame</span><span class="o">=</span><span class="nv">shadowbox</span>,
+<span class="nv">rulesepcolor</span><span class="o">=</span>\<span class="nv">color</span>{<span class="nv">red</span><span class="o">!</span><span class="mi">20</span><span class="o">!</span><span class="nv">green</span><span class="o">!</span><span class="mi">20</span><span class="o">!</span><span class="nv">blue</span><span class="o">!</span><span class="mi">20</span>}]
+<span class="o">//</span> <span class="nv">Finds</span> <span class="nv">the</span> <span class="nv">camera</span> <span class="nv">intrinsic</span> <span class="nv">and</span> <span class="nv">extrinsic</span> <span class="nv">parameters</span> <span class="nv">from</span>
+<span class="o">//</span> <span class="nv">several</span> <span class="nv">views</span> <span class="nv">of</span> <span class="nv">a</span> <span class="nv">calibration</span> <span class="nv">pattern</span>
+<span class="nv">double</span> <span class="nv">calibrateCamera</span><span class="ss">(</span>
+     <span class="nv">InputArrayOfArrays</span> <span class="nv">objectPoints</span>,
+     <span class="nv">InputArrayOfArrays</span> <span class="nv">imagePoints</span>,
+     <span class="nv">Size</span> <span class="nv">imageSize</span>,
+     <span class="nv">InputOutputArray</span> <span class="nv">cameraMatrix</span>,
+     <span class="nv">InputOutputArray</span> <span class="nv">distCoeffs</span>,
+     ... <span class="ss">)</span><span class="c1">;</span>
+<span class="o">//</span> <span class="nv">Finds</span> <span class="nv">the</span> <span class="nv">positions</span> <span class="nv">of</span> <span class="nv">internal</span> <span class="nv">corners</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">chessboard</span>
+<span class="nv">bool</span> <span class="nv">findChessboardCorners</span><span class="ss">(</span>
+     <span class="nv">InputArray</span> <span class="nv">image</span>,
+     <span class="nv">Size</span> <span class="nv">patternSize</span>,
+     <span class="nv">OutputArray</span> <span class="nv">corners</span>,
+     ... <span class="ss">)</span><span class="c1">;</span>
+<span class="o">//</span> <span class="nv">Transforms</span> <span class="nv">an</span> <span class="nv">image</span> <span class="nv">to</span> <span class="nv">compensate</span> <span class="k">for</span> <span class="nv">lens</span> <span class="nv">distortion</span>
+<span class="nv">void</span> <span class="nv">undistort</span><span class="ss">(</span>
+     <span class="nv">InputArray</span> <span class="nv">src</span>,
+     <span class="nv">OutputArray</span> <span class="nv">dst</span>,
+     <span class="nv">InputArray</span> <span class="nv">cameraMatrix</span>,
+     <span class="nv">InputArray</span> <span class="nv">distCoeffs</span>,
+     <span class="nv">InputArray</span> <span class="nv">newCameraMatrix</span><span class="o">=</span><span class="nv">noArray</span><span class="ss">()</span> <span class="ss">)</span><span class="c1">;</span>
+\<span class="k">end</span>{<span class="nv">lstlisting</span>}
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-01 01:35:58</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

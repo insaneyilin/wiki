@@ -1,0 +1,358 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>JavaScript notes - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#web_development">web_development</a>&nbsp;&#187;&nbsp;JavaScript notes
+    <span class="updated">Page Updated&nbsp;
+      2019-11-20 23:01
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">JavaScript notes</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">简介</a></li>
+<li><a href="#javascript">JavaScript 面向对象</a><ul>
+<li><a href="#prototype">Prototype</a></li>
+</ul>
+</li>
+<li><a href="#javascript_1">浏览器中的JavaScript</a></li>
+<li><a href="#html-javascript">HTML 中的 Javascript</a></li>
+<li><a href="#dom">DOM, 文档对象模型</a></li>
+<li><a href="#_2">图像</a></li>
+<li><a href="#_3">事件</a></li>
+</ul>
+</div>
+<hr />
+<h2 id="_1">简介</h2>
+<ul>
+<li>HTML          内容</li>
+<li>CSS           格式</li>
+<li>JavaScript    动作</li>
+</ul>
+<p>Java 与 Javascript没有关系！<br />
+Javascript 是解释性语言<br />
+Javascript 源代码放在HTML里面</p>
+<p><code>script</code> 可以在 <code>head</code> 或 <code>body</code> 里：</p>
+<ul>
+<li><code>head</code> 里：函数定义、变量定义</li>
+<li><code>body</code> 里：实际动作</li>
+</ul>
+<p>例子：</p>
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span> <span class="na">onLoad </span><span class="o">=</span> <span class="s">&quot;alert(&#39;hi&#39;)&quot;</span><span class="p">&gt;</span>  注意用单引号
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">);</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+     <span class="kd">var</span> <span class="nx">hello</span> <span class="o">=</span> <span class="s2">&quot;Hello&quot;</span><span class="p">;</span>
+     <span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">hello</span><span class="p">);</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<p>JS 的变量都为 <code>var</code> 声明;（变量本身没有类型，但是值有类型）</p>
+<p>运算符基本和Java一致；注释也基本一致；循环和判断语句也基本一样。</p>
+<p><code>for</code> 循环不带数据类型的声明。</p>
+<p>注意： <strong>JS语句执行完后才加载html</strong> 。</p>
+<hr />
+<h2 id="javascript">JavaScript 面向对象</h2>
+<p>JS中有对象的概念，但是它 <strong>没有类的概念</strong> ，不是先设计类再制造对象。</p>
+<div class="hlcode"><pre><span></span><span class="kd">var</span> <span class="nx">o</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">ciclr</span> <span class="o">=</span> <span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span> <span class="nx">radius</span><span class="o">:</span><span class="mi">2</span><span class="p">};</span>
+<span class="kd">var</span> <span class="nx">book</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+<span class="nx">book</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="s2">&quot;HTML5秘籍&quot;</span><span class="p">;</span>  <span class="c1">// 可以动态添加属性</span>
+<span class="nx">book</span><span class="p">.</span><span class="nx">translator</span> <span class="o">=</span> <span class="s2">&quot;李松峰&quot;</span><span class="p">;</span>
+<span class="nx">book</span><span class="p">.</span><span class="nx">chapter1</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+<span class="nx">book</span><span class="p">.</span><span class="nx">chapter1</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="s2">&quot;HTML5简介&quot;</span><span class="p">;</span>
+<span class="c1">// 删除对象属性</span>
+<span class="k">delete</span> <span class="nx">book</span><span class="p">.</span><span class="nx">chapter1</span><span class="p">;</span>
+<span class="nx">book</span><span class="p">.</span><span class="nx">chapter1</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="c1">// 遍历所有属性</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="k">in</span> <span class="nx">o</span><span class="p">)</span> <span class="p">...</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">utf-8</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="kd">var</span> <span class="nx">o</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+<span class="nx">o</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;John&quot;</span><span class="p">;</span>
+<span class="nx">o</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
+<span class="nx">o</span><span class="p">.</span><span class="nx">salary</span> <span class="o">=</span> <span class="mi">300</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="k">in</span> <span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="nx">x</span><span class="o">+</span><span class="s2">&quot;=&quot;</span><span class="nx">o</span><span class="p">[</span><span class="nx">x</span><span class="p">]);</span>
+<span class="p">}</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="c1">// 构造函数</span>
+<span class="kd">function</span> <span class="nx">Rect</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">h</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">w</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">h</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">area</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span> <span class="p">};</span>
+<span class="p">}</span>
+<span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Rect</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="nx">alert</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">area</span><span class="p">());</span>
+</pre></div>
+
+
+<h3 id="prototype">Prototype</h3>
+<p><code>prototype</code> 是构造函数的一个属性, 该属性指向一个对象. 而这个对象将作为该构造函数所创建的所有实例的基引用(base reference),  <strong>可以把对象的基引用想像成一个自动创建的隐藏属性</strong> . 当访问对象的一个属性时, 首先查找对象本身, 找到则返回; 若不, 则查找基引用指向的对象的属性(如果还找不到实际上还会沿着 <strong>原型链</strong> 向上查找,  直至到根). 只要没有被覆盖的话, 对象原型的属性就能在所有的实例中找到.原型默认为 <code>Object</code> 的新实例, 由于仍是对象, 故可以给该对象添加新的属性。</p>
+<div class="hlcode"><pre><span></span><span class="c1">// 原型对象</span>
+<span class="c1">// 对象的prototype属性指定了它的原型对象，可以用 . 运算符直接读它的对象属性；</span>
+<span class="kd">function</span> <span class="nx">Person</span><span class="p">()</span> <span class="p">{}</span>  <span class="c1">// function 也是对象</span>
+
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;Nico&quot;</span><span class="p">;</span>
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span>
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">job</span> <span class="o">=</span> <span class="s2">&quot;Coder&quot;</span><span class="p">;</span>
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 原型中的属性是共享的</span>
+<span class="kd">var</span> <span class="nx">person1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+<span class="nx">person1</span><span class="p">.</span><span class="nx">sayName</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">person2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+<span class="nx">person2</span><span class="p">.</span><span class="nx">sayName</span><span class="p">();</span>
+<span class="nx">alert</span><span class="p">(</span><span class="nx">person1</span><span class="p">.</span><span class="nx">sayName</span> <span class="o">==</span> <span class="nx">person2</span><span class="p">.</span><span class="nx">sayName</span><span class="p">);</span>
+
+<span class="c1">// 组合原型和构造方法</span>
+<span class="kd">function</span> <span class="nx">Person</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">age</span><span class="p">,</span> <span class="nx">job</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="nx">age</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">job</span> <span class="o">=</span> <span class="nx">job</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">friends</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Peter&quot;</span><span class="p">,</span> <span class="s2">&quot;John&quot;</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="o">:</span> <span class="nx">Person</span><span class="p">,</span>
+  <span class="nx">sayName</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<hr />
+<h2 id="javascript_1">浏览器中的JavaScript</h2>
+<ul>
+<li>浏览器的全局对象是 <code>window</code></li>
+<li>所有全局的变量实际上是 <code>window</code> 的成员</li>
+</ul>
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">utf-8</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+<span class="nx">alert</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<ul>
+<li><code>window.document</code> 表示浏览器窗口中的HTML页面</li>
+<li><code>document.write()</code> 将内容写入页面</li>
+<li>页面中的元素就是 <code>document</code> 里的成员</li>
+</ul>
+<div class="hlcode"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="nx">x</span> <span class="k">in</span> <span class="nb">document</span><span class="p">)</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">x</span><span class="o">+</span><span class="s2">&quot;&lt;br/&gt;&quot;</span><span class="p">);</span>
+</pre></div>
+
+
+<h2 id="html-javascript">HTML 中的 Javascript</h2>
+<p>HTML 文件中的 JavaScript:</p>
+<ul>
+<li>在 <code>&lt;script&gt;&lt;/script&gt;</code> 标记中</li>
+<li>在 <code>&lt;script&gt;</code> 的 <code>src</code> 属性或 <code>archive</code> 指定的外部文件中</li>
+<li>在某个HTML标记的事件处理器中</li>
+</ul>
+<p>外部JS文件:</p>
+<ul>
+<li><code>&lt;script src="util.js"&gt;&lt;/script&gt;</code></li>
+<li>一个纯粹的代码文件，没有HTML标记</li>
+</ul>
+<p>事件处理器:</p>
+<ul>
+<li><code>&lt;p onMouseOver="alert('hi');"&gt;</code></li>
+</ul>
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">p</span> <span class="na">onMouseOver</span><span class="o">=</span><span class="s">&quot;alert(&#39;hi&#39;);&quot;</span> <span class="na">onMouseOut</span><span class="o">=</span><span class="s">&quot;alert(&#39;bye&#39;);&quot;</span><span class="p">&gt;</span>
+一个段落
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<p><code>body</code> 事件:</p>
+<ul>
+<li><code>onLoad</code></li>
+<li><code>onUnload</code></li>
+</ul>
+<p>简单对话框:</p>
+<ul>
+<li><code>alert()</code></li>
+<li><code>confirm()</code></li>
+<li><code>prompt()</code></li>
+</ul>
+<div class="hlcode"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="nx">confirm</span><span class="p">(</span><span class="s2">&quot;还要继续吗？&quot;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;继续&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;再见&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">prompt</span><span class="p">(</span><span class="s2">&quot;你的名字是:&quot;</span><span class="p">);</span>
+<span class="nx">alert</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+</pre></div>
+
+
+<p>状态栏:</p>
+<ul>
+<li><code>status =</code></li>
+<li><code>defaultStatus =</code></li>
+</ul>
+<div class="hlcode"><pre><span></span><span class="o">&lt;</span><span class="nx">p</span> <span class="nx">onMouseOver</span><span class="o">=</span><span class="s2">&quot;status=&#39;Hello&#39;;&quot;</span> <span class="nx">onMouseOut</span><span class="o">=</span><span class="s2">&quot;status=&#39;&#39;;&quot;</span><span class="o">&gt;</span>
+<span class="nx">Hello</span>
+<span class="o">&lt;</span><span class="err">/p&gt;</span>
+</pre></div>
+
+
+<p>定时器：</p>
+<ul>
+<li><code>setInterval</code></li>
+</ul>
+<p>window的控制方法:</p>
+<ul>
+<li><code>window.open()</code></li>
+<li><code>w=window.open("smallwin.html", "smallwin", "width=400,height=350,status=yes,resizable=yes"); // 打开新窗口</code></li>
+<li><code>w.close();</code></li>
+<li><code>window.close(); // 把自己关掉</code></li>
+</ul>
+<p>location对象:</p>
+<ul>
+<li><code>window.location</code> 代表当前文档的URL</li>
+<li><code>alert(location);</code></li>
+<li><code>location="http://www.google.com";</code></li>
+</ul>
+<hr />
+<h2 id="dom">DOM, 文档对象模型</h2>
+<p>DOM -- Document Object Model</p>
+<p><code>document</code> 对象的成员提供了HTML文档的信息</p>
+<p><code>document</code> 的成员</p>
+<ul>
+<li><code>anchors[]</code>    链接</li>
+<li><code>forms[]</code>        表单</li>
+<li><code>images[]</code></li>
+<li><code>cookie</code></li>
+<li><code>title</code></li>
+<li><code>bgColor</code></li>
+<li><code>fgColor</code></li>
+<li><code>linkColor</code></li>
+<li><code>alinkColor</code></li>
+<li><code>vlinkColor</code></li>
+</ul>
+<h2 id="_2">图像</h2>
+<ul>
+<li><code>image</code> 对象的 <code>src</code> 可以改写以装入一幅新图片</li>
+<li>可以创建 <code>Image()</code> 对象来提前装载图片</li>
+<li><code>onLoad</code> 事件表明图片装载完成</li>
+</ul>
+<div class="hlcode"><pre><span></span><span class="p">&lt;</span><span class="nt">body</span> <span class="na">onLoad</span><span class="o">=</span><span class="s">&quot;setInterval(&#39;show()&#39;, 200)&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">img</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;anm&quot;</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;0.jpg&quot;</span> <span class="na">width</span><span class="o">=</span><span class="s">300</span><span class="p">&gt;&lt;/</span><span class="nt">img</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="kd">var</span> <span class="nx">images</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">images</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Image</span><span class="p">();</span>
+     <span class="nx">images</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="s2">&quot;.jpg&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">show</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">anm</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">images</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">images</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">src</span><span class="p">;</span>
+     <span class="nx">index</span> <span class="o">=</span> <span class="p">(</span><span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">6</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<h2 id="_3">事件</h2>
+<ul>
+<li><code>onLoad</code> / <code>onUnload</code></li>
+<li><code>onMouseOver</code> / <code>onMouseOut</code></li>
+<li><code>onClick</code> / <code>onDblClick</code></li>
+<li><code>onSubmit</code></li>
+</ul>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/web_development/html_notes.html">HTML notes</a></li>
+    
+    <li><a href="/wiki/web_development/css_notes.html">CSS notes</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-01 01:35:58</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

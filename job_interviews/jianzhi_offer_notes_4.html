@@ -1,0 +1,640 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/wiki/static/css/tango.css">
+    <link rel="shortcut icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/wiki/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>剑指offer笔记(4) - Yilin's Wiki</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          <!--$表示行内元素，$$表示块状元素 -->
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <!--Mermaid流程图-->
+    <script src="https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/wiki/">Home</a>&nbsp;&#187;&nbsp;<a href="/wiki/#job_interviews">job_interviews</a>&nbsp;&#187;&nbsp;剑指offer笔记(4)
+    <span class="updated">Page Updated&nbsp;
+      2019-07-13 01:34
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">剑指offer笔记(4)</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#_1">第五章 优化空间和时间效率</a><ul>
+<li><a href="#_2">时间效率</a><ul>
+<li><a href="#29">面试题29：数组中出现次数超过一半的数字</a></li>
+<li><a href="#30-k">面试题30：最小的 k 个数</a></li>
+<li><a href="#31">面试题31：连续子数组的最大和</a></li>
+<li><a href="#32-1-n-1">面试题32：统计从 1 到 n 的整数中 1 出现的次数</a></li>
+<li><a href="#33">面试题33：把数组排成最小的数</a></li>
+</ul>
+</li>
+<li><a href="#_3">时间效率与空间效率的平衡</a><ul>
+<li><a href="#34">面试题34：丑数</a></li>
+<li><a href="#35">面试题35：第一个只出现一次的字符</a></li>
+<li><a href="#36">面试题36：数组中的逆序对</a></li>
+<li><a href="#37">面试题37：两个链表的第一个公共节点</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p><a href="https://book.douban.com/subject/27008702/">《剑指Offer》</a> 读书笔记。</p>
+<h2 id="_1">第五章 优化空间和时间效率</h2>
+<p>高级开发人员必须考虑的问题。</p>
+<p>往往时间复杂度更重要一些。</p>
+<h3 id="_2">时间效率</h3>
+<p>形参尽量使用指针或引用类型，避免值传递开销。</p>
+<p>递归的时间效率 &lt; 循环的时间效率。(递归能够省去一些中间变量的定义，参考 <a href="https://blog.csdn.net/ccutyear/article/details/52819123">递归与循环相比时间优势的真正来源</a>)</p>
+<p>合理的算法与数据结构。查找，顺序查找 O(n)，有序用二分查找 O(log(n))</p>
+<h4 id="29">面试题29：数组中出现次数超过一半的数字</h4>
+<blockquote>
+<p>给定一个整型数组，找出主元素，它在数组中的出现次数严格大于数组元素个数的二分之一。</p>
+</blockquote>
+<p>可以用 Hash 表记录每个元素出现次数，但这样空间复杂度为 O(n)。</p>
+<p>尝试给出时间复杂度 O(n)，空间复杂度 O(1) 的算法。</p>
+<p>解法1：基于 partition</p>
+<p>partiton 可以得到数组的第 k 大数字。本题令 k = n/2 即可。注意这种方法时间复杂度为 O(n) 而不是 O(n * log(n))，分析的时候利用递归式。</p>
+<p>解法2：设置一个计数器来保存主元素</p>
+<div class="hlcode"><pre><span></span><span class="kt">int</span> <span class="nf">major_num</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">res</span> <span class="o">==</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="o">++</span><span class="n">cnt</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="o">--</span><span class="n">cnt</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="30-k">面试题30：最小的 k 个数</h4>
+<blockquote>
+<p>输入 n 个数，找出其中最小的 k 个数。</p>
+</blockquote>
+<p>解法1：利用 partition，时间复杂度O(n)</p>
+<p>如果允许改变原数组，空间复杂度 O(1)，否则需要先复制一份原数组，空间复杂度 O(n)。</p>
+<p>基于数组的第 k 个元素进行调整，使得比第 k 个数字小的所有数字都位于数组的左边，比第 k 个数字大的所有数字都位于数组的右边。这样调整之后，左边的 k 个数字就是最小的 k 个数字（这 k 个数字不一定有序）。</p>
+<div class="hlcode"><pre><span></span><span class="c1">// 按照“左小右大”划分数组，每次取 left 位置元素作为 pivot</span>
+<span class="kt">int</span> <span class="nf">partition</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">];</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="p">)</span>
+            <span class="o">--</span><span class="n">right</span><span class="p">;</span>
+        <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">];</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="p">)</span>
+            <span class="o">++</span><span class="n">left</span><span class="p">;</span>
+        <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">=</span> <span class="n">pivot</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">left</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">get_k_least_numbers</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">partition</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">index</span> <span class="o">!=</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">index</span> <span class="o">&gt;</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">partition</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">partition</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>解法2：利用优先队列，维护包含 k 个最小数字的优先队列，时间复杂度 O(n * log(k))，空间复杂度 O(k)。适合处理海量数据。</p>
+<p>STL 中的 priority_queue 或者 set/multiset 都可以用。</p>
+<p>priority_queue 是容器适配器，其实现容器默认为 vector。</p>
+<p>set 和 multiset 一般都是基于红黑树（一种平衡 BST）实现的。</p>
+<p>创建一个大小为 k 的容器存储最小的 k 个数字。每次从 n 个数中读入一个数。如果容器中的已有数字少于 k 个，直接把新读入的数放到容器中。如果容器中已经有 k 个数，找出已有 k 个数中的最大值，和这次新读入的数比较，保留较小的数在容器中。</p>
+<p>最小的 k 个数应该用大顶堆；最大的 k 个数用小顶堆。</p>
+<div class="hlcode"><pre><span></span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">get_k_least_numbers</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+
+    <span class="c1">// 最小的 k 个数用大顶堆</span>
+    <span class="n">multiset</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">greater</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">heap</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">heap</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">heap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="k">auto</span> <span class="n">iter_greatest</span> <span class="o">=</span> <span class="n">heap</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">iter_greatest</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">heap</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">iter_greatest</span><span class="p">);</span>
+                <span class="n">heap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">result</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">heap</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">heap</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="31">面试题31：连续子数组的最大和</h4>
+<blockquote>
+<p>输入一个整数数组，数组里既有正数也有负数，数组中一个或连续的多个整数组成一个子数组，求所有子数组的和的最大值，要求时间复杂度 O(n)。</p>
+</blockquote>
+<p>经典题之一。</p>
+<p>本质是动态规划思想。</p>
+<div class="hlcode"><pre><span></span><span class="n">设数组为</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="p">...,</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="err">。</span><span class="w"></span>
+
+<span class="n">记</span><span class="w"> </span><span class="n">D</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="n">为以</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="n">为结尾的连续子数组的最大和</span><span class="err">。</span><span class="w"></span>
+
+<span class="n">则</span><span class="w"> </span><span class="n">D</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"></span>
+
+<span class="n">D</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">D</span><span class="o">[</span><span class="n">i - 1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">),</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">    * @param nums: A list of integers</span>
+<span class="cm">    * @return: A integer indicate the sum of max subarray</span>
+<span class="cm">    */</span>
+    <span class="kt">int</span> <span class="n">maxSubArray</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// write your code here</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">D</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+        <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="n">max_sum</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_sum</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">max_sum</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">max_sum</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>分析一下上面的状态转移方程，当 <code>D[i - 1] &lt;= 0</code> 时，<code>D[i] = a[i]</code>，实际上可以不用数组 <code>D[]</code> 。</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">    * @param nums: A list of integers</span>
+<span class="cm">    * @return: A integer indicate the sum of max subarray</span>
+<span class="cm">    */</span>
+    <span class="kt">int</span> <span class="n">maxSubArray</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// write your code here</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kt">int</span> <span class="n">cur_sum</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="n">max_sum</span> <span class="o">=</span> <span class="n">cur_sum</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">cur_sum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">cur_sum</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="n">cur_sum</span> <span class="o">+=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">cur_sum</span> <span class="o">&gt;</span> <span class="n">max_sum</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">max_sum</span> <span class="o">=</span> <span class="n">cur_sum</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">max_sum</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<h4 id="32-1-n-1">面试题32：统计从 1 到 n 的整数中 1 出现的次数</h4>
+<blockquote>
+<p>例子，1 到 12 这 12 个整数中包含 1 的数有 1，10，11，12。1 一共出现了 5 次。</p>
+</blockquote>
+<p>解法1：暴力求解</p>
+<p>对每个数字都判断其中出现了多少个 1， 最后累加起来。</p>
+<p>可以每次通过对 10 求余数判断整数的个位数字是不是 1。如果这个数字大于10，除以 10 后再判断个位数字是不是 1。</p>
+<p>输入数字 n，n 有 log(n) 位。该方法的时间复杂度为 O(n * log(n))</p>
+<p>解法2：找数字规律</p>
+<p>以一个稍微大一点的数字为例子，如 21345。把 1 到 21345 分成两段，一段是从 1 到 1345，另一段是 1346 到 21345。</p>
+<p>先分析从 1346 到 21345 的数，1 的出现分为两种情况：(1) 1 出现在最高位（本例中是万位），从 1346 到 21345 里，1 出现在 10000 至 19999 这 10000 个数字的万位，出现了 10000 次。注意并不是对所有 5 位数万位出现的次数都是 10000 次。例如 12345，2346 到 12345 中出现 1 的数为 10000 到 12345，1 出现了 2346 次。 (2) 1 出现在除最高位之外的其他四位中的情况。把 1346 到 21345 再分成两段，1346 至 11345 和 11346 至 21345，在每一段除万位之外的 4 位中，选择其中一位是 1，其余 3 位可以在 0 至 9 这 10 个数字中任意选择，根据排列组合规则， 1 总共出现的次数为 2 * 10^3 = 2000 次。</p>
+<p>至于从 1 到 1345 中 1 出现的次数，可以利用递归求得，将其分为 1 至 345 和 346 至 1345 两段。</p>
+<p>这种思路是每次去掉最高位做递归，递归的次数和位数相同。一个数 n 有 O(log(n)) 位，因此这种思路时间复杂度为 O(log(n))</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/*</span>
+<span class="cm">     * param k : As description.</span>
+<span class="cm">     * param n : As description.</span>
+<span class="cm">     * return: How many k&#39;s between 0 and n.</span>
+<span class="cm">     */</span>
+    <span class="kt">int</span> <span class="n">digitCounts</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">multiplier</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">left_part</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="n">left_part</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// split number into: left_part, curr, right_part</span>
+            <span class="kt">int</span> <span class="n">curr</span> <span class="o">=</span> <span class="n">left_part</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">right_part</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="n">multiplier</span><span class="p">;</span>
+
+            <span class="c1">// count of (c000 ~ oooc000) = (ooo + (k &lt; curr)? 1 : 0) * 1000</span>
+            <span class="n">cnt</span> <span class="o">+=</span> <span class="p">(</span><span class="n">left_part</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">&lt;</span> <span class="n">curr</span><span class="p">))</span> <span class="o">*</span> <span class="n">multiplier</span><span class="p">;</span>
+
+            <span class="c1">// if k == 0, oooc000 = (ooo - 1) * 1000</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">multiplier</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">cnt</span> <span class="o">-=</span> <span class="n">multiplier</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="c1">// count of (oook000 ~ oookxxx): count += xxx + 1</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">curr</span> <span class="o">==</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">cnt</span> <span class="o">+=</span> <span class="n">right_part</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="n">left_part</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">;</span>
+            <span class="n">multiplier</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">cnt</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<h4 id="33">面试题33：把数组排成最小的数</h4>
+<blockquote>
+<p>输入一个正整数数组，把数组中的数字拼接起来排成一个数，输出能够排成的最小的数字。</p>
+</blockquote>
+<p>例子，数组 {3, 32, 321}，能够排成的最小的数是 321323。</p>
+<p>这题的本质是排序，根据一个排序规则将数组排列。</p>
+<div class="hlcode"><pre><span></span><span class="k">auto</span> <span class="n">cmp</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="o">+</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>这里用字符串表示整数，便于进行拼接操作。</p>
+<p>这是不是一个有效的排序规则？从数学上进行证明：</p>
+<ul>
+<li>自反性</li>
+<li>对称性</li>
+<li>传递性</li>
+</ul>
+<h3 id="_3">时间效率与空间效率的平衡</h3>
+<p>时间换空间，空间换时间。具体情况具体分析。</p>
+<h4 id="34">面试题34：丑数</h4>
+<blockquote>
+<p>素数因子只包含 2、3、5 的数为丑数。求按从小到大顺序的第 1500 个丑数。例子，6、8 都是丑数，但 14 不是，因为它包含素因子 7。规定 1 为最小的丑数。</p>
+</blockquote>
+<p>解法1：逐个判断每个整数是不是丑数</p>
+<p>时间效率低。</p>
+<p>解法2：空间换时间</p>
+<p>一个丑数（除了1）是另一个丑数乘以 2 或 3 或 5 的结果。可以创建一个数组，里面的数字是排好序的丑数，每一个丑数都是前面的丑数乘以 2 或 3 或 5 得到的。</p>
+<p>现在的问题是如何确保数组里面的丑数都是排好序的。直接利用 C++ 中的 heap（priority_queue）或者 bst（set ）来解决。</p>
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/*</span>
+<span class="cm">    * @param k: The number k.</span>
+<span class="cm">    * @return: The kth prime number as description.</span>
+<span class="cm">    */</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">kthPrimeNumber</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// write your code here</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">ugly_number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">priority_queue</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">greater</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;&gt;</span> <span class="n">heap</span><span class="p">;</span>
+
+        <span class="n">heap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">k</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">ugly_number</span> <span class="o">=</span> <span class="n">heap</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+            <span class="n">heap</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ugly_number</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">heap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">ugly_number</span> <span class="o">*</span> <span class="mi">3</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">ugly_number</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">heap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">ugly_number</span> <span class="o">*</span> <span class="mi">3</span><span class="p">);</span>
+                <span class="n">heap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">ugly_number</span> <span class="o">*</span> <span class="mi">5</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="n">heap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">ugly_number</span> <span class="o">*</span> <span class="mi">3</span><span class="p">);</span>
+                <span class="n">heap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">ugly_number</span> <span class="o">*</span> <span class="mi">5</span><span class="p">);</span>
+                <span class="n">heap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">ugly_number</span> <span class="o">*</span> <span class="mi">7</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">ugly_number</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>另一种解释方法：</p>
+<blockquote>
+<p>要得到第N个丑陋数，最直接的想法就是从1开始递增循环，直到找到第N个丑陋数，但是这样明显开销太大，而且我们没有用到已经生成的丑陋数的信息。如果有一个方法能够顺序只生成丑陋数就好了。仔细观察可以发现，丑陋数的因子也必定是丑陋数，它一定是某个丑陋数乘2、3、5得到的。但问题在于，小的丑陋数乘5不一定比大的丑陋数乘2要小，我们没法直接使用目前最大的丑陋数来乘2、3、5顺序得到更大的丑陋数。不过，我们可以确定的是，小的丑陋数乘2，肯定小于大的丑陋数乘2。所以我们使用三个指针，分别记录乘2、3、5得出的目前最大丑陋数，这样我们通过比较这三种最大丑陋数（这里最大是相对于只乘2、只乘3、只乘5三种不同情况下最大的丑陋数），就得到了所有数里最大的丑陋数。</p>
+<p>https://segmentfault.com/a/1190000003480992</p>
+</blockquote>
+<h4 id="35">面试题35：第一个只出现一次的字符</h4>
+<blockquote>
+<p>例子，对于"abaccdeff"，输出 'b'。</p>
+</blockquote>
+<p>直观想法：从头开始扫描这个字符串中的每个字符，当访问到某字符时，将该字符与其他字符比较，如果没有重复，输出。时间复杂度 O(n^2)。</p>
+<p>空间换时间，利用 Hash 表，记录每个字符出现的次数。两次扫描字符串，第一次生成 Hash 表，第二次判断次数并输出。</p>
+<div class="hlcode"><pre><span></span><span class="kt">char</span> <span class="nf">first_not_repeated_char</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">str</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+        <span class="k">return</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+    <span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">char</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">char_cnts</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="o">++</span><span class="p">(</span><span class="n">char_cnts</span><span class="p">[</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]]);</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">char_cnts</span><span class="p">[</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h4 id="36">面试题36：数组中的逆序对</h4>
+<blockquote>
+<p>在数组中的两个数字如果前面一个大于后面的数字，则这两个数字构成一个逆序对，求一个数组中的逆序对总数。</p>
+<p>例子，数组 {7, 5, 6, 4} 中，一共存在 5 个逆序对，(7, 5), (7, 6), (7, 4), (5, 4), (6, 4)</p>
+</blockquote>
+<div class="mermaid">
+graph TB
+  id1[7 5 6 4]-->id2[7 5]
+  id1-->id3[6 4]
+  id2-->id4[7]
+  id2-->id6[5]
+  id3-->id5[6]
+  id3-->id7[4]
+  id4-->id8[5 7]
+  id6-->id8
+  id5-->id9[4 6]
+  id7-->id9
+  id8-->id10[4 5 6 7]
+  id9-->id10
+</div>
+
+<p>先把数组分割成子数组，先统计出子数组内部的逆序对的数目，然后再统计出两个相邻子数组之间的逆序对的数目。在统计逆序对的过程中，还需要对数组进行排序。</p>
+<p>利用归并排序的思想完成求逆序对数目。</p>
+<div class="hlcode"><pre><span></span><span class="n">归并排序是将数列</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">l, h</span><span class="o">]</span><span class="w"> </span><span class="n">分成两半</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">l, mid</span><span class="o">]</span><span class="w"> </span><span class="n">和</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">mid+1, h</span><span class="o">]</span><span class="w"> </span><span class="n">分别进行归并排序</span><span class="err">，</span><span class="n">然后再将这两半合并起来</span><span class="err">。</span><span class="n">在合并的过程中</span><span class="err">（</span><span class="n">设</span><span class="w"> </span><span class="n">l</span><span class="o">&lt;=</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">mid</span><span class="err">，</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;=</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">h</span><span class="err">），</span><span class="n">当</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="n">时</span><span class="err">，</span><span class="n">并不产生逆序数</span><span class="err">；</span><span class="n">当</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="n">时</span><span class="err">，</span><span class="n">在前半部分中比</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="n">大的数都比</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="n">大</span><span class="err">（</span><span class="n">即</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="n">到</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="w"> </span><span class="n">都大于</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="err">），</span><span class="n">逆序数要加上</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="err">。</span><span class="n">因此</span><span class="err">，</span><span class="n">可以在归并排序中的合并过程中计算逆序数</span><span class="p">.</span><span class="w"></span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">InversePairs</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">merge_sort</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="c1">// return the number of inverse pairs</span>
+    <span class="kt">int</span> <span class="n">merge_sort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">tmp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">inv_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">left</span> <span class="o">&gt;=</span> <span class="n">right</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">inv_count</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="n">inv_count</span> <span class="o">+=</span> <span class="n">merge_sort</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">mid</span><span class="p">);</span>
+        <span class="n">inv_count</span> <span class="o">+=</span> <span class="n">merge_sort</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+        <span class="n">inv_count</span> <span class="o">+=</span> <span class="n">merge</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">mid</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="n">inv_count</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">merge</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">tmp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">inv_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>  <span class="c1">// index for left subarray</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>  <span class="c1">// index for right subarray</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>  <span class="c1">// index for resultant merged subarray</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">mid</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="p">{</span>
+                <span class="n">tmp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">];</span>
+
+                <span class="c1">// add number of inversions</span>
+                <span class="n">inv_count</span> <span class="o">+=</span> <span class="p">(</span><span class="n">mid</span> <span class="o">-</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="n">tmp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">mid</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">tmp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">tmp</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">_i</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span> <span class="n">_i</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">;</span> <span class="o">++</span><span class="n">_i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">_i</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">inv_count</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<h4 id="37">面试题37：两个链表的第一个公共节点</h4>
+<blockquote>
+<p>输入两个链表，找出它们的第一个公共节点。</p>
+</blockquote>
+<p>解法1：暴力法</p>
+<p>在第一个链表上顺序遍历每个节点，对每个节点，在第二个链表上顺序遍历，判断。假设两个链表的长度分别为 m 和 n，则时间复杂度为 O(m * n)。</p>
+<p>解法2：利用两个辅助栈</p>
+<p>如果两个链表有公共节点，那么公共节点出现在两个链表的尾部。如果从尾部开始往前比较，最后一个相同的节点就是我们要找的节点。但是链表不支持从后向前遍历，因此可以利用两个辅助栈。分别把两个链表的节点放入两个栈里，这样两个链表的尾节点就位于两个栈的栈顶，接下来比较两个栈顶的节点是否相同，直到找到最后一个相同的节点。</p>
+<p>该方法时间复杂度 O(m + n)，空间复杂度 O(m + n)。</p>
+<p>解法3：不用辅助空间</p>
+<p>仍然顺着解法 2 的思路，之所以从尾部出发，是因为两个链表从尾节点出发到达公共节点的长度相同。如果我们知道两个链表的长度，那么让长的链表从头部出发先走若干步，接着再同时在两个链表上遍历，这样找到的第一个相同的节点就是它们的第一个公共节点。</p>
+<p>时间复杂度 O(m + n)，空间复杂度 O(1)。</p>
+<div class="hlcode"><pre><span></span> <span class="cm">/**</span>
+<span class="cm"> * Definition for singly-linked list.</span>
+<span class="cm"> * struct ListNode {</span>
+<span class="cm"> *     int val;</span>
+<span class="cm"> *     ListNode *next;</span>
+<span class="cm"> *     ListNode(int x) : val(x), next(NULL) {}</span>
+<span class="cm"> * };</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">    * @param headA: the first list</span>
+<span class="cm">    * @param headB: the second list</span>
+<span class="cm">    * @return: a ListNode</span>
+<span class="cm">    */</span>
+    <span class="n">ListNode</span> <span class="o">*</span><span class="n">getIntersectionNode</span><span class="p">(</span><span class="n">ListNode</span> <span class="o">*</span><span class="n">headA</span><span class="p">,</span> <span class="n">ListNode</span> <span class="o">*</span><span class="n">headB</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// write your code here</span>
+        <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">get_length_of_list</span><span class="p">(</span><span class="n">headA</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">get_length_of_list</span><span class="p">(</span><span class="n">headB</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">diff_len</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="o">?</span> <span class="n">m</span> <span class="o">-</span> <span class="nl">n</span> <span class="p">:</span> <span class="n">n</span> <span class="o">-</span> <span class="n">m</span><span class="p">;</span>
+
+        <span class="n">ListNode</span> <span class="o">*</span><span class="n">p_long</span> <span class="o">=</span> <span class="n">headA</span><span class="p">;</span>
+        <span class="n">ListNode</span> <span class="o">*</span><span class="n">p_short</span> <span class="o">=</span> <span class="n">headB</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">p_short</span> <span class="o">=</span> <span class="n">headA</span><span class="p">;</span>
+            <span class="n">p_long</span> <span class="o">=</span> <span class="n">headB</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">diff_len</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">p_long</span> <span class="o">=</span> <span class="n">p_long</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="n">p_short</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">p_long</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> 
+            <span class="n">p_short</span> <span class="o">!=</span> <span class="n">p_long</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">p_short</span> <span class="o">=</span> <span class="n">p_short</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+            <span class="n">p_long</span> <span class="o">=</span> <span class="n">p_long</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">p_short</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">get_length_of_list</span><span class="p">(</span><span class="n">ListNode</span> <span class="o">*</span><span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">head</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="o">++</span><span class="n">len</span><span class="p">;</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">len</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>本题的启发是，有时候空间换时间并不是必要的。</p>
+  <div class="relation">
+    <h2>Related</h2>
+    <ul>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_6.html">剑指offer笔记(6)</a></li>
+    
+    <li><a href="/wiki/job_interviews/leetcode_solutions.html">LeetCode Solutions</a></li>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_2.html">剑指offer笔记(2)</a></li>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_3.html">剑指offer笔记(3)</a></li>
+    
+    <li><a href="/wiki/job_interviews/ctci_notes.html">< Cracking The Code Interview > notes</a></li>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_5.html">剑指offer笔记(5)</a></li>
+    
+    <li><a href="/wiki/job_interviews/jianzhi_offer_notes_1.html">剑指offer笔记(1)</a></li>
+    
+    </ul>
+  </div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 Yilin Gui.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-06-01 01:35:58</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
