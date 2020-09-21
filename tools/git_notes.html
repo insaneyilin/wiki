@@ -66,6 +66,7 @@
 <li><a href="#git-clone-depth1">git clone --depth=1 之后怎样获取其他分支？</a></li>
 <li><a href="#repo-repo">本地 repo 关联到远端 repo</a></li>
 <li><a href="#github-repo">GitHub 设置本地 repo 记住登录信息</a></li>
+<li><a href="#git-stash">git stash 用法总结和注意点</a></li>
 </ul>
 </div>
 <h2 id="git"><a name="gitconfig"></a>Git 配置</h2>
@@ -184,12 +185,58 @@
 <p>github 针对本地 repo 设置保存用户名和密码，不用每次 pull/push 都重新输入：</p>
 <div class="hlcode"><pre><span></span><span class="n">git</span> <span class="n">config</span> <span class="c1">--local credential.helper store</span>
 </pre></div>
+
+
+<hr />
+<h2 id="git-stash"><code>git stash</code> 用法总结和注意点</h2>
+<p>参考：</p>
+<p>https://www.cnblogs.com/zndxall/archive/2018/09/04/9586088.html</p>
+<div class="hlcode"><pre><span></span><span class="c1"># 执行存储时，添加备注，方便查找</span>
+git stash save <span class="s2">&quot;save message&quot;</span>
+
+<span class="c1"># 列出存储内容</span>
+git stash list
+
+<span class="c1"># 显示做了哪些改动，默认show第一个存储,如果要显示其他存贮，后面加stash@{$num}，</span>
+<span class="c1"># 比如第二个 git stash show stash@{1}</span>
+git stash show
+
+<span class="c1"># 显示第一个存储的改动，如果想显示其他存存储，命令：git stash show stash@{$num} -p</span>
+<span class="c1"># 比如第二个：git stash show stash@{1} -p</span>
+git stash show -p
+
+<span class="c1"># 应用某个存储,但不会把存储从存储列表中删除，默认使用第一个存储,即stash@{0}，</span>
+<span class="c1"># 如果要使用其他存储，git stash apply stash@{$num}</span>
+<span class="c1"># 比如第二个：git stash apply stash@{1} </span>
+git stash apply
+
+<span class="c1"># 命令恢复之前缓存的工作目录，将缓存堆栈中的对应stash删除，并将对应修改应用到当前的工作目录下,</span>
+<span class="c1"># 默认为第一个stash,即stash@{0}，如果要应用并删除其他stash，</span>
+<span class="c1"># 命令：git stash pop stash@{$num}</span>
+<span class="c1"># 比如应用并删除第二个：git stash pop stash@{1}</span>
+git stash pop
+
+<span class="c1"># 丢弃stash@{$num}存储，从列表中删除这个存储</span>
+git stash drop stash@<span class="o">{</span><span class="nv">$num</span><span class="o">}</span>
+
+<span class="c1"># 删除所有缓存的stash</span>
+git stash clear
+</pre></div>
+
+
+<p>注意： <strong>git add 只是把文件加到git 版本控制里，并不等于就被stash起来了，git add和git stash 没有必然的关系，但是执行git stash 能正确存储的前提是文件必须在git 版本控制中才行。</strong></p>
+<p>常规 <code>git stash</code> 的一个限制是它会一下暂存所有的文件。有时， <strong>只备份某些文件</strong> 更为方便，让另外一些与代码库保持一致。一个非常有用的技巧，用来备份部分文件：</p>
+<ol>
+<li>add 那些你不想备份的文件（例如： git add file1.js, file2.js）</li>
+<li>调用 <code>git stash –keep-index</code>。只会备份那些没有被add的文件。</li>
+<li>调用 <code>git reset</code> 取消已经add的文件的备份，继续自己的工作。</li>
+</ol>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 Yilin Gui.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-06-29 09:26:16</p>
+        <p>Site Generated 2020-09-22 02:51:42</p>
       </span>
     </div>
 
